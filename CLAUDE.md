@@ -1,7 +1,10 @@
-# <Nome do app> - Claude Code Context & Instructions
+# Tá faltando - Claude Code Context & Instructions
 
-<!-- BOOTSTRAP.md fills this paragraph: what the app is, for whom, and its core loop. -->
-<One paragraph: what the app does, who uses it, the loop a user repeats every day.>
+A personal shopping-list PWA for the owner's Android phone, with no account: lists are kept per
+context (the place she shops: Mercado, Farmácia, Pet shop…), and each item has one default
+context, so typing "leite" puts it on the right list. Her daily loop: add what is missing during
+the day (search, voice, batch or from the catalog), shop with the list in one-hand shopping mode,
+and, from phase 1b, read the receipt photo so the app learns products and prices.
 
 ## Docs
 
@@ -21,7 +24,10 @@ The owner edits docs between messages: re-read a doc before editing it and prese
 | Reviewing or reorganizing the docs | All of them |
 
 Hard rules from `docs/SEGURANCA.md`, valid for every change:
-- <BOOTSTRAP.md writes 3 to 5 rules here, e.g. "No outbound network calls; `connect-src 'none'`".>
+- Phase 1a makes no network calls (`connect-src 'none'`); from phase 1b the browser talks only to
+  the app's own `/api`, behind Cloudflare Access (ADR-004).
+- Data lives only in IndexedDB on the phone; backups go to local files, never to a server.
+- Secrets (the Claude API key) never reach client code; the receipt's CPF is never stored.
 - Never insert user text as HTML; links open with `target="_blank" rel="noopener noreferrer"`.
 - Minimize dependencies; pin exact versions; bundle them, never load from a CDN.
 - `network-policy.ts` is the only place that says which servers the app may talk to.
@@ -84,7 +90,11 @@ Each step rereads the whole conversation, so long sessions and back-and-forth co
 
 ## Architecture Overview
 - Clean Architecture + Domain Driven Design (DDD).
-- <BOOTSTRAP.md: where data lives (e.g. IndexedDB, local-only) and what talks to what.>
+- All data lives in IndexedDB on the phone, through Dexie in `src/infrastructure/` (ADR-005); no
+  login for the lists.
+- Phase 1b adds Cloudflare Pages Functions under `/api`, stateless, that read the receipt photo
+  with the Claude API; Cloudflare Access with Google login lets only the owner in (ADR-004).
+- Voice and QR code use browser APIs (Web Speech, `BarcodeDetector`), no libraries (ADR-006).
 
 ## Project Layout
 - `src/domain` - entities and rules. Pure TypeScript, no framework imports.
