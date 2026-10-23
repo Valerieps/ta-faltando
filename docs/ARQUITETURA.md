@@ -13,8 +13,10 @@ O desenho técnico que o código não mostra sozinho.
 aplicação define as portas (interfaces) que a infraestrutura implementa; a interface chama casos de
 uso, nunca o banco direto.
 
-Os dados ficam no IndexedDB do celular (ADR-005). Na fase 1b, as funções em `/api` (Cloudflare
-Pages Functions) leem a foto da nota com a API do Claude e não guardam nada (ADR-004).
+Cada aparelho (o celular e o navegador do computador) trabalha sobre a sua cópia no IndexedDB
+(ADR-005). A função `/api/sync` (Cloudflare Pages Functions) guarda a cópia compartilhada no D1 e
+troca as mudanças com os aparelhos (ADR-007). Na fase 1b, outra função em `/api` lê a foto da nota
+com a API do Claude e não guarda a foto (ADR-004).
 
 ## Invariantes
 
@@ -23,7 +25,10 @@ Pages Functions) leem a foto da nota com a API do Claude e não guardam nada (AD
 - O preço pertence ao produto, nunca ao item.
 - A chave de acesso de uma compra é única: uma nota lida duas vezes não é gravada de novo.
 - Um produto está ligado a um item ou marcado como ignorado, nunca os dois.
-- O CPF da nota nunca chega ao banco.
+- O CPF da nota nunca chega ao banco, nem ao IndexedDB nem ao D1.
+- Todo registro sincronizado tem `id` gerado no aparelho, `updatedAt` e `deletedAt`; nada é
+  apagado de verdade, só marcado, para o apagamento chegar ao outro aparelho.
+- Entre duas versões do mesmo registro, vale a de `updatedAt` maior (ADR-007).
 
 ## Modelo de dados
 
@@ -52,9 +57,15 @@ Regras derivadas:
 O app não guarda um histórico de eventos: o estado atual é a fonte. As compras e as linhas de
 compra são o histórico que importa.
 
+Sincronização (ADR-007): uma mudança grava no IndexedDB e marca o registro como pendente. O
+aparelho manda os pendentes para `/api/sync`, que guarda no D1 a versão vencedora de cada registro
+e lhe dá um número de sequência do servidor. Depois o aparelho pede os registros com sequência
+acima do seu cursor, aplica a mesma regra e avança o cursor.
+
 ## Migrações
 
-- Banco: versão 1 do esquema Dexie, ainda não criada.
+- Banco: versão 1 do esquema Dexie, ainda não criada. O esquema do D1 espelha as mesmas tabelas,
+  com as migrações do D1 versionadas no repositório; as duas mudam juntas.
 - Backup: um arquivo JSON com `formato: "ta-faltando"` e `versao: 1`, com todas as tabelas do banco.
 - Regra para mudar: uma versão só acrescenta campos opcionais; remover um campo leva duas versões.
   A importação aceita backups de qualquer versão anterior e os migra.

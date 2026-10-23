@@ -27,4 +27,6 @@ Um termo, um sentido. Estes nomes valem para os textos da interface e para as do
 - **Loja:** onde a compra foi feita, com nome, CNPJ e contexto. (`spec/nota-fiscal.md`)
 - **Produto:** uma linha exata da nota ("LEITE INTEG ITALAC 1L"), ligada a um item. O preço é do
   produto, não do item. (`spec/nota-fiscal.md`, `spec/precos.md`)
+- **Sincronizar:** levar as mudanças de um aparelho para o servidor e trazer as do outro, para o
+  celular e o computador mostrarem os mesmos dados. (`spec/sincronizacao.md`)
 - **Último preço:** o preço da compra mais recente entre todos os produtos de um item. (`spec/precos.md`)

@@ -1,6 +1,7 @@
 # Tá faltando - Claude Code Context & Instructions
 
-A personal shopping-list PWA for the owner's Android phone, with no account: lists are kept per
+A personal shopping-list PWA for the owner's Android phone and desktop browser, with the same data
+on both, synced through her Google login: lists are kept per
 context (the place she shops: Mercado, Farmácia, Pet shop…), and each item has one default
 context, so typing "leite" puts it on the right list. Her daily loop: add what is missing during
 the day (search, voice, batch or from the catalog), shop with the list in one-hand shopping mode,
@@ -24,9 +25,9 @@ The owner edits docs between messages: re-read a doc before editing it and prese
 | Reviewing or reorganizing the docs | All of them |
 
 Hard rules from `docs/SEGURANCA.md`, valid for every change:
-- Phase 1a makes no network calls (`connect-src 'none'`); from phase 1b the browser talks only to
-  the app's own `/api`, behind Cloudflare Access (ADR-004).
-- Data lives only in IndexedDB on the phone; backups go to local files, never to a server.
+- The browser talks only to the app's own `/api`, behind Cloudflare Access (ADR-004, ADR-007).
+- Data lives in IndexedDB on each device and in the app's D1 database, reached only through
+  `/api/sync`; backups go to local files, never to a server.
 - Secrets (the Claude API key) never reach client code; the receipt's CPF is never stored.
 - Never insert user text as HTML; links open with `target="_blank" rel="noopener noreferrer"`.
 - Minimize dependencies; pin exact versions; bundle them, never load from a CDN.
@@ -90,10 +91,10 @@ Each step rereads the whole conversation, so long sessions and back-and-forth co
 
 ## Architecture Overview
 - Clean Architecture + Domain Driven Design (DDD).
-- All data lives in IndexedDB on the phone, through Dexie in `src/infrastructure/` (ADR-005); no
-  login for the lists.
-- Phase 1b adds Cloudflare Pages Functions under `/api`, stateless, that read the receipt photo
-  with the Claude API; Cloudflare Access with Google login lets only the owner in (ADR-004).
+- Each device works on its own copy in IndexedDB, through Dexie in `src/infrastructure/`
+  (ADR-005); a Cloudflare Pages Function at `/api/sync` keeps the shared copy in D1, last write
+  wins (ADR-007). Cloudflare Access with Google login lets only the owner into `/api` (ADR-004).
+- Phase 1b adds a function under `/api` that reads the receipt photo with the Claude API.
 - Voice and QR code use browser APIs (Web Speech, `BarcodeDetector`), no libraries (ADR-006).
 
 ## Project Layout

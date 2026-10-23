@@ -4,7 +4,7 @@ A nota fiscal acrescenta ao catálogo os itens que ainda não estão lá e regis
 produto comprado.
 
 - **Entra aqui:** a captura da nota, a ligação de cada produto a um item, a revisão, as notas
-  repetidas e o login.
+  repetidas e o login para ler a nota.
 - **Não entra aqui:** como os preços aparecem depois (`precos.md`).
 
 ## Em aberto
@@ -33,10 +33,9 @@ nota, então o app não consegue lê-la sozinho (ADR-004).
 
 ## Login
 
-- Para ler uma nota, eu entro com a minha conta Google; só a minha conta é aceita. *(1b)*
+- Para ler uma nota, eu uso o mesmo login Google da sincronização (`sincronizacao.md`); só a
+  minha conta é aceita. *(1b)*
   Por quê: sem login, qualquer pessoa que descobrisse o endereço gastaria meus créditos da API do Claude.
-- O login serve só para a leitura de nota: as listas e o catálogo continuam funcionando sem ele, e
-  os dados continuam só no celular. *(1b)*
 
 ## Ligação com o catálogo
 
