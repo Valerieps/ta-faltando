@@ -40,11 +40,12 @@ async function setup() {
     backup: new Backup(store, clock),
     settings,
     sync: new Synchronizer(store, { exchange: async () => ({ kind: 'offline' }) }, clock),
-    speech: { supported: true, listen: () => () => {} },
+    account: { email: async () => 'dona@example.com' },
     files: { save: async () => true, open: async () => null },
     haptic: () => {},
     now: clock.now,
     loginPath: '/api/login',
+    logoutPath: '/cdn-cgi/access/logout',
   };
   const snapshot = await lists.snapshot();
   const render = (node: React.ReactNode) => renderToStaticMarkup(<ServicesProvider services={services}>{node}</ServicesProvider>);
@@ -57,8 +58,20 @@ describe('screens', () => {
     const html = render(<Capture snapshot={snapshot} />);
     expect(html).toContain('O que tá faltando?');
     expect(html).toContain('Agora há pouco');
-    expect(html).toContain('Falar os itens');
+    expect(html).not.toContain('Falar os itens');
     expect(html).toMatch(/Listas <span class="count">2<\/span>/);
+    expect(html).toContain('aria-label="Comprar"');
+    expect(html).toContain('Meu perfil e ajustes');
+  });
+
+  it('the lists put the pencil by the name, the avatar on top and the shopping button at the bottom', async () => {
+    const { snapshot, render } = await setup();
+    const html = render(<ListsScreen snapshot={snapshot} contextId="mercado" />);
+    expect(html).toContain('aria-label="Editar Mercado"');
+    expect(html).toContain('Meu perfil e ajustes');
+    expect(html).toContain('Comprar no Mercado');
+    expect(html).toContain('aria-label="Novo contexto"');
+    expect(html).not.toContain('>Ajustes<');
   });
 
   it('the lists show a tab per context plus "Sem contexto", with the trash and no strike', async () => {

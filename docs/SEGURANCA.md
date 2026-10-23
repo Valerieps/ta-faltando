@@ -21,8 +21,6 @@ entre o celular e o computador (ADR-007); na fase 1b o mesmo servidor lê a nota
   navegador nunca fala com o banco direto.
 - Backups vão para arquivos locais que a pessoa escolhe, nunca para um servidor.
 - Sem analytics, telemetria nem relatórios de erro remotos.
-- Exceção conhecida: o reconhecimento de voz do Chrome manda o áudio para o Google, fora da CSP.
-  O microfone só liga quando a pessoa toca no botão (ADR-006).
 
 ### Fase 1b: leitura de nota
 
@@ -37,5 +35,5 @@ entre o celular e o computador (ADR-007); na fase 1b o mesmo servidor lê a nota
 - Links abrem com `target="_blank" rel="noopener noreferrer"`.
 - Dependências mínimas, com versões exatas, instaladas com `npm ci` e empacotadas no build; nada de CDN.
 - A CSP é injetada no build de produção (ADR-002) e os cabeçalhos ficam em `public/_headers`.
-- Câmera e microfone só para a própria origem (`Permissions-Policy` em `public/_headers`).
+- Câmera só para a própria origem, microfone desligado (`Permissions-Policy` em `public/_headers`).
 - Nenhum dado pessoal vai para a URL.

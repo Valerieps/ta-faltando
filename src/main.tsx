@@ -8,8 +8,8 @@ import { Synchronizer } from './application/synchronizer';
 import { haptic, randomIds, requestPersistentStorage, startSyncTriggers, systemClock } from './infrastructure/browser';
 import { DexieStore } from './infrastructure/dexie-store';
 import { browserFiles } from './infrastructure/files';
-import { HttpSyncApi, LOGIN_PATH } from './infrastructure/http-sync-api';
-import { browserSpeech } from './infrastructure/speech';
+import { HttpAccountApi } from './infrastructure/http-account-api';
+import { HttpSyncApi, LOGIN_PATH, LOGOUT_PATH } from './infrastructure/http-sync-api';
 import { App } from './ui/App';
 import { ServicesProvider, type Services } from './ui/services';
 import { takeBackFromLogin } from './ui/welcome-gate';
@@ -28,11 +28,12 @@ const services: Services = {
   backup: new Backup(store, systemClock),
   settings,
   sync,
-  speech: browserSpeech,
+  account: new HttpAccountApi(),
   files: browserFiles,
   haptic,
   now: systemClock.now,
   loginPath: LOGIN_PATH,
+  logoutPath: LOGOUT_PATH,
 };
 
 takeBackFromLogin(window.location, window.history);

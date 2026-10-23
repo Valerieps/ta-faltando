@@ -34,8 +34,6 @@ export const tata = {
   login: 'Oi, eu sou a Tatá. Entre com a sua conta Google e as suas listas ficam iguais no celular e no computador.',
   welcome: 'Oi, eu sou a Tatá. Eu anoto o que tá faltando e coloco cada coisa na lista do lugar certo.',
   ask: 'O que tá faltando?',
-  listening: 'Tô ouvindo. Pode falar os itens.',
-  heardNothing: 'Não entendi nada dessa vez. Tenta de novo?',
   offline: 'Tô sem internet, mas anotei tudo aqui. Sincronizo quando ela voltar.',
   backupDue: 'Faz um mês desde o último backup. Quer guardar uma cópia agora?',
   noneWithoutContext: 'Tudo tem contexto. Nada pra arrumar aqui.',

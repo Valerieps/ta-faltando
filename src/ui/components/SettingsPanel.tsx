@@ -4,6 +4,7 @@ import { navigate } from '../router';
 import { useServices, useSettings } from '../services';
 import { SyncIndicator } from '../SyncIndicator';
 import { tata } from '../tata-lines';
+import { HandChoice } from './HandChoice';
 import { Say } from './Say';
 
 const DATE = new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -46,13 +47,7 @@ export function SettingsPanel({ showHand }: { showHand: boolean }) {
         <section className="settings__section">
           <h3>Mão</h3>
           <p className="muted">Os botões ficam do lado do polegar, em todas as telas do celular.</p>
-          <div className="segmented" role="radiogroup" aria-label="Mão que segura o celular">
-            {(['left', 'right'] as const).map((hand) => (
-              <button key={hand} type="button" role="radio" aria-checked={state.hand === hand} className={state.hand === hand ? 'is-on' : ''} onClick={() => void settings.set('hand', hand)}>
-                {hand === 'right' ? 'Mão direita' : 'Mão esquerda'}
-              </button>
-            ))}
-          </div>
+          <HandChoice />
         </section>
       )}
 
