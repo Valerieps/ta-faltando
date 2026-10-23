@@ -88,3 +88,22 @@ export const ChevronIcon = ({ open }: { open: boolean }) => (
     <path d="M9 5l7 7-7 7" />
   </svg>
 );
+
+export const ListIcon = () => (
+  <svg {...base}>
+    <path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01" />
+  </svg>
+);
+
+export const BookIcon = () => (
+  <svg {...base}>
+    <path d="M12 6c-2-1.5-5-2-8-1.5v14c3-.5 6 0 8 1.5 2-1.5 5-2 8-1.5v-14c-3-.5-6 0-8 1.5zM12 6v14" />
+  </svg>
+);
+
+export const PersonIcon = () => (
+  <svg {...base}>
+    <circle cx="12" cy="8" r="4" />
+    <path d="M4 21a8 8 0 0 1 16 0" />
+  </svg>
+);

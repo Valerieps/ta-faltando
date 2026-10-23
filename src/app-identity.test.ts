@@ -42,7 +42,7 @@ describe('app identity', () => {
 
   it('has icon shortcuts that open the capture, the lists, the catalog and the batch', () => {
     const routes = manifest.shortcuts.map((s) => parseRoute(s.url.replace(/^\.\/?/, '')).name);
-    expect(routes).toEqual(['home', 'lists', 'catalog', 'batch']);
+    expect(routes).toEqual(['capture', 'lists', 'catalog', 'batch']);
     for (const shortcut of manifest.shortcuts) {
       expect(shortcut.icons).toHaveLength(1);
       expect(read(`public/${shortcut.icons[0]!.src}`)).toContain(token(light, 'color-brand'));

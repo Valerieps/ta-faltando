@@ -6,11 +6,12 @@ import { Capture } from './screens/Capture';
 import { ListsScreen } from './screens/ListsScreen';
 import { Setup } from './screens/Setup';
 import { ShoppingMode } from './screens/ShoppingMode';
-import { BatchScreen, CatalogScreen, SettingsScreen } from './screens/SimpleScreens';
+import { ProfileScreen } from './screens/ProfileScreen';
+import { BatchScreen, CatalogScreen } from './screens/SimpleScreens';
 import { useIsDesktop, useServices, useSettings, useSnapshot } from './services';
 
 /**
- * The app shell: the setup on first use, then the phone's screens (capture first) or the
+ * The app shell: the setup on first use, then the phone's screens (lists first) or the
  * computer's layout (lists first). The hand chosen in the settings mirrors the phone's controls.
  */
 export function App() {
@@ -51,11 +52,15 @@ export function App() {
       case 'batch':
         screen = <BatchScreen snapshot={snapshot} />;
         break;
+      case 'capture':
+        screen = <Capture snapshot={snapshot} />;
+        break;
       case 'settings':
-        screen = <SettingsScreen />;
+      case 'profile':
+        screen = <ProfileScreen />;
         break;
       default:
-        screen = <Capture snapshot={snapshot} />;
+        screen = <ListsScreen snapshot={snapshot} contextId={undefined} />;
     }
   }
 

@@ -11,7 +11,8 @@ import { Capture } from './screens/Capture';
 import { ListsScreen } from './screens/ListsScreen';
 import { Setup } from './screens/Setup';
 import { ShoppingMode } from './screens/ShoppingMode';
-import { BatchScreen, CatalogScreen, SettingsScreen } from './screens/SimpleScreens';
+import { ProfileScreen } from './screens/ProfileScreen';
+import { BatchScreen, CatalogScreen } from './screens/SimpleScreens';
 import { ServicesProvider, type Services } from './services';
 
 /** Renders each screen over real use cases and a store in memory: a smoke test for the layout code. */
@@ -61,17 +62,31 @@ describe('screens', () => {
     expect(html).not.toContain('Falar os itens');
     expect(html).toMatch(/Listas <span class="count">2<\/span>/);
     expect(html).toContain('aria-label="Comprar"');
-    expect(html).toContain('Meu perfil e ajustes');
+    expect(html).not.toContain('bottom-nav');
   });
 
-  it('the lists put the pencil by the name, the avatar on top and the shopping button at the bottom', async () => {
+  it('the lists put the pencil by the name, then shopping, the round + and the bottom bar', async () => {
     const { snapshot, render } = await setup();
     const html = render(<ListsScreen snapshot={snapshot} contextId="mercado" />);
     expect(html).toContain('aria-label="Editar Mercado"');
-    expect(html).toContain('Meu perfil e ajustes');
     expect(html).toContain('Comprar no Mercado');
+    expect(html).toContain('class="fab" aria-label="Anotar"');
     expect(html).toContain('aria-label="Novo contexto"');
-    expect(html).not.toContain('>Ajustes<');
+    const nav = html.slice(html.indexOf('class="bottom-nav"'));
+    expect(nav.indexOf('Perfil')).toBeLessThan(nav.indexOf('Catálogo'));
+    expect(nav.indexOf('Catálogo')).toBeLessThan(nav.indexOf('Listas'));
+    expect(nav).toMatch(/is-on" aria-current="page">.*Listas/);
+  });
+
+  it('the profile holds the account, the sync and every setting', async () => {
+    const { render } = await setup();
+    const html = render(<ProfileScreen />);
+    expect(html).toContain('Mão direita');
+    expect(html).toContain('Exportar backup');
+    expect(html).toContain('Refazer o setup');
+    expect(html).toContain('sync-indicator');
+    expect(html).not.toContain('<h3>Sincronização</h3>');
+    expect(html).toMatch(/is-on" aria-current="page">.*Perfil/);
   });
 
   it('the lists show a tab per context plus "Sem contexto", with the trash and no strike', async () => {
@@ -135,6 +150,5 @@ describe('screens', () => {
     expect(render(<Setup snapshot={snapshot} redo onFinish={() => {}} />)).toContain('Onde você costuma comprar?');
     expect(render(<CatalogScreen snapshot={snapshot} contextId="mercado" />)).toContain('Leite');
     expect(render(<BatchScreen snapshot={snapshot} />)).toContain('Separar os itens');
-    expect(render(<SettingsScreen />)).toContain('Exportar backup');
   });
 });

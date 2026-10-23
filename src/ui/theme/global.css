@@ -254,6 +254,53 @@ a.btn {
   padding: 0;
 }
 
+/* The round + by the thumb: it follows .reach, so it sits on the chosen hand's side. */
+.fab {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--fab-size);
+  height: var(--fab-size);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-brand);
+  color: var(--color-on-brand);
+}
+
+.fab svg {
+  width: 26px;
+  height: 26px;
+}
+
+/* ---- Bottom bar (phone): Perfil, Catálogo, Listas ---- */
+
+.bottom-nav {
+  display: flex;
+  margin: 0 calc(-1 * var(--space-4));
+  border-top: 1px solid var(--color-border);
+}
+
+.bottom-nav__tab {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-height: var(--touch-min);
+  padding: var(--space-2) 0 0;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-small);
+  font-weight: 600;
+}
+
+.bottom-nav__tab.is-on {
+  color: var(--color-text);
+  font-weight: 800;
+}
+
 .btn--icon {
   display: inline-flex;
   align-items: center;

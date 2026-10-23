@@ -16,7 +16,7 @@
       "name": "Adicionar item",
       "short_name": "Adicionar",
       "description": "Abre o campo de adicionar",
-      "url": "./#/",
+      "url": "./#/anotar",
       "icons": [
         { "src": "atalhos/adicionar.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
       ]

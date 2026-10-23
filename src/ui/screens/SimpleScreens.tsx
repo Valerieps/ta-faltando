@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { splitBatch, type EntryText } from '../../domain/entry-text';
 import { activeContexts, type Snapshot } from '../../domain/list-view';
 import { BatchReview } from '../components/BatchReview';
+import { BottomNav } from '../components/BottomNav';
 import { Catalog } from '../components/Catalog';
 import { ContextChips } from '../components/ContextChips';
 import { Say } from '../components/Say';
-import { SettingsPanel } from '../components/SettingsPanel';
-import { goBack, navigate } from '../router';
+import { goBack } from '../router';
 import { tata } from '../tata-lines';
 
 // The phone's secondary screens: a title on top, the content, and the buttons at the bottom,
@@ -22,14 +22,7 @@ export function CatalogScreen({ snapshot, contextId }: { snapshot: Snapshot; con
         <ContextChips snapshot={snapshot} current={id} />
         <Catalog key={id ?? 'none'} snapshot={snapshot} contextId={id} />
       </div>
-      <div className="reach">
-        <button type="button" className="pill" onClick={goBack}>
-          Voltar
-        </button>
-        <button type="button" className="pill pill--solid" onClick={() => navigate({ name: 'lists', contextId: id })}>
-          Ver a lista
-        </button>
-      </div>
+      <BottomNav current="catalog" contextId={id} />
     </main>
   );
 }
@@ -86,22 +79,6 @@ export function BatchScreen({ snapshot }: { snapshot: Snapshot }) {
           </button>
         </div>
       )}
-    </main>
-  );
-}
-
-export function SettingsScreen() {
-  return (
-    <main className="screen">
-      <h1 className="title">Ajustes</h1>
-      <div className="screen__body">
-        <SettingsPanel showHand />
-      </div>
-      <div className="reach">
-        <button type="button" className="pill pill--solid" onClick={goBack}>
-          Voltar
-        </button>
-      </div>
     </main>
   );
 }
