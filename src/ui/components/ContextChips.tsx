@@ -3,18 +3,21 @@ import { activeContexts, contextName, type Snapshot } from '../../domain/list-vi
 import { PencilIcon, PlusIcon } from '../icons';
 import { navigate } from '../router';
 import { useServices } from '../services';
+import { CategoryEditor } from './CategoryEditor';
 
 /**
  * The catalog's context chips: a "+" before them creates a context, and the pencil renames one,
- * moves it among the tabs or deactivates it. The pencil shows on hover on the computer, and on
- * the open chip on the phone.
+ * moves it among the tabs, edits its categories or deactivates it. The pencil shows on hover on
+ * the computer, and on the open chip on the phone.
  */
 export function ContextChips({ snapshot, current }: { snapshot: Snapshot; current: string | null }) {
   const { contexts } = useServices();
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState<string | null>(null);
+  const [categoriesOf, setCategoriesOf] = useState<string | null>(null);
   const list = activeContexts(snapshot.contexts);
   const open = (contextId: string | null | undefined) => navigate({ name: 'catalog', contextId }, { replace: true });
+  const categoryContext = list.find((c) => c.id === categoriesOf);
 
   return (
     <>
@@ -62,6 +65,9 @@ export function ContextChips({ snapshot, current }: { snapshot: Snapshot; curren
               <button type="button" className="icon-button" aria-label="Para a direita" disabled={index === list.length - 1} onClick={() => void contexts.move(context.id, 1)}>
                 →
               </button>
+              <button type="button" className="link-button" onClick={() => setCategoriesOf(context.id)}>
+                Categorias
+              </button>
               <button
                 type="button"
                 className="link-button"
@@ -93,6 +99,7 @@ export function ContextChips({ snapshot, current }: { snapshot: Snapshot; curren
           {contextName(snapshot, null)}
         </button>
       </nav>
+      {categoryContext && <CategoryEditor context={categoryContext} snapshot={snapshot} onClose={() => setCategoriesOf(null)} />}
     </>
   );
 }

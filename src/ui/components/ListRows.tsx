@@ -2,6 +2,7 @@ import type { Context } from '../../domain/context';
 import { entryDetails } from '../../domain/entry-text';
 import type { Item } from '../../domain/item';
 import { isChecked, type ListEntry } from '../../domain/list-entry';
+import { contextCategories } from '../../domain/context-categories';
 import { groupByCategory } from '../../domain/list-view';
 import { TrashIcon } from '../icons';
 
@@ -32,7 +33,7 @@ export function ListRows(props: RowsProps) {
   }
   return (
     <div className="groups">
-      {groupByCategory(entries, items, context).map((group) => (
+      {groupByCategory(entries, items, contextCategories(context, items.values())).map((group) => (
         <section key={group.categoryId ?? 'outros'} className="group">
           <h3 className="label">{group.name}</h3>
           <ul className="rows">

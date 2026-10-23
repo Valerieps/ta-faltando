@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { categoryIdFor, categoryName, customCategories, isCategory } from './suggestion';
+import { categoryIdFor, categoryName, isCategory } from './suggestion';
 
 describe('categories she creates', () => {
   it('reuses an app category with the typed name, else creates one named as typed', () => {
@@ -14,16 +14,5 @@ describe('categories she creates', () => {
     expect(isCategory('propria:Festa')).toBe(true);
     expect(isCategory('propria:')).toBe(false);
     expect(categoryName('nada')).toBe('Outros');
-  });
-
-  it('lists the ones some item still uses, by name', () => {
-    const items = [
-      { category: 'propria:Viagem', deletedAt: null },
-      { category: 'propria:Festa', deletedAt: null },
-      { category: 'propria:Festa', deletedAt: null },
-      { category: 'propria:Sumiu', deletedAt: 5 },
-      { category: 'limpeza', deletedAt: null },
-    ];
-    expect(customCategories(items)).toEqual(['propria:Festa', 'propria:Viagem']);
   });
 });

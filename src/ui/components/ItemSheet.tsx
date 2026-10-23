@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
+import { contextCategories } from '../../domain/context-categories';
 import { activeContexts, contextName, type Snapshot } from '../../domain/list-view';
-import { CATEGORIES, OTHER_CATEGORY_NAME, categoryIdFor, categoryName, customCategories } from '../../domain/suggestion';
-import { PlusIcon } from '../icons';
+import { OTHER_CATEGORY_NAME, categoryName } from '../../domain/suggestion';
+import { AddChip } from './AddChip';
 import { useServices } from '../services';
 
 /**
@@ -53,11 +54,17 @@ export function ItemSheet({
     if (context) await chooseContext(context.id);
   }
 
-  const categories = [
-    ...CATEGORIES.map((c) => ({ id: c.id as string | null, name: c.name })),
-    ...customCategories(snapshot.items).map((id) => ({ id: id as string | null, name: categoryName(id) })),
-    { id: null, name: OTHER_CATEGORY_NAME },
-  ];
+  // The category belongs to the item's default context, which has its own categories.
+  const home = contexts.find((c) => c.id === item.defaultContextId);
+  const own = contextCategories(home, snapshot.items);
+  const category = item.category !== null && own.includes(item.category) ? item.category : null;
+  const categories = [...own.map((id) => ({ id: id as string | null, name: categoryName(id) })), { id: null, name: OTHER_CATEGORY_NAME }];
+
+  async function addCategory(name: string) {
+    if (!home) return;
+    const id = await contextService.addCategory(home.id, name);
+    if (id) await lists.setCategory(item!.id, id);
+  }
 
   return (
     <dialog ref={dialog} className="sheet" onClose={onClose} aria-labelledby="item-sheet-title">
@@ -137,21 +144,24 @@ export function ItemSheet({
         </fieldset>
 
         <fieldset className="sheet__group">
-          <legend className="label">Categoria</legend>
-          <div className="chips">
-            {categories.map((c) => (
-              <button
-                key={c.id ?? 'none'}
-                type="button"
-                className={c.id === item.category ? 'chip is-on' : 'chip'}
-                aria-pressed={c.id === item.category}
-                onClick={() => void lists.setCategory(item.id, c.id)}
-              >
-                {c.name}
-              </button>
-            ))}
-            <AddChip label="Nova categoria" onAdd={(name) => lists.setCategory(item.id, categoryIdFor(name))} />
-          </div>
+          <legend className="label">Categoria{home ? ` em ${home.name}` : ''}</legend>
+          {!home && <p className="muted">Escolha um contexto padrão para escolher a categoria.</p>}
+          {home && (
+            <div className="chips">
+              {categories.map((c) => (
+                <button
+                  key={c.id ?? 'none'}
+                  type="button"
+                  className={c.id === category ? 'chip is-on' : 'chip'}
+                  aria-pressed={c.id === category}
+                  onClick={() => void lists.setCategory(item.id, c.id)}
+                >
+                  {c.name}
+                </button>
+              ))}
+              <AddChip label="Nova categoria" onAdd={addCategory} />
+            </div>
+          )}
         </fieldset>
 
         <div className="sheet__actions">
@@ -183,45 +193,5 @@ export function ItemSheet({
         </div>
       </form>
     </dialog>
-  );
-}
-
-/** A "+" at the end of the chips that opens a field for a new name; Enter or leaving it adds. */
-function AddChip({ label, onAdd }: { label: string; onAdd: (name: string) => Promise<void> }) {
-  const [editing, setEditing] = useState(false);
-
-  if (!editing) {
-    return (
-      <button type="button" className="chip chip--add" aria-label={label} title={label} onClick={() => setEditing(true)}>
-        <PlusIcon />
-      </button>
-    );
-  }
-
-  function finish(input: HTMLInputElement) {
-    const name = input.value.trim();
-    setEditing(false);
-    if (name) void onAdd(name);
-  }
-
-  return (
-    <input
-      className="chip chip--input"
-      aria-label={label}
-      placeholder={label}
-      autoFocus
-      enterKeyHint="done"
-      onBlur={(event) => finish(event.target)}
-      onKeyDown={(event) => {
-        if (event.key === 'Enter') {
-          event.preventDefault();
-          event.currentTarget.blur();
-        } else if (event.key === 'Escape') {
-          event.preventDefault();
-          event.stopPropagation();
-          setEditing(false);
-        }
-      }}
-    />
   );
 }

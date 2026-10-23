@@ -1,7 +1,7 @@
 import type { Context } from './context';
 import type { Item } from './item';
 import { isChecked, type ListEntry } from './list-entry';
-import { CATEGORIES, categoryName, findSuggestion, isCategory } from './suggestion';
+import { categoryName, findSuggestion } from './suggestion';
 import { findItemByName } from './item';
 
 /** Everything the screens show: the live records of each table. */
@@ -69,28 +69,18 @@ export interface CategoryGroup {
 }
 
 /**
- * The order of the groups: the context's own order first (the store's aisles), then the app's
- * categories, then the ones she created, with "Outros" last.
+ * A list grouped by the context's categories, in their order, with "Outros" last for an item
+ * whose category the context does not have; inside each group the struck entries go last
+ * (spec/modo-compra.md).
  */
-export function categoryOrder(context: Pick<Context, 'categoryOrder'> | undefined, custom: readonly string[] = []): (string | null)[] {
-  const own = (context?.categoryOrder ?? []).filter(isCategory);
-  return [...own, ...[...CATEGORIES.map((c) => c.id), ...custom].filter((id) => !own.includes(id)), null];
-}
-
-/** A list grouped by category; inside each group the struck entries go last (spec/modo-compra.md). */
-export function groupByCategory(
-  entries: readonly ListEntry[],
-  items: ReadonlyMap<string, Item>,
-  context: Pick<Context, 'categoryOrder'> | undefined,
-): CategoryGroup[] {
+export function groupByCategory(entries: readonly ListEntry[], items: ReadonlyMap<string, Item>, categories: readonly string[]): CategoryGroup[] {
   const groups = new Map<string | null, ListEntry[]>();
   for (const entry of entries) {
     const category = items.get(entry.itemId)?.category ?? null;
-    const id = isCategory(category) ? category : null;
+    const id = category !== null && categories.includes(category) ? category : null;
     groups.set(id, [...(groups.get(id) ?? []), entry]);
   }
-  const custom = [...groups.keys()].filter((id): id is string => id !== null && !CATEGORIES.some((c) => c.id === id));
-  return categoryOrder(context, custom.sort((a, b) => categoryName(a).localeCompare(categoryName(b), 'pt-BR')))
+  return [...categories, null]
     .filter((id) => groups.has(id))
     .map((id) => {
       const list = [...groups.get(id)!].sort((a, b) => Number(isChecked(a)) - Number(isChecked(b)));

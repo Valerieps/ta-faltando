@@ -75,6 +75,54 @@ describe('Contexts', () => {
     await contexts.move('farmacia', -1);
     expect((await store.list('contexts')).sort((a, b) => a.order - b.order).map((c) => c.id)).toEqual(['farmacia', 'mercado']);
     await contexts.setCategoryOrder('mercado', ['limpeza', null, 'hortifruti']);
-    expect((await store.get('contexts', 'mercado'))?.categoryOrder).toEqual(['limpeza', 'hortifruti']);
+    expect((await store.get('contexts', 'mercado'))?.categories).toEqual(['limpeza', 'laticinios', 'mercearia', 'higiene']);
+  });
+
+  it('edits the categories of one context: create, rename, move and delete', async () => {
+    const { store, contexts, lists } = setup();
+    await contexts.create('Mercado', 'mercado');
+    await contexts.create('Farmácia', 'farmacia');
+    await lists.add('leite');
+    await lists.add('sabonete');
+    await lists.setDefaultContext((await lists.add('dipirona'))!.item.id, 'farmacia');
+    const categoriesOf = async (id: string) => (await store.get('contexts', id))?.categories;
+    const categoryOf = async (name: string) => (await store.list('items')).find((i) => i.name === name)?.category;
+
+    expect(await contexts.addCategory('mercado', 'festa  junina')).toBe('propria:Festa junina');
+    expect(await contexts.addCategory('mercado', 'outros')).toBeNull();
+    expect(await categoriesOf('mercado')).toEqual(['laticinios', 'mercearia', 'limpeza', 'higiene', 'propria:Festa junina']);
+    expect(await categoriesOf('farmacia')).toBeUndefined();
+
+    await contexts.renameCategory('mercado', 'laticinios', 'Geladeira');
+    expect(await categoriesOf('mercado')).toEqual(['propria:Geladeira', 'mercearia', 'limpeza', 'higiene', 'propria:Festa junina']);
+    expect(await categoryOf('Leite')).toBe('propria:Geladeira');
+    // A name the context already has merges the two.
+    await contexts.renameCategory('mercado', 'propria:Geladeira', 'mercearia');
+    expect(await categoriesOf('mercado')).toEqual(['mercearia', 'limpeza', 'higiene', 'propria:Festa junina']);
+    expect(await categoryOf('Leite')).toBe('mercearia');
+
+    await contexts.moveCategory('mercado', 'higiene', -1);
+    expect(await categoriesOf('mercado')).toEqual(['mercearia', 'higiene', 'limpeza', 'propria:Festa junina']);
+
+    // Only this context's items go to "Outros"; Farmácia keeps its higiene.
+    await contexts.removeCategory('mercado', 'higiene');
+    expect(await categoriesOf('mercado')).toEqual(['mercearia', 'limpeza', 'propria:Festa junina']);
+    expect(await categoryOf('Sabonete')).toBeNull();
+    expect(await categoryOf('Dipirona')).toBe('saude');
+  });
+
+  it('an item that changes context brings its category; a new one keeps it only if the context has it', async () => {
+    const { store, contexts, lists } = setup();
+    await contexts.create('Mercado', 'mercado');
+    await contexts.create('Farmácia', 'farmacia');
+    await contexts.removeCategory('mercado', 'laticinios');
+    await contexts.removeCategory('farmacia', 'higiene');
+    // Leite is a Mercado suggestion, but Mercado has no laticínios any more.
+    expect((await lists.add('leite'))!.item.category).toBeNull();
+    const dipirona = (await lists.add('dipirona'))!.item;
+    await lists.setDefaultContext(dipirona.id, 'mercado');
+    expect((await store.get('contexts', 'mercado'))?.categories).toEqual(['mercearia', 'limpeza', 'higiene', 'saude']);
+    // Without a context the suggestion's category waits for the context it gets later.
+    expect((await lists.add('sabonete', 'manual', null))!.item.category).toBe('higiene');
   });
 });

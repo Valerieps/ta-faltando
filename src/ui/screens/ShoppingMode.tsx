@@ -3,8 +3,9 @@ import type { Hand } from '../../application/settings';
 import type { Context } from '../../domain/context';
 import { entryDetails } from '../../domain/entry-text';
 import { isChecked, type ListEntry } from '../../domain/list-entry';
-import { categoryOrder, groupByCategory, itemsById, listEntries, type Snapshot } from '../../domain/list-view';
-import { categoryName, customCategories } from '../../domain/suggestion';
+import { contextCategories } from '../../domain/context-categories';
+import { groupByCategory, itemsById, listEntries, type Snapshot } from '../../domain/list-view';
+import { categoryName } from '../../domain/suggestion';
 import { nameKey } from '../../domain/text';
 import { Say } from '../components/Say';
 import { useFading, withFading } from '../components/useFading';
@@ -128,7 +129,7 @@ export function ShoppingMode({ snapshot, contextId }: { snapshot: Snapshot; cont
       <div className="shop__body">
         {entries.length === 0 && loose.length === 0 && <Say mood="happy">{key ? 'Nada com esse nome na lista.' : tata.emptyList(context.name)}</Say>}
         {context.groupByCategory ? (
-          groupByCategory(entries, items, context).map((group) => {
+          groupByCategory(entries, items, contextCategories(context, snapshot.items)).map((group) => {
             const id = group.categoryId ?? 'outros';
             const open = !collapsed.has(id);
             return (
@@ -211,7 +212,7 @@ export function ShoppingMode({ snapshot, contextId }: { snapshot: Snapshot; cont
         </div>
       </div>
 
-      {ordering && <GroupOrder context={context} custom={customCategories(snapshot.items)} onClose={() => setOrdering(false)} />}
+      {ordering && <GroupOrder context={context} categories={contextCategories(context, snapshot.items)} onClose={() => setOrdering(false)} />}
     </main>
   );
 }
@@ -309,11 +310,11 @@ function ShoppingRow({ entry, items, hand, fading, onAction, onTrash, onUndo }: 
 }
 
 /** The order of the category groups, dragged to follow the store's aisles (spec/modo-compra.md). */
-function GroupOrder({ context, custom, onClose }: { context: Context; custom: readonly string[]; onClose: () => void }) {
+function GroupOrder({ context, categories, onClose }: { context: Context; categories: readonly string[]; onClose: () => void }) {
   const { contexts } = useServices();
   const dialog = useRef<HTMLDialogElement>(null);
   const list = useRef<HTMLOListElement>(null);
-  const [order, setOrder] = useState(() => categoryOrder(context, custom).filter((id) => id !== null) as string[]);
+  const [order, setOrder] = useState(() => [...categories]);
   const [dragging, setDragging] = useState<string | null>(null);
 
   useEffect(() => {
