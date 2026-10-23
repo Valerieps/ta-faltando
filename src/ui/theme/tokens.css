@@ -1,20 +1,32 @@
 /*
  * Design tokens: every color, font and spacing value used by the UI lives here.
  * Change the look of the app by editing this file only. The dark theme, below, redefines every color.
+ * Palette "Horta" (docs/rascunhos/identidade-visual.html): white and dark green, with peach only on Tatá.
  */
 :root {
   color-scheme: light;
 
-  --color-bg: #f4f2ed;
+  /* White with a hint of green, so greys and the brand look like one family */
+  --color-bg: #f7f9f6;
   --color-surface: #ffffff;
-  --color-text: #1f1f1f;
-  /* 5:1 on --color-bg, above WCAG AA's 4.5:1 for small text */
-  --color-text-muted: #6b675f;
-  --color-border: #e4e0d8;
-  --color-brand: #4b3fb3;
+  /* 15.8:1 on --color-bg */
+  --color-text: #16201b;
+  /* 5.7:1 on --color-bg, above WCAG AA's 4.5:1 for small text */
+  --color-text-muted: #5a6660;
+  --color-border: #e2e8e3;
+  /* Everything I can tap or just did: field, buttons, active tab, checked item. 9.1:1 on --color-bg */
+  --color-brand: #1f4d3a;
+  --color-on-brand: #ffffff;
+  --color-brand-soft: #e4eee8;
+  /* Tatá only: her cheeks (never text, 2:1) and her speech bubble (text 6.7:1) */
+  --color-blush: #f4a28c;
+  --color-blush-soft: #fdede7;
+  --color-blush-ink: #8c3b26;
   --color-danger: #b3261e;
 
   --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* Questions, screen titles and Tatá's voice; bundled from @fontsource/nunito (700 and 800, latin) */
+  --font-display: 'Nunito', ui-rounded, var(--font-sans);
   --font-size-base: 15px;
 
   --space-1: 4px;
@@ -25,18 +37,34 @@
   --space-8: 32px;
 
   --radius: 8px;
+  --radius-m: 14px;
+  --radius-l: 22px;
+  --radius-pill: 999px;
+
+  /* Thumb targets: at least 44px; rows in shopping mode at least 56px (spec/modo-compra.md) */
+  --touch-min: 44px;
+  --row-shopping: 56px;
+  /* Swiping twice or deleting fades the item out before it leaves the list (spec/modo-compra.md) */
+  --fade-out: 3s;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
 
-    --color-bg: #17161a;
-    --color-surface: #211f25;
-    --color-text: #ecebef;
-    --color-text-muted: #a3a0aa;
-    --color-border: #34313a;
-    --color-brand: #a59cf0;
+    --color-bg: #0f1411;
+    --color-surface: #171e1a;
+    --color-text: #e6ece8;
+    /* 6.5:1 on --color-surface */
+    --color-text-muted: #98a69e;
+    --color-border: #26302a;
+    /* The green turns mint: 9.3:1 on --color-bg */
+    --color-brand: #7cc9a0;
+    --color-on-brand: #0f1411;
+    --color-brand-soft: #1c2e24;
+    --color-blush: #e8907a;
+    --color-blush-soft: #3a2420;
+    --color-blush-ink: #f3b9a8;
     --color-danger: #f2b8b5;
   }
 }
