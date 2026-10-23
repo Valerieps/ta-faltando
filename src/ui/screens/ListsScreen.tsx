@@ -92,8 +92,8 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
           })}
         </nav>
         <div className="reach">
-          <button type="button" className="pill" onClick={() => navigate({ name: 'contexts' })}>
-            Contextos
+          <button type="button" className="pill" onClick={() => navigate({ name: 'settings' })}>
+            Ajustes
           </button>
           <button type="button" className="pill pill--icon" aria-label="Anotar" onClick={() => navigate({ name: 'home' })}>
             <PlusIcon />

@@ -7,7 +7,6 @@ import { useSyncExternalStore } from 'react';
 export type Route =
   | { readonly name: 'home' }
   | { readonly name: 'lists'; readonly contextId?: string | null }
-  | { readonly name: 'contexts' }
   | { readonly name: 'catalog'; readonly contextId?: string | null }
   | { readonly name: 'shop'; readonly contextId: string }
   | { readonly name: 'batch' }
@@ -19,7 +18,6 @@ const NO_CONTEXT = 'sem-contexto';
 
 const PATHS = {
   lists: 'listas',
-  contexts: 'contextos',
   catalog: 'catalogo',
   shop: 'compra',
   batch: 'lote',
@@ -54,8 +52,6 @@ export function parseRoute(hash: string): Route {
       return { name: 'catalog', contextId };
     case PATHS.shop:
       return contextId ? { name: 'shop', contextId } : { name: 'lists' };
-    case PATHS.contexts:
-      return { name: 'contexts' };
     case PATHS.batch:
       return { name: 'batch' };
     case PATHS.uncontexted:

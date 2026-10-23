@@ -1,57 +1,26 @@
 import { useState } from 'react';
 import { splitBatch, type EntryText } from '../../domain/entry-text';
-import { activeContexts, contextName, itemsWithoutContext, type Snapshot } from '../../domain/list-view';
+import { activeContexts, type Snapshot } from '../../domain/list-view';
 import { BatchReview } from '../components/BatchReview';
 import { Catalog } from '../components/Catalog';
-import { ContextManager } from '../components/ContextManager';
+import { ContextChips } from '../components/ContextChips';
 import { Say } from '../components/Say';
 import { SettingsPanel } from '../components/SettingsPanel';
-import { Uncontexted } from '../components/Uncontexted';
 import { goBack, navigate } from '../router';
-import { Tata } from '../Tata';
 import { tata } from '../tata-lines';
 
 // The phone's secondary screens: a title on top, the content, and the buttons at the bottom,
 // by the thumb (identity draft, "Só com a mão direita").
-
-/** The contexts, with the items without context on top; each context opens its catalog. */
-export function ContextsScreen({ snapshot }: { snapshot: Snapshot }) {
-  const loose = itemsWithoutContext(snapshot).length;
-  return (
-    <main className="screen">
-      <h1 className="title">Contextos</h1>
-      <div className="screen__body">
-        {loose > 0 && (
-          <section className="panel">
-            <div className="panel__head">
-              <Tata mood="thinking" size={28} />
-              <h2>{loose === 1 ? '1 item sem contexto' : `${loose} itens sem contexto`}</h2>
-            </div>
-            <Uncontexted snapshot={snapshot} limit={3} />
-          </section>
-        )}
-        <ContextManager snapshot={snapshot} />
-      </div>
-      <div className="reach">
-        <button type="button" className="pill" onClick={() => navigate({ name: 'settings' })}>
-          Ajustes
-        </button>
-        <button type="button" className="pill pill--solid" onClick={() => navigate({ name: 'lists' })}>
-          Listas
-        </button>
-      </div>
-    </main>
-  );
-}
 
 export function CatalogScreen({ snapshot, contextId }: { snapshot: Snapshot; contextId: string | null | undefined }) {
   const contexts = activeContexts(snapshot.contexts);
   const id = contextId === undefined ? (contexts[0]?.id ?? null) : contextId;
   return (
     <main className="screen">
-      <h1 className="title">Catálogo · {contextName(snapshot, id)}</h1>
+      <h1 className="title">Catálogo</h1>
       <div className="screen__body">
-        <Catalog snapshot={snapshot} contextId={id} />
+        <ContextChips snapshot={snapshot} current={id} />
+        <Catalog key={id ?? 'none'} snapshot={snapshot} contextId={id} />
       </div>
       <div className="reach">
         <button type="button" className="pill" onClick={goBack}>
