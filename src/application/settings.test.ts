@@ -7,7 +7,7 @@ describe('Settings', () => {
     const store = new MemoryStore();
     const settings = new Settings(store, { now: () => 42 });
     await settings.ready;
-    expect(settings.getState()).toEqual({ hand: 'right', setupDone: false, lastBackupAt: null, firstUseAt: 42 });
+    expect(settings.getState()).toEqual({ hand: 'right', setupDone: false, lastBackupAt: null, firstUseAt: 42, email: null });
 
     let calls = 0;
     settings.subscribe(() => calls++);

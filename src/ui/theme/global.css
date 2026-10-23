@@ -128,6 +128,47 @@ a {
   font-size: var(--font-size-title);
 }
 
+/* A screen's title with the avatar in the top corner. */
+.screen__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.screen__head .avatar,
+.capture__head .avatar {
+  margin-left: auto;
+}
+
+.avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--touch-min);
+  height: var(--touch-min);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-brand-soft);
+  color: var(--color-brand);
+  font-size: var(--font-size-small);
+  font-weight: 800;
+}
+
+.avatar--big {
+  width: 56px;
+  height: 56px;
+  font-size: 20px;
+}
+
+/* No e-mail yet: an empty head-and-shoulders outline. */
+.avatar__empty {
+  width: 40%;
+  height: 40%;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+}
+
 .question {
   font-size: var(--font-size-question);
 }
@@ -211,6 +252,13 @@ a.btn {
 .pill--icon {
   width: var(--touch-min);
   padding: 0;
+}
+
+.btn--icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
 }
 
 .link-button {
@@ -387,18 +435,6 @@ a.btn {
 
 .field--quiet:focus-within {
   border-color: var(--color-brand);
-}
-
-.field__mic {
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border: 0;
-  border-radius: 50%;
-  background: var(--color-brand-soft);
-  color: var(--color-brand);
 }
 
 .batch-text {
@@ -1281,6 +1317,50 @@ button.check::before {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  gap: var(--space-2);
+}
+
+/* The profile menu opens from the avatar, so it hangs from the top. */
+.sheet--top {
+  margin: 0 auto auto;
+  border-radius: 0 0 var(--radius-l) var(--radius-l);
+}
+
+.sheet--top .sheet__body {
+  padding-top: max(var(--space-4), env(safe-area-inset-top));
+}
+
+.profile__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.profile__who {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.profile__row {
+  display: flex;
+  align-items: center;
+  min-height: var(--touch-min);
+  padding: 0;
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  background: none;
+  color: var(--color-text);
+  font-weight: 600;
+  text-align: left;
+  text-decoration: none;
+}
+
+.shop-chooser {
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--space-2);
 }
 

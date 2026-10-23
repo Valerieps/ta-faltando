@@ -1,5 +1,6 @@
 import { isTableName, type Change } from '../src/domain/tables';
 import type { D1Database, Env } from './d1';
+import { allowedUser, json } from './owner';
 
 /** Limits on what one request may carry; the app sends at most PUSH_BATCH changes. */
 export const MAX_BODY_BYTES = 2_000_000;
@@ -7,12 +8,6 @@ export const MAX_CHANGES = 500;
 export const MAX_RECORD_BYTES = 16_000;
 /** Records pulled per response; the app asks again while `more` is true. */
 export const PULL_PAGE = 500;
-
-const json = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), {
-    status,
-    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
-  });
 
 /**
  * POST /api/sync (ADR-007): stores the pushed changes where they win (last write wins, ties by
@@ -29,17 +24,6 @@ export async function handleSync(request: Request, env: Env): Promise<Response> 
 
   await push(env.DB, user, parsed.changes);
   return json(await pull(env.DB, user, parsed.cursor));
-}
-
-/**
- * Cloudflare Access lets only the allowed users reach /api and adds the e-mail to the request;
- * checking it here as well keeps the data closed if the Access application is ever misconfigured.
- * The e-mail, lower-cased, owns the records the request reads and writes (ADR-011).
- */
-function allowedUser(request: Request, env: Env): string | null {
-  const email = request.headers.get('Cf-Access-Authenticated-User-Email')?.trim().toLowerCase();
-  const allowed = (env.ALLOWED_EMAILS ?? '').split(',').map((e) => e.trim().toLowerCase());
-  return email && allowed.includes(email) ? email : null;
 }
 
 interface ParsedRequest {

@@ -7,7 +7,7 @@ A lista de um contexto em tela cheia, para eu usar com uma mão só dentro da lo
 
 ## Uso com uma mão
 
-- Nas configurações, eu escolho **mão direita** ou **mão esquerda**; um atalho na própria tela troca
+- No menu do perfil e nos Ajustes, eu escolho **mão direita** ou **mão esquerda**; um atalho na própria tela troca
   o lado na hora. A escolha vale para todas as telas do celular, não só para o modo compra. *(1a)*
 - Todos os controles (finalizar, desfazer, agrupar, buscar) ficam numa barra no terço inferior da
   tela, do lado da mão escolhida, ao alcance do polegar. *(1a)*

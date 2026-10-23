@@ -15,7 +15,8 @@ uso, nunca o banco direto.
 
 Cada aparelho (o celular e o navegador do computador) trabalha sobre a sua cópia no IndexedDB
 (ADR-005). A função `/api/sync` (Cloudflare Pages Functions) guarda a cópia compartilhada no D1 e
-troca as mudanças com os aparelhos (ADR-007). Na fase 1b, outra função em `/api` lê a foto da nota
+troca as mudanças com os aparelhos (ADR-007); `/api/me` devolve o e-mail de quem entrou, para as
+iniciais do menu do perfil, e o aparelho o guarda nos seus ajustes para mostrar sem internet. Na fase 1b, outra função em `/api` lê a foto da nota
 com a API do Claude e não guarda a foto (ADR-004).
 
 ## Invariantes

@@ -13,7 +13,7 @@ Eu uso o app no celular e no navegador do computador, e os dois mostram os mesmo
   computador, pelo mesmo endereço. *(1a)*
 - No computador eu vejo e mexo nas listas e no catálogo: adiciono (digitando, pelo catálogo ou em
   lote), edito, risco e apago. *(1a)*
-- Microfone, QR code, modo compra e leitura de nota não precisam funcionar no computador. Onde o
+- QR code, modo compra e leitura de nota não precisam funcionar no computador. Onde o
   navegador não tem o recurso, o botão some. *(1a)*
   Por quê: no computador eu planejo; no mercado eu uso o celular.
 

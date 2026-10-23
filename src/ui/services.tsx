@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, useSyncExternalStore, t
 import type { Backup } from '../application/backup';
 import type { Contexts } from '../application/contexts';
 import type { Lists } from '../application/lists';
-import type { FileAccess, SpeechInput } from '../application/ports';
+import type { AccountApi, FileAccess } from '../application/ports';
 import type { DeviceSettings, Settings } from '../application/settings';
 import type { SyncState, Synchronizer } from '../application/synchronizer';
 import { EMPTY_SNAPSHOT, type Snapshot } from '../domain/list-view';
@@ -14,11 +14,12 @@ export interface Services {
   readonly backup: Backup;
   readonly settings: Settings;
   readonly sync: Synchronizer;
-  readonly speech: SpeechInput;
+  readonly account: AccountApi;
   readonly files: FileAccess;
   readonly haptic: () => void;
   readonly now: () => number;
   readonly loginPath: string;
+  readonly logoutPath: string;
 }
 
 const ServicesContext = createContext<Services | null>(null);

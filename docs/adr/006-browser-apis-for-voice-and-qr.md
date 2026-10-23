@@ -1,6 +1,7 @@
 # ADR-006: Browser APIs for voice and QR code, no libraries
 
-**Status:** Accepted, updated by ADR-007
+**Status:** Accepted for the QR code; the voice input was removed on 2026-10-23 (it did not work on
+the owner's phone), and `microphone=()` now turns the microphone off. Updated by ADR-007
 **Date:** 2026-10-22
 **Decision:** Voice input uses the Web Speech API (`SpeechRecognition`, `lang: 'pt-BR'`), started
 only by a tap on the microphone button. QR codes are decoded with the `BarcodeDetector` API, from

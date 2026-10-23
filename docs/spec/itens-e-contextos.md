@@ -26,6 +26,18 @@ Eu adiciono o que está faltando sem pensar em qual lista: o app coloca cada ite
 - Eu crio e edito os contextos no Catálogo: um + antes das cápsulas cria um contexto novo, e o
   lápis numa cápsula muda o nome dela. No computador, o lápis aparece quando passo o mouse; no
   celular, ele fica na cápsula aberta. Não há uma tela de Contextos. *(1a)*
+- No celular, a tela das listas também edita os contextos: um lápis ao lado do nome da lista
+  edita aquele contexto (nome, posição nas abas, categorias, desativar), e um + no fim das abas
+  cria um novo. *(1a)*
+  Por quê: era difícil achar onde se editava um contexto.
+- No celular, a captura e a tela das listas têm no canto de cima, à direita, um círculo com as
+  minhas iniciais, tiradas do e-mail da conta Google. Um toque abre o menu do perfil: o meu
+  e-mail, o estado da sincronização, editar contextos, a mão, o backup, refazer o setup e sair
+  (ou entrar, se eu estiver sem login). *(1a)*
+  Por quê: é onde eu procuro os ajustes de um app.
+- No celular, eu entro no modo compra pelo botão grande "Comprar no …" no pé da lista, ou pelo
+  carrinho ao lado do campo da captura, que pergunta em qual lista com itens faltando eu vou
+  comprar. *(1a)*
 
 ## Formas de adicionar
 
@@ -36,16 +48,15 @@ contexto", sem nenhuma pergunta na hora.
 | --- | --- | --- |
 | Pelo catálogo | Abro o catálogo de um contexto (tudo o que eu costumo comprar ali) e toco nos itens que estão faltando. Os que já estão na lista aparecem marcados | Montar a lista antes da compra do mês |
 | Botão + | Um campo com autocompletar a partir do catálogo, tolerante a acento e erro de digitação ("agua sanitaria" encontra "Água sanitária") | Lembrar de um item no meio do dia |
-| Microfone | Eu falo "leite, ovos e ração"; o app transcreve, separa em itens e mostra para eu conferir | Mãos ocupadas, na cozinha |
 | Em lote | Uma caixa de texto em que cada linha ou vírgula vira um item; aceita colar uma lista de outro app ou de uma mensagem | Migrar listas antigas ou copiar de uma conversa |
 
-- As quatro formas valem desde a fase 1a. *(1a)*
+- As três formas valem desde a fase 1a. *(1a)*
 - Quantidade e observação são opcionais e vêm no próprio texto: o número no começo é a
   quantidade, e o que vem depois de dois-pontos é a observação ("2 leite: sem lactose"). Sem
   dois-pontos, tudo é o nome: "leite sem lactose" é um item próprio. *(1a)*
 - Um item que já está na lista e é adicionado de novo fica como está, e a Tatá avisa que ele já
   estava lá. Se eu digito uma quantidade ou observação nova, ela substitui a antiga. *(1a)*
-- No microfone e no lote, os itens se separam por vírgula, quebra de linha e a palavra "e". Antes de
+- No lote, os itens se separam por vírgula, quebra de linha e a palavra "e". Antes de
   salvar, uma tela mostra os itens separados para eu conferir. *(1a)*
 - No computador, nessa conferência do lote, o contexto de cada item é uma lista de escolha, mesmo
   quando o app não achou nenhum ("Sem contexto"). O contexto que eu escolho ali vira o padrão do

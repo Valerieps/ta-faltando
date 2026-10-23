@@ -3,6 +3,8 @@ import type { Change } from '../domain/tables';
 
 /** Where the app opens the Cloudflare Access login; it comes back to the app after (ADR-008). */
 export const LOGIN_PATH = '/api/login';
+/** Cloudflare Access's own logout for this app: it ends the session that lets the app into /api. */
+export const LOGOUT_PATH = '/cdn-cgi/access/logout';
 
 /**
  * `/api/sync` on the app's own origin (ADR-007). Behind Cloudflare Access, an expired session
