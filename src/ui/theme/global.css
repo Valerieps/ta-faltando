@@ -792,7 +792,6 @@ button.check::before {
 
 /* ---- Contexts and catalog ---- */
 
-.ctx-manager,
 .catalog,
 .settings {
   display: flex;
@@ -814,36 +813,49 @@ button.check::before {
   border-top: 1px solid var(--color-border);
 }
 
-.ctx-list__open {
-  display: flex;
-  flex: 1;
+.ctx-chip {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  min-height: var(--touch-min);
+  position: relative;
+}
+
+.ctx-chip.is-editing {
+  gap: var(--space-1);
+}
+
+/* The pencil sits on the chip's corner and shows on hover or keyboard focus. */
+.ctx-chip__edit {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
   padding: 0;
-  border: 0;
-  background: none;
-  font-size: var(--font-size-item);
-  text-align: start;
-}
-
-.ctx-list__edit {
-  display: flex;
-  flex: 1;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2) 0;
-}
-
-.ctx-list__edit input {
-  flex: 1 1 160px;
-  min-height: var(--touch-min);
-  padding: 0 var(--space-3);
-  border: 2px solid var(--color-brand);
-  border-radius: var(--radius-m);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
   background: var(--color-surface);
+  color: var(--color-brand);
+  opacity: 0;
+  transition: opacity 120ms;
+}
+
+.ctx-chip__edit svg {
+  width: 13px;
+  height: 13px;
+}
+
+.ctx-chip:hover .ctx-chip__edit,
+.ctx-chip:focus-within .ctx-chip__edit {
+  opacity: 1;
+}
+
+/* No hover on a touch screen: the open chip always shows its pencil. */
+@media (hover: none) {
+  .ctx-chip:has(.is-on) .ctx-chip__edit {
+    opacity: 1;
+  }
 }
 
 .ctx-categories {
@@ -869,12 +881,6 @@ button.check::before {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-m);
   background: var(--color-surface);
-}
-
-.ctx-manager__inactive {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
 }
 
 /* ---- Setup ---- */
