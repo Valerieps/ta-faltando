@@ -18,6 +18,9 @@ Um termo, um sentido. Estes nomes valem para os textos da interface e para as do
 - **Sem contexto:** a aba dos itens que ainda não têm contexto padrão. (`spec/itens-e-contextos.md`)
 - **Categoria:** o tipo do item (hortifrúti, laticínios, limpeza, higiene…), usado para agrupar a
   lista no modo compra. As categorias são do app; eu não crio as minhas. (`spec/modo-compra.md`)
+- **Captura:** a tela inicial do celular, só com o campo de adicionar. (`spec/itens-e-contextos.md`)
+- **Tatá:** o bot do app, uma sacolinha que fala em primeira pessoa nos momentos certos. A voz e
+  o desenho estão no rascunho da identidade visual (`rascunhos/README.md`).
 - **Setup:** as telas do primeiro uso, que montam o catálogo inicial. (`spec/setup.md`)
 - **Sugestão:** um item das filas do setup, com contexto e categoria. (`spec/setup.md`)
 - **Cápsula:** o botão de uma sugestão no setup, em forma de cápsula. (`spec/setup.md`)

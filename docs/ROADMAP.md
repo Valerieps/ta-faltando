@@ -16,7 +16,8 @@ O que ainda não está pronto.
 | Setup: contextos, cápsulas, resumo | 1a | [spec/setup.md](spec/setup.md) | As filas saem da tabela do spec para um arquivo de dados |
 | Catálogo, listas por contexto e "Sem contexto" | 1a | [spec/itens-e-contextos.md](spec/itens-e-contextos.md) | |
 | Adicionar pelo catálogo, botão + com autocompletar, microfone, em lote | 1a | [spec/itens-e-contextos.md](spec/itens-e-contextos.md) | Microfone: ADR-006 |
-| Modo compra | 1a | [spec/modo-compra.md](spec/modo-compra.md) | |
+| Captura como tela inicial do celular, telas de listas e contextos, uso com uma mão | 1a | [spec/itens-e-contextos.md](spec/itens-e-contextos.md) | Layout e falas da Tatá no [rascunho da identidade](rascunhos/identidade-visual.html) |
+| Modo compra, com os gestos e a lixeira | 1a | [spec/modo-compra.md](spec/modo-compra.md) | |
 | Exportar, importar, lembrete de backup | 1a | [spec/backup.md](spec/backup.md) | |
 | App instalável e offline (service worker) | 1a | [spec/modo-compra.md](spec/modo-compra.md) | |
 | Função `/api` da leitura de nota | 1b | [spec/nota-fiscal.md](spec/nota-fiscal.md) | ADR-004; o login já vem da 1a |
@@ -44,3 +45,6 @@ O que ainda não está pronto.
 - [ ] Um item novo digitado entra no catálogo; um contexto "Outro" começa sem sugestões. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md), [spec/setup.md](spec/setup.md))
 - [ ] O microfone usa o reconhecimento de voz do Chrome, que manda o áudio para o Google. ([SEGURANCA.md](SEGURANCA.md))
 - [ ] Importar um backup mostra o conteúdo e pede confirmação antes. ([spec/backup.md](spec/backup.md))
+- [ ] O item que sai da lista pelo segundo deslize ou pela lixeira esmaece por 3 segundos. ([spec/modo-compra.md](spec/modo-compra.md))
+- [ ] A lixeira também existe no modo compra, e o "Desfazer" aparece no próprio item enquanto ele esmaece. ([spec/modo-compra.md](spec/modo-compra.md))
+- [ ] "Sem gestos, só a lixeira" vale para a tela das listas do celular; no computador eu continuo riscando nas listas. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md), [spec/sincronizacao.md](spec/sincronizacao.md))

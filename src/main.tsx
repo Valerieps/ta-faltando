@@ -7,6 +7,8 @@ import { DexieStore } from './infrastructure/dexie-store';
 import { HttpSyncApi, LOGIN_PATH } from './infrastructure/http-sync-api';
 import { App } from './ui/App';
 import { ServicesProvider, type Services } from './ui/services';
+import '@fontsource/nunito/latin-700.css';
+import '@fontsource/nunito/latin-800.css';
 import './ui/theme/tokens.css';
 import './ui/theme/global.css';
 

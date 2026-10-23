@@ -3,13 +3,25 @@
 Eu adiciono o que está faltando sem pensar em qual lista: o app coloca cada item no contexto certo.
 
 - **Entra aqui:** as formas de adicionar, como o app escolhe o contexto, os itens sem contexto, a
-  tela das listas.
+  tela das listas, as telas do celular e do computador.
 - **Não entra aqui:** a lista em tela cheia dentro da loja (`modo-compra.md`) e o último preço
   mostrado em cada item (`precos.md`).
 
 ## Em aberto
 
 - [ ] Um item que já está na lista e é adicionado de novo: soma a quantidade ou fica como está?
+
+## Telas do celular e do computador
+
+- No celular, o app abre na captura: o campo de adicionar já vem focado, com o teclado aberto. O
+  enter adiciona o item e limpa o campo para o próximo. *(1a)*
+  Por quê: no celular eu quase sempre adiciono um item por vez, no meio do dia.
+- No celular, a tela das listas e a dos contextos ficam separadas da captura, a um toque dela. *(1a)*
+- No celular, tudo que eu toco fica na parte de baixo da tela, do lado da mão escolhida
+  (`modo-compra.md`). Na captura, o campo fica colado no teclado e o autocompletar abre para
+  cima. *(1a)*
+- No computador, o app abre nas listas, uma coluna por contexto, com a caixa do lote ao lado. *(1a)*
+  Por quê: no computador eu vejo tudo de uma vez e adiciono em lote.
 
 ## Formas de adicionar
 
@@ -59,5 +71,9 @@ contexto", sem nenhuma pergunta na hora.
 
 - Uma aba por contexto, mais a aba "Sem contexto", cada uma com o contador de itens que estão
   faltando. *(1a)*
+- No celular, a tela das listas não tem gestos nem riscado: cada item tem só a lixeira, que tira o
+  item da lista sem contar como comprado, com o mesmo esmaecer e o mesmo "Desfazer" do modo compra
+  (`modo-compra.md`). *(1a)*
+  Por quê: deslizar tem um só sentido no app, e riscar é coisa de dentro da loja.
 - Eu ligo ou desligo o agrupamento por categoria em cada lista (`modo-compra.md`). *(1a)*
 - Cada item mostra, em texto discreto, o último preço pago (`precos.md`). *(1b)*

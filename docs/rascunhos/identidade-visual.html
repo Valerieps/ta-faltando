@@ -1,0 +1,917 @@
+<title>Identidade Tá faltando</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap">
+<style>
+/* Layout: a single calm column of sections, phone mockups in a wrapping row, one wide desktop mockup that scrolls sideways on its own. */
+:root {
+  --bg: #F7F9F6;          /* fundo, branco puxado para o verde */
+  --surface: #FFFFFF;
+  --ink: #16201B;         /* 15,8:1 */
+  --ink-soft: #5A6660;    /* 5,7:1 */
+  --line: #E2E8E3;
+  --brand: #1F4D3A;       /* verde-escuro, 9,1:1 */
+  --on-brand: #FFFFFF;
+  --brand-soft: #E4EEE8;
+  --blush: #F4A28C;       /* pêssego: só o bot */
+  --blush-soft: #FDEDE7;
+  --blush-ink: #8C3B26;   /* 6,7:1 sobre pêssego claro */
+  --danger: #B3261E;
+  --key: #E9EDEA;
+  --key-face: #FFFFFF;
+
+  --font-display: "Nunito", ui-rounded, "Segoe UI", system-ui, sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --r-s: 8px;
+  --r-m: 14px;
+  --r-l: 22px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1411; --surface: #171E1A; --ink: #E6ECE8; --ink-soft: #98A69E; --line: #26302A;
+    --brand: #7CC9A0; --on-brand: #0F1411; --brand-soft: #1C2E24;
+    --blush: #E8907A; --blush-soft: #3A2420; --blush-ink: #F3B9A8; --danger: #F2B8B5;
+    --key: #1F2722; --key-face: #2B352F;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1411; --surface: #171E1A; --ink: #E6ECE8; --ink-soft: #98A69E; --line: #26302A;
+  --brand: #7CC9A0; --on-brand: #0F1411; --brand-soft: #1C2E24;
+  --blush: #E8907A; --blush-soft: #3A2420; --blush-ink: #F3B9A8; --danger: #F2B8B5;
+  --key: #1F2722; --key-face: #2B352F;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 80px;
+}
+.wrap { max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; gap: 96px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.15; }
+h2 { font-size: clamp(26px, 4vw, 34px); font-weight: 800; letter-spacing: -0.01em; }
+h3 { font-size: 19px; font-weight: 700; }
+p { margin: 0; }
+.prose { max-width: 66ch; color: var(--ink-soft); }
+.prose strong { color: var(--ink); font-weight: 600; }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--brand); }
+.section { display: flex; flex-direction: column; gap: 28px; }
+.section > header { display: flex; flex-direction: column; gap: 12px; }
+.hex { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 13px; font-variant-numeric: tabular-nums; }
+
+/* masthead */
+.mast { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding-block: 28px 0; font-size: 14px; color: var(--ink-soft); }
+.mast .mark { display: flex; align-items: center; gap: 10px; color: var(--ink); font-family: var(--font-display); font-weight: 800; font-size: 18px; }
+
+/* hero */
+.hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 48px; align-items: center; padding-top: 24px; }
+.hero h1 { font-size: clamp(40px, 7vw, 68px); font-weight: 800; letter-spacing: -0.02em; }
+.hero h1 em { font-style: normal; color: var(--brand); }
+.hero-text { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.hero-text .prose { font-size: 18px; }
+.facts { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 15px; }
+.facts li { display: flex; gap: 10px; align-items: center; }
+.facts i { width: 12px; height: 12px; border-radius: 4px; flex: none; }
+
+.demo { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-l); padding: 24px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.demo-head { display: flex; align-items: center; gap: 12px; }
+.demo-head b { font-family: var(--font-display); font-weight: 800; font-size: 22px; }
+.field { display: flex; align-items: center; gap: 10px; border: 2px solid var(--brand); border-radius: var(--r-m); padding: 0 8px 0 14px; background: var(--surface); }
+.field input { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; color: var(--ink); font: 400 17px var(--font-body); padding: 13px 0; }
+.field input::placeholder { color: var(--ink-soft); }
+.enter { font-size: 12px; color: var(--ink-soft); border: 1px solid var(--line); border-radius: 6px; padding: 2px 7px; white-space: nowrap; }
+.feed { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.feed li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 2px; border-top: 1px solid var(--line); font-size: 15px; }
+.feed li span:last-child { color: var(--ink-soft); font-size: 13px; white-space: nowrap; }
+.feed li.new { animation: drop .35s ease-out; }
+@keyframes drop { from { transform: translateY(-6px); background: var(--brand-soft); } to { transform: none; background: transparent; } }
+.say { background: var(--blush-soft); color: var(--blush-ink); border-radius: var(--r-m) var(--r-m) var(--r-m) 4px; padding: 10px 14px; font-family: var(--font-display); font-weight: 700; font-size: 15px; line-height: 1.35; }
+.demo small { color: var(--ink-soft); font-size: 13px; }
+
+/* principles */
+.principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 32px 28px; }
+.principles div { display: flex; flex-direction: column; gap: 8px; border-top: 2px solid var(--ink); padding-top: 16px; }
+.principles p { color: var(--ink-soft); font-size: 15px; }
+
+/* palette */
+.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+.sw { display: flex; gap: 14px; align-items: flex-start; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-m); padding: 14px; }
+.sw i { width: 44px; height: 44px; border-radius: 12px; flex: none; border: 1px solid var(--line); }
+.sw div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sw b { font-size: 15px; }
+.sw p { font-size: 13px; color: var(--ink-soft); line-height: 1.4; }
+.note { font-size: 14px; color: var(--ink-soft); max-width: 72ch; }
+
+.directions { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+.dir { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.dir-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.tag { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; background: var(--brand); color: var(--on-brand); white-space: nowrap; }
+.chips-hex { display: flex; flex-wrap: wrap; gap: 6px 12px; }
+.chips-hex span { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--ink-soft); }
+.chips-hex i { width: 14px; height: 14px; border-radius: 4px; border: 1px solid var(--line); }
+.mini { background: var(--p-bg); color: var(--p-ink); border-radius: var(--r-l); padding: 18px; display: flex; flex-direction: column; gap: 12px; border: 1px solid var(--line); }
+.mini-q { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 800; font-size: 19px; }
+.mini-field { border: 2px solid var(--p-brand); border-radius: 12px; padding: 9px 12px; font-size: 14px; background: var(--p-surface); color: var(--p-ink); }
+.mini-row { display: flex; justify-content: space-between; font-size: 13px; padding: 2px 0; }
+.mini-row span:last-child { opacity: .7; }
+.mini-row mark { background: var(--p-mark, transparent); color: inherit; border-radius: 3px; padding: 0 3px; }
+.mini-btn { align-self: flex-start; background: var(--p-brand); color: var(--p-on); border-radius: 999px; padding: 7px 14px; font-size: 13px; font-weight: 600; }
+.dir p { font-size: 14px; color: var(--ink-soft); }
+.dir p b { color: var(--ink); font-weight: 600; }
+
+/* type */
+.type-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+.type-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-l); padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+.type-card .big { font-size: 34px; line-height: 1.15; }
+.type-card p { font-size: 14px; color: var(--ink-soft); }
+.scale { display: flex; flex-direction: column; }
+.scale div { display: grid; grid-template-columns: 90px minmax(0, 1fr) auto; gap: 16px; align-items: baseline; padding: 12px 0; border-top: 1px solid var(--line); }
+.scale small { font-size: 12px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .08em; }
+.scale code { font-size: 12px; color: var(--ink-soft); font-family: ui-monospace, Consolas, monospace; white-space: nowrap; }
+.d { font-family: var(--font-display); }
+
+/* bot */
+.bots { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.bot-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-l); padding: 20px 16px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+.bot-card b { font-size: 15px; }
+.bot-card p { font-size: 13px; color: var(--ink-soft); line-height: 1.4; }
+.voice { width: 100%; border-collapse: collapse; font-size: 15px; }
+.voice th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-soft); font-weight: 600; padding: 0 16px 10px 0; }
+.voice td { padding: 12px 16px 12px 0; border-top: 1px solid var(--line); vertical-align: top; }
+.voice td:first-child { color: var(--ink-soft); width: 34%; }
+.voice td .say { display: inline-block; }
+.table-scroll { overflow-x: auto; }
+.rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+.rules ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; color: var(--ink-soft); font-size: 15px; }
+.rules h3 { margin-bottom: 10px; }
+.names { display: flex; flex-wrap: wrap; gap: 10px; }
+.names span { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 8px 16px; font-family: var(--font-display); font-weight: 700; }
+.names span.fav { border-color: var(--brand); color: var(--brand); }
+.names small { font-family: var(--font-body); font-weight: 400; color: var(--ink-soft); margin-left: 6px; }
+
+/* phones */
+.phones { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 28px; align-items: start; }
+.shot { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.shot > p { font-size: 14px; color: var(--ink-soft); }
+.shot > p b { color: var(--ink); }
+.phone { width: 100%; max-width: 300px; height: 600px; margin: 0 auto; background: var(--bg); border: 8px solid var(--ink); border-radius: 38px; overflow: hidden; display: flex; flex-direction: column; font-size: 14px; position: relative; }
+.status { display: flex; justify-content: space-between; padding: 10px 20px 4px; font-size: 12px; font-weight: 600; }
+.scr { flex: 1; display: flex; flex-direction: column; gap: 14px; padding: 8px 16px 14px; min-height: 0; }
+.bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.bar .lnk { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--brand); }
+.count { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--brand); color: var(--on-brand); font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; font-variant-numeric: tabular-nums; }
+.count.quiet { background: var(--line); color: var(--ink); }
+.q { font-family: var(--font-display); font-weight: 800; font-size: 28px; line-height: 1.1; }
+.pfield { display: flex; align-items: center; gap: 8px; border: 2px solid var(--brand); border-radius: var(--r-m); padding: 10px 10px 10px 12px; background: var(--surface); font-size: 16px; }
+.pfield .t { flex: 1; }
+.caret { display: inline-block; width: 2px; height: 18px; background: var(--brand); vertical-align: -3px; margin-left: 1px; animation: blink 1.1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.mic { width: 30px; height: 30px; border-radius: 50%; background: var(--brand-soft); display: grid; place-items: center; flex: none; }
+.ac { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-m); margin-top: -8px; overflow: hidden; }
+.ac div { display: flex; justify-content: space-between; padding: 9px 12px; font-size: 14px; }
+.ac div + div { border-top: 1px solid var(--line); }
+.ac div span:last-child { color: var(--ink-soft); font-size: 12px; }
+.ac div.on { background: var(--brand-soft); }
+.label { font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-soft); }
+.recent { display: flex; flex-direction: column; }
+.recent div { display: flex; justify-content: space-between; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
+.recent div span:last-child { color: var(--ink-soft); font-size: 12px; }
+.kbd { margin-top: auto; background: var(--key); padding: 8px 4px 12px; display: flex; flex-direction: column; gap: 6px; }
+.kbd .row { display: flex; gap: 4px; justify-content: center; }
+.kbd .row i { flex: 0 1 24px; height: 30px; border-radius: 5px; background: var(--key-face); }
+.kbd .row i.ret { flex: 0 0 64px; background: var(--brand); color: var(--on-brand); font-style: normal; font-size: 16px; display: grid; place-items: center; }
+.kbd .row i.sp { flex: 0 1 140px; }
+.tabs { display: flex; gap: 6px; overflow: hidden; }
+.tab { display: flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); font-size: 13px; white-space: nowrap; }
+.tab.on { background: var(--brand); color: var(--on-brand); border-color: var(--brand); }
+.tab.on .count { background: var(--on-brand); color: var(--brand); }
+.items { display: flex; flex-direction: column; }
+.it { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+.it .ck { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--ink-soft); flex: none; }
+.it .meta { margin-left: auto; color: var(--ink-soft); font-size: 12px; }
+.it.done { color: var(--ink-soft); text-decoration: line-through; }
+.it.done .ck { border-color: var(--brand); background: var(--brand); position: relative; }
+.it.done .ck::after { content: ""; position: absolute; left: 5px; top: 1px; width: 5px; height: 10px; border: solid var(--on-brand); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.big .it { padding: 14px 0; font-size: 18px; }
+.big .it .ck { width: 26px; height: 26px; }
+.big .it.done .ck::after { left: 7px; top: 2px; width: 7px; height: 13px; }
+.btn { margin-top: auto; background: var(--brand); color: var(--on-brand); border-radius: 999px; padding: 14px; text-align: center; font-weight: 700; font-size: 15px; }
+.btn.huge { padding: 18px; font-size: 17px; }
+.ctx-list { display: flex; flex-direction: column; }
+.ctx-list div { display: flex; justify-content: space-between; padding: 11px 0; border-top: 1px solid var(--line); font-size: 15px; }
+.ctx-list div span:last-child { color: var(--ink-soft); font-size: 13px; }
+.ctx-list .add { color: var(--brand); font-weight: 600; }
+.loose { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-m); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.loose b { font-size: 15px; }
+.pick { display: flex; flex-wrap: wrap; gap: 6px; }
+.pick span { font-size: 12px; padding: 4px 10px; border: 1px solid var(--line); border-radius: 999px; }
+.pick span.on { border-color: var(--brand); color: var(--brand); font-weight: 600; }
+.reach { display: flex; gap: 8px; align-items: stretch; justify-content: flex-end; }
+.reach .btn { margin-top: 0; flex: 1; }
+.pill { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 14px; border-radius: 999px; background: var(--brand-soft); color: var(--brand); font-weight: 700; font-size: 13px; white-space: nowrap; }
+.rh .it .ck { order: 3; margin-left: auto; }
+.rh .it .meta { order: 2; margin-left: 0; }
+.trash { width: 30px; height: 30px; display: grid; place-items: center; color: var(--ink-soft); flex: none; }
+.rh .it .trash { order: 2; margin-left: auto; }
+.rh .it .trash + .ck { margin-left: 6px; }
+.it.fading > :first-child { opacity: .35; }
+.it.fading .undo { margin-left: auto; color: var(--brand); font-weight: 700; font-size: 13px; }
+.swp { position: relative; overflow: hidden; }
+.swp-bg { position: absolute; inset: 0; display: flex; align-items: center; padding-left: 12px; background: var(--brand); color: var(--on-brand); font-weight: 700; font-size: 13px; }
+.swp.out .swp-bg { background: var(--ink); color: var(--bg); }
+.swp-fg { position: relative; background: var(--bg); transform: translateX(var(--x, 40%)); border-bottom-color: transparent; }
+.zone { background:
+  radial-gradient(circle at 100% 100%, color-mix(in srgb, var(--brand) 30%, var(--bg)) 0 46%, color-mix(in srgb, var(--brand) 12%, var(--bg)) 46% 78%, var(--bg) 78%); }
+.zone .zl { position: absolute; font-family: var(--font-display); font-weight: 800; font-size: 15px; color: var(--brand); }
+.gest { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.gest > div { display: flex; flex-direction: column; gap: 10px; }
+.gest .demo-row { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-m); overflow: hidden; }
+.gest .demo-row .it { padding: 14px 12px; font-size: 16px; border-bottom: 0; }
+.gest .demo-row .swp-fg { background: var(--surface); }
+.gest p { font-size: 15px; color: var(--ink-soft); }
+.gest p b { color: var(--ink); }
+.decided { display: flex; flex-wrap: wrap; gap: 8px; }
+.decided span { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; padding: 4px 12px; border-radius: 999px; background: var(--brand-soft); color: var(--brand); font-weight: 600; }
+.progress { height: 4px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.progress i { display: block; height: 100%; width: 42%; background: var(--brand); }
+
+/* desktop */
+.desk-scroll { overflow-x: auto; padding-bottom: 6px; }
+.desk { min-width: 900px; background: var(--bg); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; font-size: 14px; }
+.chrome { display: flex; gap: 6px; padding: 10px 14px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.chrome i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.desk-body { display: grid; grid-template-columns: 200px minmax(0, 1fr) 280px; min-height: 480px; }
+.side { border-right: 1px solid var(--line); padding: 18px 14px; display: flex; flex-direction: column; gap: 6px; }
+.side .mark { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 800; font-size: 17px; margin-bottom: 14px; }
+.side a { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border-radius: 10px; color: var(--ink); text-decoration: none; }
+.side a.on { background: var(--brand-soft); color: var(--brand); font-weight: 700; }
+.side .sync { margin-top: auto; font-size: 12px; color: var(--ink-soft); display: flex; align-items: center; gap: 6px; }
+.side .sync i { width: 7px; height: 7px; border-radius: 50%; background: var(--brand); }
+.main { padding: 22px 24px; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.main-head { display: flex; justify-content: space-between; align-items: center; }
+.main-head h3 { font-size: 24px; font-weight: 800; }
+.toggle { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-soft); }
+.toggle i { width: 30px; height: 18px; border-radius: 999px; background: var(--brand); position: relative; }
+.toggle i::after { content: ""; position: absolute; right: 2px; top: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--on-brand); }
+.cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start; }
+.col { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-m); padding: 14px; display: flex; flex-direction: column; gap: 4px; }
+.col h4 { margin: 0 0 6px; display: flex; justify-content: space-between; align-items: center; font-family: var(--font-display); font-size: 16px; }
+.col .it { font-size: 14px; padding: 7px 0; }
+.col .it:last-child { border-bottom: 0; }
+.col .it .ck { width: 16px; height: 16px; }
+.col .label { margin-top: 8px; }
+.batch { border-left: 1px solid var(--line); background: var(--surface); padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.batch h3 { font-size: 17px; }
+.ta { border: 2px solid var(--brand); border-radius: 12px; padding: 10px 12px; font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; line-height: 1.7; white-space: pre-line; color: var(--ink); background: var(--bg); }
+.parsed { display: flex; flex-direction: column; }
+.parsed div { display: flex; justify-content: space-between; padding: 6px 0; border-top: 1px solid var(--line); font-size: 13px; }
+.parsed div span:last-child { color: var(--ink-soft); }
+.parsed div span.none { color: var(--blush-ink); font-weight: 600; }
+.batch .btn { margin-top: 4px; padding: 11px; font-size: 14px; }
+
+.widths { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+.widths div { display: flex; flex-direction: column; gap: 6px; border-top: 2px solid var(--ink); padding-top: 14px; }
+.widths p { color: var(--ink-soft); font-size: 15px; }
+
+/* motion */
+.motion { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+.motion > div { display: flex; flex-direction: column; gap: 8px; }
+.motion p { font-size: 15px; color: var(--ink-soft); }
+.motion code { font-size: 12px; font-family: ui-monospace, Consolas, monospace; color: var(--ink-soft); }
+.stage { height: 120px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-l); display: grid; place-items: center; overflow: hidden; position: relative; }
+.fly { display: flex; align-items: center; gap: 8px; animation: fly 2.6s ease-in-out infinite; font-size: 15px; }
+.fly .tab { animation: pop 2.6s ease-in-out infinite; }
+@keyframes fly { 0%, 15% { transform: translateY(-22px); opacity: 0; } 30%, 80% { transform: none; opacity: 1; } 100% { opacity: 0; } }
+@keyframes pop { 0%, 35% { transform: scale(1); } 45% { transform: scale(1.12); } 55%, 100% { transform: scale(1); } }
+.blinker .eyes { animation: blinkeyes 3.2s infinite; transform-origin: 32px 37px; }
+@keyframes blinkeyes { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(.1); } }
+.strike { display: flex; align-items: center; gap: 12px; font-size: 18px; }
+.strike .ck { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--ink-soft); animation: ckfill 2.4s infinite; }
+.strike span { background: linear-gradient(currentColor, currentColor) no-repeat 0 55% / 0 2px; animation: line 2.4s infinite; }
+@keyframes ckfill { 0%, 30% { background: transparent; border-color: var(--ink-soft); } 40%, 85% { background: var(--brand); border-color: var(--brand); } 100% { background: transparent; } }
+@keyframes line { 0%, 35% { background-size: 0 2px; color: var(--ink); } 50%, 85% { background-size: 100% 2px; color: var(--ink-soft); } 100% { background-size: 0 2px; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; }
+}
+
+/* icon */
+.icons { display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-end; }
+.icons figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-soft); }
+.ic { background: #1F4D3A; display: grid; place-items: center; }
+
+/* risks + next */
+.risks { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px 28px; }
+.risks div { display: flex; flex-direction: column; gap: 8px; }
+.risks p { font-size: 15px; color: var(--ink-soft); }
+.next { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 10px; max-width: 72ch; }
+.next li::marker { color: var(--brand); font-weight: 700; }
+.foot { color: var(--ink-soft); font-size: 13px; border-top: 1px solid var(--line); padding-top: 20px; }
+
+:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
+
+@media (max-width: 760px) {
+  .wrap { gap: 72px; }
+  .hero { grid-template-columns: 1fr; gap: 32px; }
+  .scale div { grid-template-columns: 70px minmax(0, 1fr); }
+  .scale code { grid-column: 2; }
+}
+</style>
+
+<div class="wrap">
+
+<div>
+  <div class="mast">
+    <span class="mark"><span data-bot="normal" data-size="30"></span>Tá faltando</span>
+    <span>Identidade visual · outubro de 2026</span>
+  </div>
+  <div class="decided" style="margin-top:16px"><span>✓ Paleta Horta</span><span>✓ O bot se chama Tatá</span><span>✓ Navegação do celular</span><span>✓ Uso só com a mão direita</span><span>✓ Gestos e lixeira</span></div>
+
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Anota e <em>esquece.</em> O resto é comigo.</h1>
+      <p class="prose">O app é quase só branco e verde-escuro, com espaço sobrando. Quem dá calor é a Tatá, o bot do app: uma sacolinha de olhos grandes que anota o que falta, sabe em que loja cada coisa se compra e nunca dá bronca por esquecer.</p>
+      <ul class="facts">
+        <li><i style="background:var(--surface);border:1px solid var(--line)"></i>Fundo claro e quieto em todas as telas</li>
+        <li><i style="background:var(--brand)"></i>Verde-escuro em tudo que eu toco</li>
+        <li><i style="background:var(--blush)"></i>Pêssego só nas bochechas do bot</li>
+      </ul>
+    </div>
+    <div class="demo" aria-label="Experimente a captura">
+      <div class="demo-head"><span id="demo-bot" data-bot="normal" data-size="44"></span><b>O que tá faltando?</b></div>
+      <label class="field" for="demo-input">
+        <input id="demo-input" type="text" autocomplete="off" placeholder="Digite e aperte enter" aria-label="Item que está faltando">
+        <span class="enter">enter ↵</span>
+      </label>
+      <div class="say" id="demo-say">Anotado. Ração foi pro Pet shop.</div>
+      <ul class="feed" id="demo-feed">
+        <li><span>Ração</span><span>Pet shop</span></li>
+        <li><span>Leite</span><span>Mercado</span></li>
+        <li><span>Dipirona</span><span>Farmácia</span></li>
+      </ul>
+      <small>Experimente: café, banana, shampoo, pão, areia do gato ou qualquer outra coisa.</small>
+    </div>
+  </section>
+</div>
+
+<section class="section">
+  <header>
+    <span class="eyebrow">Princípios</span>
+    <h2>Pouca coisa na tela, e cada coisa com um trabalho só</h2>
+  </header>
+  <div class="principles">
+    <div><h3>Um campo, um enter</h3><p>No celular, abrir o app já é estar digitando. O campo vem focado, o teclado sobe sozinho e o enter adiciona e limpa para o próximo item.</p></div>
+    <div><h3>Cada aparelho no seu papel</h3><p>O celular captura. Ver as listas e cuidar dos contextos é outra tela, a um toque. No computador, a tela inicial são as listas lado a lado, com o lote ao lado.</p></div>
+    <div><h3>Verde é a minha mão</h3><p>O verde-escuro marca o que eu posso fazer ou acabei de fazer: o campo, o botão, a aba aberta, o item riscado. Todo o resto é tinta e branco.</p></div>
+    <div><h3>O bot é o único calor</h3><p>O pêssego só aparece no bot e nos balões dele. Se tem pêssego na tela, é ele falando. Nunca em botão, nunca em erro.</p></div>
+    <div><h3>Ninguém leva bronca</h3><p>Esquecer é normal. O bot fala curto, no presente e do lado de quem está com a vida corrida: "deixei aqui pra você", nunca "você esqueceu".</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <header>
+    <span class="eyebrow">Cor</span>
+    <h2>Horta: verde-escuro, branco e uma bochecha pêssego</h2>
+    <p class="prose">O verde-escuro é a cor da feira, da folha e da sacola de pano. Os neutros puxam de leve para o verde, para o cinza e o verde parecerem da mesma família. O pêssego é pequeno e raro de propósito: num app minimalista, a única cor quente vira assinatura.</p>
+  </header>
+  <div class="swatches">
+    <div class="sw"><i style="background:#1F4D3A"></i><div><b>Verde-escuro</b><span class="hex">#1F4D3A · 9,6:1</span><p>Campo focado, botões, aba ativa, item marcado, o corpo do bot.</p></div></div>
+    <div class="sw"><i style="background:#F7F9F6"></i><div><b>Névoa</b><span class="hex">#F7F9F6</span><p>Fundo das telas. Branco com um fio de verde.</p></div></div>
+    <div class="sw"><i style="background:#FFFFFF"></i><div><b>Branco</b><span class="hex">#FFFFFF</span><p>Campos, cartões e o painel do lote.</p></div></div>
+    <div class="sw"><i style="background:#16201B"></i><div><b>Tinta</b><span class="hex">#16201B · 15,8:1</span><p>Texto principal e o traço do bot.</p></div></div>
+    <div class="sw"><i style="background:#5A6660"></i><div><b>Tinta suave</b><span class="hex">#5A6660 · 5,7:1</span><p>Contexto ao lado do item, contadores, legendas, itens riscados.</p></div></div>
+    <div class="sw"><i style="background:#E4EEE8"></i><div><b>Verde claro</b><span class="hex">#E4EEE8</span><p>Sugestão selecionada no autocompletar, item recém-chegado, menu ativo.</p></div></div>
+    <div class="sw"><i style="background:#F4A28C"></i><div><b>Pêssego</b><span class="hex">#F4A28C</span><p>Só as bochechas do bot. Nunca texto: dá 2:1 no branco.</p></div></div>
+    <div class="sw"><i style="background:#FDEDE7"></i><div><b>Pêssego claro</b><span class="hex">#FDEDE7 · #8C3B26</span><p>O balão do bot, com texto em terracota escuro (6,7:1).</p></div></div>
+    <div class="sw"><i style="background:#B3261E"></i><div><b>Erro</b><span class="hex">#B3261E · 6,5:1</span><p>Só erros de verdade, sempre com texto. Vermelho, longe do pêssego.</p></div></div>
+  </div>
+  <p class="note">No tema escuro o verde clareia para menta (#7CC9A0, 9,3:1 no fundo #0F1411) e o bot fica com corpo menta e olhos escuros. Esta página inteira usa a Horta: troque o tema do aparelho para ver as telas no escuro.</p>
+</section>
+
+<section class="section">
+  <header>
+    <span class="eyebrow">Outras direções</span>
+    <h2>Quatro paletas lado a lado</h2>
+    <p class="prose">Todas usam o mesmo esqueleto: fundo claro, uma cor de ação escura e uma cor quente só para o bot. Muda o clima.</p>
+  </header>
+  <div class="directions">
+    <div class="dir">
+      <div class="dir-top"><h3>Horta</h3><span class="tag">Escolhida</span></div>
+      <div class="chips-hex"><span><i style="background:#1F4D3A"></i>#1F4D3A verde-escuro</span><span><i style="background:#F4A28C"></i>#F4A28C pêssego</span></div>
+      <div class="mini" style="--p-bg:#F7F9F6;--p-surface:#FFFFFF;--p-ink:#16201B;--p-brand:#1F4D3A;--p-on:#FFFFFF;--p-blush:#F4A28C;--p-eye:#FFFFFF">
+        <div class="mini-q"><span data-bot="normal" data-size="30" data-palette></span>O que tá faltando?</div>
+        <div class="mini-field">café</div>
+        <div><div class="mini-row"><span>Leite</span><span>Mercado</span></div><div class="mini-row"><span>Ração</span><span>Pet shop</span></div></div>
+        <span class="mini-btn">Ver listas</span>
+      </div>
+      <p><b>Clima:</b> feira de sábado, sacola de pano. Calmo, de casa, sem pressa.</p>
+      <p><b>Por que escolho:</b> é a sua ideia, e ela funciona. O verde fala de comida e de casa sem ficar infantil, contrasta muito bem e deixa o pêssego do bot brilhar sozinho.</p>
+      <p><b>Risco:</b> verde também quer dizer "deu certo". Como o verde aqui já é a cor de marcar o item, isso ajuda; só não pode haver um segundo verde de sucesso.</p>
+    </div>
+    <div class="dir">
+      <div class="dir-top"><h3>Grafite e marca-texto</h3></div>
+      <div class="chips-hex"><span><i style="background:#262626"></i>#262626 grafite</span><span><i style="background:#FFE45C"></i>#FFE45C marca-texto</span></div>
+      <div class="mini" style="--p-bg:#FAFAF8;--p-surface:#FFFFFF;--p-ink:#262626;--p-brand:#262626;--p-on:#FFFFFF;--p-blush:#FFE45C;--p-eye:#FFFFFF;--p-mark:#FFE45C">
+        <div class="mini-q"><span data-bot="normal" data-size="30" data-palette></span>O que tá faltando?</div>
+        <div class="mini-field">café</div>
+        <div><div class="mini-row"><span><mark>Leite</mark></span><span>Mercado</span></div><div class="mini-row"><span>Ração</span><span>Pet shop</span></div></div>
+        <span class="mini-btn">Ver listas</span>
+      </div>
+      <p><b>Clima:</b> a lista no verso do envelope, a caneta-marca-texto da bolsa. O item novo chega grifado de amarelo.</p>
+      <p><b>Risco:</b> é a mais minimalista e a que mais se parece com qualquer app de notas. O bot preto fica sério; o amarelo nunca vira texto (1,2:1).</p>
+    </div>
+    <div class="dir">
+      <div class="dir-top"><h3>Petróleo</h3></div>
+      <div class="chips-hex"><span><i style="background:#0F4C5C"></i>#0F4C5C azul-petróleo</span><span><i style="background:#F2C14E"></i>#F2C14E mostarda</span></div>
+      <div class="mini" style="--p-bg:#F6F9F9;--p-surface:#FFFFFF;--p-ink:#132326;--p-brand:#0F4C5C;--p-on:#FFFFFF;--p-blush:#F2C14E;--p-eye:#FFFFFF">
+        <div class="mini-q"><span data-bot="normal" data-size="30" data-palette></span>O que tá faltando?</div>
+        <div class="mini-field">café</div>
+        <div><div class="mini-row"><span>Leite</span><span>Mercado</span></div><div class="mini-row"><span>Ração</span><span>Pet shop</span></div></div>
+        <span class="mini-btn">Ver listas</span>
+      </div>
+      <p><b>Clima:</b> azulejo de cozinha antiga, pote de vidro. Um meio-termo entre o verde e o azul, mais fresco.</p>
+      <p><b>Risco:</b> puxado para o azul, começa a lembrar app de banco ou de saúde. A mostarda do bot tem pouco contraste e só serve como enfeite.</p>
+    </div>
+    <div class="dir">
+      <div class="dir-top"><h3>Berinjela</h3></div>
+      <div class="chips-hex"><span><i style="background:#4B2142"></i>#4B2142 berinjela</span><span><i style="background:#9ED9B5"></i>#9ED9B5 menta</span></div>
+      <div class="mini" style="--p-bg:#FAF7F9;--p-surface:#FFFFFF;--p-ink:#24121F;--p-brand:#4B2142;--p-on:#FFFFFF;--p-blush:#9ED9B5;--p-eye:#FFFFFF">
+        <div class="mini-q"><span data-bot="normal" data-size="30" data-palette></span>O que tá faltando?</div>
+        <div class="mini-field">café</div>
+        <div><div class="mini-row"><span>Leite</span><span>Mercado</span></div><div class="mini-row"><span>Ração</span><span>Pet shop</span></div></div>
+        <span class="mini-btn">Ver listas</span>
+      </div>
+      <p><b>Clima:</b> hortifrúti também, só que mais charmoso. A mais diferente das quatro, com bot de bochecha menta.</p>
+      <p><b>Risco:</b> roxo escuro no Brasil lembra Nubank. E a menta não é cor de bochecha: o bot fica menos fofinho.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <header>
+    <span class="eyebrow">Tipografia</span>
+    <h2>Uma fonte arredondada para a voz, a do sistema para o resto</h2>
+  </header>
+  <div class="type-grid">
+    <div class="type-card">
+      <span class="label">Títulos e a voz do bot</span>
+      <div class="big d" style="font-weight:800">O que tá faltando?</div>
+      <p>Nunito, pesos 700 e 800. Os terminais redondos combinam com o bot sem virar letra de criança. Usada na pergunta da tela de captura, nos títulos de tela, nos nomes dos contextos e nos balões do bot. Vai empacotada no app (cerca de 30 KB em woff2, só latim), nunca de CDN.</p>
+    </div>
+    <div class="type-card">
+      <span class="label">Todo o resto</span>
+      <div class="big" style="font-size:22px;line-height:1.4">Leite · 2 · sem lactose<br><span style="color:var(--ink-soft);font-size:16px">Mercado · último preço R$ 5,49</span></div>
+      <p>Fonte do sistema (Roboto no Android, Segoe no Windows), como o app já faz. Os itens são a parte que mais se lê, então ficam na letra mais nítida e rápida de cada aparelho.</p>
+    </div>
+  </div>
+  <div class="scale">
+    <div><small>Pergunta</small><span class="d" style="font-size:30px;font-weight:800">O que tá faltando?</span><code>Nunito 800 · 30</code></div>
+    <div><small>Título</small><span class="d" style="font-size:24px;font-weight:800">Mercado</span><code>Nunito 800 · 24</code></div>
+    <div><small>Bot</small><span class="d" style="font-size:16px;font-weight:700">Anotado. Leite foi pro Mercado.</span><code>Nunito 700 · 16</code></div>
+    <div><small>Item</small><span style="font-size:17px">Papel toalha</span><code>sistema 400 · 17 (19 no modo compra)</code></div>
+    <div><small>Legenda</small><span style="font-size:13px;color:var(--ink-soft)">Pet shop · há 2 h</span><code>sistema 400 · 13</code></div>
+    <div><small>Rótulo</small><span class="label" style="color:var(--ink-soft)">Laticínios</span><code>sistema 700 · 11 · maiúsculas</code></div>
+  </div>
+</section>
+
+<section class="section">
+  <header>
+    <span class="eyebrow">A Tatá</span>
+    <h2>Uma sacolinha que entende que a vida é corrida</h2>
+    <p class="prose">O corpo é uma sacola de compras com a alça no lugar da antena: o objeto do app virou personagem. Formas simples, que cabem em 24 px na barra e em 120 px numa tela vazia. Ele aparece cedo, já no setup, e depois só nos momentos certos.</p>
+  </header>
+  <div class="bots">
+    <div class="bot-card"><span data-bot="normal" data-size="72"></span><b>Atento</b><p>Na tela de captura, esperando o próximo item.</p></div>
+    <div class="bot-card"><span data-bot="happy" data-size="72"></span><b>Contente</b><p>Item anotado, compra finalizada, lista vazia.</p></div>
+    <div class="bot-card"><span data-bot="listen" data-size="72"></span><b>Ouvindo</b><p>Microfone ligado.</p></div>
+    <div class="bot-card"><span data-bot="think" data-size="72"></span><b>Pensando</b><p>Separando o lote, sincronizando, lendo a nota (1b).</p></div>
+    <div class="bot-card"><span data-bot="sleep" data-size="72"></span><b>Cochilando</b><p>Sem internet. Tudo continua funcionando; ele só avisa.</p></div>
+  </div>
+
+  <div class="table-scroll">
+    <table class="voice">
+      <thead><tr><th>Momento</th><th>A Tatá diz</th></tr></thead>
+      <tbody>
+        <tr><td>Item anotado</td><td><span class="say">Anotado. Leite foi pro Mercado.</span></td></tr>
+        <tr><td>Item sem contexto</td><td><span class="say">Ainda não sei onde se compra pilha. Deixei em Sem contexto, depois você me conta.</span></td></tr>
+        <tr><td>Item que já estava na lista</td><td><span class="say">Café já tava na lista. Fica tranquila.</span></td></tr>
+        <tr><td>Lista vazia</td><td><span class="say">Nada faltando no Mercado. Por hoje, tá tudo em ordem.</span></td></tr>
+        <tr><td>Lote conferido</td><td><span class="say">Separei em 6 itens. Confere antes de eu guardar?</span></td></tr>
+        <tr><td>Compra finalizada</td><td><span class="say">Compra feita. Tirei 9 itens da lista.</span></td></tr>
+        <tr><td>Sem internet</td><td><span class="say">Tô sem internet, mas anotei tudo aqui. Sincronizo quando ela voltar.</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="rules">
+    <div>
+      <h3>Como ele fala</h3>
+      <ul>
+        <li>Uma frase, duas no máximo. No presente, em primeira pessoa.</li>
+        <li>Diz o que fez ("deixei", "tirei", "separei"), não o que eu deveria ter feito.</li>
+        <li>No máximo um ponto de exclamação por dia. Fofura vem do jeito, não da pontuação.</li>
+        <li>Sem emoji no texto: a cara dele já faz esse papel.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Quando ele aparece</h3>
+      <ul>
+        <li>Na captura, pequeno ao lado da pergunta, e no balão depois de cada enter.</li>
+        <li>Em telas vazias, no setup, no lote e no aviso de sem internet.</li>
+        <li>No modo compra, só ao finalizar. Dentro da loja, a lista manda.</li>
+        <li>Nunca em mensagens de erro de verdade: erro é texto claro, sem personagem.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>O nome</h3>
+      <div class="names">
+        <span class="fav">Tatá<small>de "tá faltando"</small></span>
+      </div>
+      <ul style="margin-top:12px">
+        <li>No texto do app ela aparece pouco pelo nome: quem fala é ela, em primeira pessoa.</li>
+        <li>O nome entra no setup ("Oi, eu sou a Tatá") e no ícone.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <header>
+    <span class="eyebrow">Celular</span>
+    <h2>Abrir, digitar, enter</h2>
+    <p class="prose">A tela inicial é só a captura. Listas e contextos ficam numa segunda tela, que abre pelo botão ao lado do campo. Assim o caminho mais comum, um item por vez no meio do dia, não tem nada no meio do caminho. Todas as telas abaixo já estão no modo mão direita.</p>
+  </header>
+  <div class="phones rh">
+    <div class="shot">
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>●●● ▮</span></div>
+        <div class="scr">
+          <div style="display:flex;gap:10px;align-items:center"><span data-bot="normal" data-size="32"></span><span class="q" style="font-size:24px">O que tá faltando?</span></div>
+          <div class="recent">
+            <span class="label">Agora há pouco</span>
+            <div><span>Ração</span><span>Pet shop</span></div>
+            <div><span>Pilha AA</span><span>Sem contexto</span></div>
+          </div>
+          <div class="say" style="font-size:13px;margin-top:auto">Anotado. Ração foi pro Pet shop.</div>
+          <div class="ac" style="margin:0 0 -8px"><div><span>Detergente de roupa</span><span>Mercado</span></div><div class="on"><span>Detergente</span><span>Mercado</span></div></div>
+          <div class="reach"><div class="pfield" style="flex:1;min-width:0"><span class="t">detergen<span class="caret"></span></span><span class="mic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" style="color:var(--brand)"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span></div><span class="pill">Listas <span class="count">19</span></span></div>
+        </div>
+        <div class="kbd" data-kbd></div>
+      </div>
+      <p><b>Captura (tela inicial).</b> O campo já vem focado e fica colado no teclado, onde o polegar já está. O autocompletar abre para cima e mostra para onde o item vai antes do enter. O botão Listas e o microfone ficam na mesma linha do campo. O balão da Tatá confirma e some no item seguinte.</p>
+    </div>
+
+    <div class="shot">
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>●●● ▮</span></div>
+        <div class="scr">
+          <h3 style="font-size:24px;font-weight:800">Mercado</h3>
+          <div class="items">
+            <span class="label">Laticínios</span>
+            <div class="it"><span>Leite</span><span class="meta">2</span><span class="trash" data-trash></span></div>
+            <div class="it"><span>Iogurte natural</span><span class="trash" data-trash></span></div>
+            <span class="label" style="margin-top:10px">Limpeza</span>
+            <div class="it fading"><span>Detergente</span><span class="undo">Desfazer</span></div>
+            <div class="it"><span>Papel toalha</span><span class="trash" data-trash></span></div>
+            <span class="label" style="margin-top:10px">Mercearia</span>
+            <div class="it"><span>Café</span><span class="trash" data-trash></span></div>
+          </div>
+          <div class="tabs" style="margin-top:auto"><span class="tab on">Mercado <span class="count">12</span></span><span class="tab">Farmácia <span class="count quiet">2</span></span><span class="tab">Sem contexto <span class="count quiet">3</span></span></div>
+          <div class="reach"><span class="pill">Contextos</span><span class="pill" aria-label="Anotar">+</span><span class="btn">Comprar</span></div>
+        </div>
+      </div>
+      <p><b>Listas.</b> As abas dos contextos descem para perto do polegar e rolam de lado. Embaixo: Contextos, + para voltar à captura e o botão que abre o modo compra. Aqui não se risca nem se desliza: cada item tem só a lixeira, e o item apagado esmaece com "Desfazer" antes de sumir.</p>
+    </div>
+
+    <div class="shot">
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>●●● ▮</span></div>
+        <div class="scr">
+          <h3 style="font-size:24px;font-weight:800">Contextos</h3>
+          <div class="loose">
+            <div style="display:flex;gap:10px;align-items:center"><span data-bot="think" data-size="28"></span><b>3 itens sem contexto</b></div>
+            <div style="display:flex;flex-direction:column;gap:6px"><span>Pilha AA</span><div class="pick"><span>Mercado</span><span class="on">Lojas online</span><span>Farmácia</span><span>…</span></div></div>
+            <div style="display:flex;flex-direction:column;gap:6px"><span>Fita dupla-face</span><div class="pick"><span>Mercado</span><span>Lojas online</span><span>Farmácia</span><span>…</span></div></div>
+          </div>
+          <div class="ctx-list">
+            <div><span>Mercado</span><span>86 no catálogo</span></div>
+            <div><span>Hortifrúti</span><span>31</span></div>
+            <div><span>Farmácia</span><span>24</span></div>
+            <div><span>Pet shop</span><span>12</span></div>
+          </div>
+          <div class="reach" style="margin-top:auto"><span class="pill">Novo contexto</span><span class="pill">Listas</span></div>
+        </div>
+      </div>
+      <p><b>Contextos.</b> Os itens sem contexto ficam no topo: um toque num contexto vincula o item para sempre. Embaixo, cada contexto abre o seu catálogo.</p>
+    </div>
+
+    <div class="shot">
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>●●● ▮</span></div>
+        <div class="scr big">
+          <div class="bar"><span class="lnk">‹ Sair</span><span style="font-size:13px;color:var(--ink-soft)">5 de 12</span></div>
+          <h3 style="font-size:26px;font-weight:800">Mercado</h3>
+          <div class="progress"><i></i></div>
+          <div class="items">
+            <span class="label">Laticínios</span>
+            <div class="swp"><span class="swp-bg">✓ Riscar</span><div class="it swp-fg" style="--x:38%"><span class="ck"></span>Iogurte</div></div>
+            <div class="it"><span>Queijo</span><span class="trash" data-trash></span><span class="ck"></span></div>
+            <div class="it fading"><span>Leite · 2</span><span class="undo">Desfazer</span></div>
+            <span class="label" style="margin-top:8px">Limpeza</span>
+            <div class="it"><span>Papel toalha</span><span class="trash" data-trash></span><span class="ck"></span></div>
+            <div class="swp out"><span class="swp-bg">✓ Comprado</span><div class="it done swp-fg" style="--x:52%"><span class="ck"></span>Detergente</div></div>
+          </div>
+          <div class="reach" style="margin-top:auto"><span class="btn huge">Finalizar compra</span></div>
+        </div>
+      </div>
+      <p><b>Modo compra.</b> Tudo maior: linhas de 56 px, letra 19. Deslizar para a direita risca; deslizar de novo conta como comprado e o item esmaece até sumir. A lixeira tira sem comprar. Finalizar fica no canto do polegar.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <header>
+    <span class="eyebrow">Só com a mão direita</span>
+    <h2>Tudo que eu toco fica no canto do polegar</h2>
+    <p class="prose">Com o celular na mão direita, o polegar alcança bem a metade de baixo e o lado direito da tela. Por isso, em todas as telas do celular, o topo só mostra coisas (o título, a Tatá, o que já entrou) e tudo que se toca desce para perto do teclado e para a direita. O modo mão esquerda espelha tudo.</p>
+  </header>
+  <div class="phones">
+    <div class="shot">
+      <div class="phone zone">
+        <span class="zl" style="left:18px;top:40px;color:var(--ink-soft)">Só para ler</span>
+        <span class="zl" style="left:18px;top:250px">Alcança</span>
+        <span class="zl" style="right:24px;bottom:60px">Fácil</span>
+      </div>
+      <p><b>Onde o polegar chega.</b> Os botões ficam na zona fácil. Na zona do meio, só o que se toca de vez em quando, como as abas. Em cima, nada que precise de toque no dia a dia.</p>
+    </div>
+    <div class="shot" style="grid-column:1 / -1;min-width:0">
+      <div class="gest">
+        <div>
+          <div class="demo-row rh"><div class="swp"><span class="swp-bg">✓ Riscar</span><div class="it swp-fg" style="--x:45%"><span class="ck"></span>Papel toalha</div></div></div>
+          <p><b>Deslizar para a direita</b> risca o item na hora. Ele fica no lugar, riscado, como um toque na bolinha.</p>
+        </div>
+        <div>
+          <div class="demo-row rh"><div class="swp out"><span class="swp-bg">✓ Comprado</span><div class="it done swp-fg" style="--x:55%"><span class="ck"></span>Papel toalha</div></div></div>
+          <p><b>Deslizar de novo</b> conta como comprado: o item esmaece por 3 segundos e some, sem esperar o Finalizar.</p>
+        </div>
+        <div>
+          <div class="demo-row rh"><div class="it fading"><span>Papel toalha</span><span class="undo">Desfazer</span></div></div>
+          <p><b>Deslizar para a esquerda</b> desfaz o gesto anterior: tira o riscado ou devolve o item que estava esmaecendo. O "Desfazer" no próprio item faz o mesmo.</p>
+        </div>
+        <div>
+          <div class="demo-row rh"><div class="it"><span>Papel toalha</span><span class="trash" data-trash></span><span class="ck"></span></div></div>
+          <p><b>A lixeira</b> tira da lista sem contar como comprado. O item esmaece do mesmo jeito e dá para desfazer.</p>
+        </div>
+      </div>
+      <ul class="prose" style="margin:20px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+        <li>A bolinha de marcar fica à direita da linha; o nome, à esquerda.</li>
+        <li>Na captura, o campo fica colado no teclado e o autocompletar abre para cima.</li>
+        <li>Nada importante depende de alcançar o topo: voltar é o gesto de voltar do Android.</li>
+        <li>Os gestos valem só no modo compra. Na tela das listas não se desliza nem se risca: lá, só a lixeira.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <header>
+    <span class="eyebrow">Computador</span>
+    <h2>Todas as listas de uma vez, e o lote ao lado</h2>
+    <p class="prose">No computador a tela inicial são as listas, uma coluna por contexto. À direita fica o lote: eu colo uma lista de uma conversa, o bot separa e mostra para onde vai cada item antes de guardar.</p>
+  </header>
+  <div class="desk-scroll">
+    <div class="desk">
+      <div class="chrome"><i></i><i></i><i></i></div>
+      <div class="desk-body">
+        <nav class="side">
+          <span class="mark"><span data-bot="normal" data-size="26"></span>Tá faltando</span>
+          <a class="on">Listas <span class="count">19</span></a>
+          <a>Catálogo</a>
+          <a>Contextos</a>
+          <a>Sem contexto <span class="count quiet">3</span></a>
+          <span class="sync"><i></i>Sincronizado há 1 min</span>
+        </nav>
+        <div class="main">
+          <div class="main-head"><h3>Listas</h3><span class="toggle">Agrupar por categoria <i></i></span></div>
+          <div class="cols">
+            <div class="col">
+              <h4>Mercado <span class="count">12</span></h4>
+              <span class="label">Laticínios</span>
+              <div class="it"><span class="ck"></span>Leite<span class="meta">2</span></div>
+              <div class="it"><span class="ck"></span>Iogurte natural</div>
+              <span class="label">Limpeza</span>
+              <div class="it"><span class="ck"></span>Detergente</div>
+              <div class="it"><span class="ck"></span>Papel toalha</div>
+              <span class="label">Mercearia</span>
+              <div class="it"><span class="ck"></span>Café</div>
+              <div class="it"><span class="ck"></span>Arroz<span class="meta">5 kg</span></div>
+            </div>
+            <div class="col">
+              <h4>Hortifrúti <span class="count quiet">4</span></h4>
+              <div class="it"><span class="ck"></span>Tomate</div>
+              <div class="it"><span class="ck"></span>Cebola</div>
+              <div class="it"><span class="ck"></span>Banana</div>
+              <div class="it"><span class="ck"></span>Limão<span class="meta">2</span></div>
+            </div>
+            <div class="col">
+              <h4>Farmácia <span class="count quiet">2</span></h4>
+              <div class="it"><span class="ck"></span>Dipirona</div>
+              <div class="it"><span class="ck"></span>Fio dental</div>
+              <h4 style="margin-top:14px">Pet shop <span class="count quiet">1</span></h4>
+              <div class="it"><span class="ck"></span>Ração</div>
+            </div>
+          </div>
+        </div>
+        <aside class="batch">
+          <h3>Adicionar em lote</h3>
+          <div class="ta">tomate, cebola, 2 limão
+shampoo
+areia do gato e fita dupla-face</div>
+          <div style="display:flex;gap:10px;align-items:flex-start"><span data-bot="think" data-size="30"></span><div class="say" style="font-size:13px;flex:1">Separei em 6 itens. Confere antes de eu guardar?</div></div>
+          <div class="parsed">
+            <div><span>Tomate</span><span>Hortifrúti</span></div>
+            <div><span>Cebola</span><span>Hortifrúti</span></div>
+            <div><span>2 Limão</span><span>Hortifrúti</span></div>
+            <div><span>Shampoo</span><span>Farmácia</span></div>
+            <div><span>Areia do gato</span><span>Pet shop</span></div>
+            <div><span>Fita dupla-face</span><span class="none">Sem contexto</span></div>
+          </div>
+          <div class="btn">Adicionar 6 itens</div>
+        </aside>
+      </div>
+    </div>
+  </div>
+  <div class="widths">
+    <div><h3>Celular · até 599 px</h3><p>Captura na tela inicial. Listas, contextos e modo compra em telas próprias. O bot pequeno, no topo.</p></div>
+    <div><h3>Tablet · 600 a 1023 px</h3><p>Captura e listas lado a lado, em duas colunas. O lote entra como uma aba da captura.</p></div>
+    <div><h3>Computador · 1024 px ou mais</h3><p>Menu lateral, listas em colunas e o painel do lote fixo à direita. O campo de um item só fica no topo das listas.</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <header>
+    <span class="eyebrow">Movimento</span>
+    <h2>Pequeno, rápido e sempre confirmando</h2>
+    <p class="prose">A interface quase não se mexe. Cada movimento responde a uma ação minha e termina em menos de meio segundo.</p>
+  </header>
+  <div class="motion">
+    <div>
+      <div class="stage"><div class="fly"><span>Leite</span><span style="color:var(--ink-soft)">→</span><span class="tab on">Mercado <span class="count">13</span></span></div></div>
+      <h3>Item anotado</h3>
+      <p>O item desce do campo para a lista recente e o contador do contexto pula de leve.</p>
+      <code>300 ms · ease-out</code>
+    </div>
+    <div>
+      <div class="stage"><div class="strike"><span class="ck"></span><span>Papel toalha</span></div></div>
+      <h3>Marcar no modo compra</h3>
+      <p>O círculo enche de verde e o risco atravessa o nome. Nada sai do lugar até finalizar.</p>
+      <code>200 ms · com vibração curta</code>
+    </div>
+    <div>
+      <div class="stage blinker"><span data-bot="normal" data-size="72"></span></div>
+      <h3>O bot pisca</h3>
+      <p>Na captura, ele pisca de vez em quando. É o único movimento que não vem de um toque meu.</p>
+      <code>a cada 4 a 8 s · desliga com movimento reduzido</code>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <header>
+    <span class="eyebrow">Ícone do app</span>
+    <h2>A sacolinha no verde</h2>
+    <p class="prose">O ícone é o bot contente sobre o verde-escuro, sem texto. A alça fica dentro da área segura do ícone adaptável do Android, para não ser cortada no círculo.</p>
+  </header>
+  <div class="icons">
+    <figure><span class="ic" style="width:112px;height:112px;border-radius:26px"><span data-bot="happy" data-size="76" data-icon></span></span>Tela inicial</figure>
+    <figure><span class="ic" style="width:64px;height:64px;border-radius:50%"><span data-bot="happy" data-size="40" data-icon></span></span>Android, recorte redondo</figure>
+    <figure><span class="ic" style="width:32px;height:32px;border-radius:8px"><span data-bot="happy" data-size="24" data-icon></span></span>Aba do navegador</figure>
+  </div>
+</section>
+
+<section class="section">
+  <header>
+    <span class="eyebrow">Riscos</span>
+    <h2>O que pode dar errado nesta direção</h2>
+  </header>
+  <div class="risks">
+    <div><h3>Minimalismo frio</h3><p>Branco, verde e pouca coisa na tela podem virar um app de tarefas qualquer. Quem segura a personalidade é o bot; se ele for cortado para "simplificar", a identidade some junto.</p></div>
+    <div><h3>Bot que fala demais</h3><p>Um balão a cada enter cansa em uma semana. A regra de um balão por vez, que some no item seguinte, e o silêncio no modo compra existem para isso. Vale testar no uso real e cortar falas.</p></div>
+    <div><h3>Verde de ação e verde de sucesso</h3><p>Se um dia entrar uma mensagem de sucesso em verde, ela vai se confundir com botão. Sucesso fica com o bot contente e um texto, sem cor própria.</p></div>
+    <div><h3>Uma fonte a mais</h3><p>A Nunito acrescenta cerca de 30 KB ao app e tem que vir empacotada. Se pesar, a pergunta e os títulos podem ficar na fonte do sistema em peso 800 e o bot segura o lado fofo sozinho.</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <header>
+    <span class="eyebrow">Próximos passos</span>
+    <h2>O que já está no código e o que vem com as telas</h2>
+  </header>
+  <ol class="next">
+    <li>Já no código: a Horta em <code>src/ui/theme/tokens.css</code> nos dois temas, a Nunito empacotada, a Tatá com os cinco estados (<code>src/ui/Tata.tsx</code>) e os ícones do app.</li>
+    <li>Já no spec: a captura como tela inicial, o uso com uma mão em todas as telas, os gestos do modo compra e a lixeira.</li>
+    <li>Com cada tela da fase 1a: o layout desta página, as falas da Tatá e os movimentos.</li>
+  </ol>
+  <p class="foot">Todos os contrastes de texto passam de 4,5:1 (WCAG AA) nos dois temas. O pêssego e as cores quentes das outras paletas nunca carregam texto.</p>
+</section>
+
+</div>
+
+<script>
+(function () {
+  // Bot: a shopping bag with the handle as antenna. Colors come from page tokens, or from
+  // the palette card's own variables when data-palette is set.
+  function bot(state, size, palette, icon) {
+    var body = palette ? 'var(--p-brand)' : (icon ? '#FFFFFF' : 'var(--brand)');
+    var eye = palette ? 'var(--p-eye)' : (icon ? '#1F4D3A' : 'var(--on-brand)');
+    var blush = palette ? 'var(--p-blush)' : 'var(--blush)';
+    var eyes, mouth, extra = '';
+    if (state === 'happy') {
+      eyes = '<path d="M21 38 Q25 32 29 38 M35 38 Q39 32 43 38" fill="none" stroke="' + eye + '" stroke-width="3" stroke-linecap="round"/>';
+      mouth = '<path d="M27 45 Q32 51 37 45" fill="none" stroke="' + eye + '" stroke-width="2.6" stroke-linecap="round"/>';
+    } else if (state === 'sleep') {
+      eyes = '<path d="M21 37 Q25 40 29 37 M35 37 Q39 40 43 37" fill="none" stroke="' + eye + '" stroke-width="2.6" stroke-linecap="round"/>';
+      mouth = '<path d="M30 46 H34" stroke="' + eye + '" stroke-width="2.4" stroke-linecap="round"/>';
+      extra = '<text x="50" y="16" font-family="Nunito, sans-serif" font-weight="800" font-size="12" fill="var(--ink-soft)">z</text><text x="56" y="8" font-family="Nunito, sans-serif" font-weight="800" font-size="9" fill="var(--ink-soft)">z</text>';
+    } else if (state === 'think') {
+      eyes = '<g class="eyes"><ellipse cx="26" cy="34" rx="3.2" ry="4.2" fill="' + eye + '"/><ellipse cx="40" cy="34" rx="3.2" ry="4.2" fill="' + eye + '"/></g>';
+      mouth = '<path d="M29 46 Q32 44 35 46" fill="none" stroke="' + eye + '" stroke-width="2.4" stroke-linecap="round"/>';
+      extra = '<circle cx="53" cy="14" r="2" fill="var(--ink-soft)"/><circle cx="58" cy="8" r="2.6" fill="var(--ink-soft)"/>';
+    } else {
+      eyes = '<g class="eyes"><ellipse cx="25" cy="37" rx="3.2" ry="4.2" fill="' + eye + '"/><ellipse cx="39" cy="37" rx="3.2" ry="4.2" fill="' + eye + '"/></g>';
+      mouth = state === 'listen'
+        ? '<ellipse cx="32" cy="47" rx="2.6" ry="3" fill="' + eye + '"/>'
+        : '<path d="M28 45 Q32 49 36 45" fill="none" stroke="' + eye + '" stroke-width="2.4" stroke-linecap="round"/>';
+      if (state === 'listen') extra = '<path d="M56 30 Q60 37 56 44 M60 26 Q66 37 60 48" fill="none" stroke="var(--brand)" stroke-width="2.4" stroke-linecap="round"/>';
+    }
+    var vb = extra ? '0 0 68 64' : '0 0 64 64';
+    var w = extra ? Math.round(size * 68 / 64) : size;
+    return '<svg width="' + w + '" height="' + size + '" viewBox="' + vb + '" aria-hidden="true" style="display:block;overflow:visible">' +
+      '<path d="M23 21 V16 Q23 8 32 8 Q41 8 41 16 V21" fill="none" stroke="' + body + '" stroke-width="4" stroke-linecap="round"/>' +
+      '<rect x="9" y="19" width="46" height="40" rx="13" fill="' + body + '"/>' +
+      '<circle cx="18" cy="45" r="3.6" fill="' + blush + '"/><circle cx="46" cy="45" r="3.6" fill="' + blush + '"/>' +
+      eyes + mouth + extra + '</svg>';
+  }
+  function paint(el) {
+    el.innerHTML = bot(el.dataset.bot, +el.dataset.size || 40, el.hasAttribute('data-palette'), el.hasAttribute('data-icon'));
+    el.style.display = 'inline-block';
+  }
+  document.querySelectorAll('[data-bot]').forEach(paint);
+
+  // Trash icon on list rows.
+  document.querySelectorAll('[data-trash]').forEach(function (t) {
+    t.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>';
+    t.setAttribute('aria-label', 'Tirar da lista');
+  });
+
+  // Keyboard rows for the capture mockup.
+  document.querySelectorAll('[data-kbd]').forEach(function (k) {
+    var rows = [10, 9, 7];
+    var html = rows.map(function (n) { return '<div class="row">' + '<i></i>'.repeat(n) + '</div>'; }).join('');
+    html += '<div class="row"><i></i><i class="sp"></i><i class="ret">↵</i></div>';
+    k.innerHTML = html;
+  });
+
+  // Capture demo: enter adds, the bot says where the item went.
+  var known = {
+    'leite': 'Mercado', 'cafe': 'Mercado', 'arroz': 'Mercado', 'detergente': 'Mercado', 'papel toalha': 'Mercado', 'acucar': 'Mercado', 'ovos': 'Mercado', 'iogurte': 'Mercado', 'azeite': 'Mercado', 'sabao em po': 'Mercado',
+    'banana': 'Hortifrúti', 'tomate': 'Hortifrúti', 'cebola': 'Hortifrúti', 'alface': 'Hortifrúti', 'limao': 'Hortifrúti', 'batata': 'Hortifrúti', 'maca': 'Hortifrúti',
+    'pao': 'Padaria', 'pao de queijo': 'Padaria', 'bolo': 'Padaria',
+    'shampoo': 'Farmácia', 'dipirona': 'Farmácia', 'fio dental': 'Farmácia', 'protetor solar': 'Farmácia', 'pasta de dente': 'Farmácia',
+    'racao': 'Pet shop', 'areia do gato': 'Pet shop', 'petisco': 'Pet shop'
+  };
+  var norm = function (s) { return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim(); };
+  var input = document.getElementById('demo-input');
+  var feed = document.getElementById('demo-feed');
+  var say = document.getElementById('demo-say');
+  var face = document.getElementById('demo-bot');
+  var timer;
+  input.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    var raw = input.value.trim();
+    if (!raw) return;
+    var name = raw.charAt(0).toUpperCase() + raw.slice(1);
+    var ctx = known[norm(raw)];
+    var li = document.createElement('li');
+    li.className = 'new';
+    var a = document.createElement('span'); a.textContent = name;
+    var b = document.createElement('span'); b.textContent = ctx || 'Sem contexto';
+    li.append(a, b);
+    feed.prepend(li);
+    while (feed.children.length > 4) feed.lastElementChild.remove();
+    say.textContent = ctx
+      ? 'Anotado. ' + name + ' foi ' + (/^(Farmácia|Padaria)$/.test(ctx) ? 'pra ' : 'pro ') + ctx + '.'
+      : 'Ainda não sei onde se compra ' + raw.toLowerCase() + '. Deixei em Sem contexto, depois você me conta.';
+    input.value = '';
+    face.dataset.bot = 'happy'; paint(face);
+    clearTimeout(timer);
+    timer = setTimeout(function () { face.dataset.bot = 'normal'; paint(face); }, 1100);
+  });
+})();
+</script>
