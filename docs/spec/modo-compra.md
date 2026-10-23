@@ -24,9 +24,9 @@ A lista de um contexto em tela cheia, para eu usar com uma mão só dentro da lo
   as que os seus itens já usam (Mercado: laticínios, mercearia, limpeza, higiene; Farmácia:
   higiene, saúde); um contexto novo começa sem nenhuma. *(1a)*
   Por quê: o caminho da loja e o jeito de separar os itens mudam de uma loja para a outra.
-- No catálogo, o lápis do contexto abre "Categorias", onde eu crio, renomeio, subo, desço e apago
-  as categorias daquele contexto. Renomear leva os itens junto; apagar manda os itens dela para
-  "Outros". Mexer nas categorias de um contexto não muda as dos outros. *(1a)*
+- No Catálogo, o lápis na cápsula do contexto mostra "Categorias", que abre a tela onde eu crio,
+  renomeio, subo, desço e apago as categorias daquele contexto. Renomear leva os itens junto;
+  apagar manda os itens dela para "Outros". Mexer nas categorias de um contexto não muda as dos outros. *(1a)*
 - A categoria vem da sugestão do setup, se o contexto do item tiver essa categoria; senão, e nos
   itens criados à mão, pelo microfone ou em lote, o item fica em "Outros" até eu escolher uma
   categoria no detalhe do item. *(1a)*

@@ -7,8 +7,8 @@ import { CategoryEditor } from './CategoryEditor';
 
 /**
  * The catalog's context chips: a "+" before them creates a context, and the pencil renames one,
- * moves it among the tabs, edits its categories or deactivates it. The pencil shows on hover on the computer, and on
- * the open chip on the phone.
+ * moves it among the tabs, edits its categories or deactivates it. The pencil shows on hover on
+ * the computer, and on the open chip on the phone.
  */
 export function ContextChips({ snapshot, current }: { snapshot: Snapshot; current: string | null }) {
   const { contexts } = useServices();

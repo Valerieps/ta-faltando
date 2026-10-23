@@ -10,5 +10,43 @@
   "icons": [
     { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
     { "src": "icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Adicionar item",
+      "short_name": "Adicionar",
+      "description": "Abre o campo de adicionar",
+      "url": "./#/",
+      "icons": [
+        { "src": "atalhos/adicionar.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+      ]
+    },
+    {
+      "name": "Listas",
+      "short_name": "Listas",
+      "description": "Abre as listas por contexto",
+      "url": "./#/listas",
+      "icons": [
+        { "src": "atalhos/listas.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+      ]
+    },
+    {
+      "name": "Catálogo",
+      "short_name": "Catálogo",
+      "description": "Abre o catálogo para marcar o que falta",
+      "url": "./#/catalogo",
+      "icons": [
+        { "src": "atalhos/catalogo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+      ]
+    },
+    {
+      "name": "Adicionar em lote",
+      "short_name": "Em lote",
+      "description": "Abre a caixa do lote",
+      "url": "./#/lote",
+      "icons": [
+        { "src": "atalhos/lote.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+      ]
+    }
   ]
 }

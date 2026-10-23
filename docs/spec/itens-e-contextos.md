@@ -18,6 +18,10 @@ Eu adiciono o que está faltando sem pensar em qual lista: o app coloca cada ite
   cima. *(1a)*
 - No computador, o app abre nas listas, uma coluna por contexto, com a caixa do lote ao lado. *(1a)*
   Por quê: no computador eu vejo tudo de uma vez e adiciono em lote.
+- Quando eu seguro o dedo no ícone do app, aparecem atalhos para a captura, as listas, o
+  catálogo e o lote; cada atalho pode ser arrastado para a tela inicial. No computador, os mesmos
+  atalhos aparecem no clique direito no ícone do app instalado. *(1a)*
+  Por quê: o Chrome não deixa um PWA ter widget na tela inicial; o atalho é o mais perto disso.
 
 - Eu crio e edito os contextos no Catálogo: um + antes das cápsulas cria um contexto novo, e o
   lápis numa cápsula muda o nome dela. No computador, o lápis aparece quando passo o mouse; no
