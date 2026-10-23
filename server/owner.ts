@@ -10,10 +10,12 @@ export const json = (body: unknown, status = 200) =>
 export const accessEmail = (request: Request) => request.headers.get('Cf-Access-Authenticated-User-Email')?.trim() ?? '';
 
 /**
- * Cloudflare Access lets only the owner reach /api and adds her e-mail to the request; checking
- * it here as well keeps the data closed if the Access application is ever misconfigured.
+ * Cloudflare Access lets only the allowed users reach /api and adds the e-mail to the request;
+ * checking it here as well keeps the data closed if the Access application is ever misconfigured.
+ * The e-mail, lower-cased, owns the records the request reads and writes (ADR-011).
  */
-export function isOwner(request: Request, env: Env): boolean {
-  const owner = env.OWNER_EMAIL?.trim().toLowerCase();
-  return Boolean(owner) && accessEmail(request).toLowerCase() === owner;
+export function allowedUser(request: Request, env: Env): string | null {
+  const email = accessEmail(request).toLowerCase();
+  const allowed = (env.ALLOWED_EMAILS ?? '').split(',').map((e) => e.trim().toLowerCase());
+  return email && allowed.includes(email) ? email : null;
 }

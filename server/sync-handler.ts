@@ -1,6 +1,6 @@
 import { isTableName, type Change } from '../src/domain/tables';
 import type { D1Database, Env } from './d1';
-import { isOwner, json } from './owner';
+import { allowedUser, json } from './owner';
 
 /** Limits on what one request may carry; the app sends at most PUSH_BATCH changes. */
 export const MAX_BODY_BYTES = 2_000_000;
@@ -11,18 +11,19 @@ export const PULL_PAGE = 500;
 
 /**
  * POST /api/sync (ADR-007): stores the pushed changes where they win (last write wins, ties by
- * device id) with a new server sequence, then returns the records after the device's cursor.
+ * device id) with a new server sequence, then returns the user's records after the device's cursor.
  */
 export async function handleSync(request: Request, env: Env): Promise<Response> {
-  if (!isOwner(request, env)) return json({ error: 'forbidden' }, 403);
+  const user = allowedUser(request, env);
+  if (!user) return json({ error: 'forbidden' }, 403);
 
   const text = await request.text();
   if (text.length > MAX_BODY_BYTES) return json({ error: 'too large' }, 413);
   const parsed = parseRequest(text);
   if (!parsed) return json({ error: 'bad request' }, 400);
 
-  await push(env.DB, parsed.changes);
-  return json(await pull(env.DB, parsed.cursor));
+  await push(env.DB, user, parsed.changes);
+  return json(await pull(env.DB, user, parsed.cursor));
 }
 
 interface ParsedRequest {
@@ -61,9 +62,9 @@ function isValidChange(change: unknown): change is Change {
 
 // Inserts or replaces a record only when the pushed version wins; each write takes the next sequence.
 const UPSERT = `
-INSERT INTO records (tbl, id, updated_at, updated_by, deleted_at, data, seq)
-VALUES (?1, ?2, ?3, ?4, ?5, ?6, (SELECT COALESCE(MAX(seq), 0) + 1 FROM records))
-ON CONFLICT (tbl, id) DO UPDATE SET
+INSERT INTO records (owner, tbl, id, updated_at, updated_by, deleted_at, data, seq)
+VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, (SELECT COALESCE(MAX(seq), 0) + 1 FROM records))
+ON CONFLICT (owner, tbl, id) DO UPDATE SET
   updated_at = excluded.updated_at,
   updated_by = excluded.updated_by,
   deleted_at = excluded.deleted_at,
@@ -72,20 +73,20 @@ ON CONFLICT (tbl, id) DO UPDATE SET
 WHERE excluded.updated_at > records.updated_at
    OR (excluded.updated_at = records.updated_at AND excluded.updated_by > records.updated_by)`;
 
-async function push(db: D1Database, changes: readonly Change[]): Promise<void> {
+async function push(db: D1Database, owner: string, changes: readonly Change[]): Promise<void> {
   if (changes.length === 0) return;
   const upsert = db.prepare(UPSERT);
   await db.batch(
     changes.map(({ table, record }) =>
-      upsert.bind(table, record.id, record.updatedAt, record.updatedBy, record.deletedAt, JSON.stringify(record)),
+      upsert.bind(owner, table, record.id, record.updatedAt, record.updatedBy, record.deletedAt, JSON.stringify(record)),
     ),
   );
 }
 
-async function pull(db: D1Database, cursor: number) {
+async function pull(db: D1Database, owner: string, cursor: number) {
   const { results } = await db
-    .prepare('SELECT tbl, data, seq FROM records WHERE seq > ?1 ORDER BY seq LIMIT ?2')
-    .bind(cursor, PULL_PAGE)
+    .prepare('SELECT tbl, data, seq FROM records WHERE owner = ?1 AND seq > ?2 ORDER BY seq LIMIT ?3')
+    .bind(owner, cursor, PULL_PAGE)
     .all<{ tbl: string; data: string; seq: number }>();
   return {
     changes: results.map((row) => ({ table: row.tbl, record: JSON.parse(row.data) })),

@@ -21,6 +21,6 @@ export interface D1Database {
 /** The bindings and variables of the Pages project (set in the Cloudflare dashboard). */
 export interface Env {
   DB: D1Database;
-  /** The only Google account allowed in, the same one as the Access policy (ADR-004). */
-  OWNER_EMAIL: string;
+  /** The Google accounts allowed in, comma-separated, the same ones as the Access policy (ADR-011). */
+  ALLOWED_EMAILS: string;
 }

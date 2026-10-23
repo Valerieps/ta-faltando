@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { DatabaseSync, type SQLInputValue } from 'node:sqlite';
 import type { D1Database, D1PreparedStatement } from './d1';
@@ -6,7 +6,10 @@ import type { D1Database, D1PreparedStatement } from './d1';
 /** A D1Database over node:sqlite with the repository's migrations applied, for the tests. */
 export function sqliteD1(): D1Database {
   const db = new DatabaseSync(':memory:');
-  db.exec(readFileSync(join(__dirname, '..', 'migrations', '0001_records.sql'), 'utf8'));
+  const migrations = join(__dirname, '..', 'migrations');
+  for (const file of readdirSync(migrations).filter((f) => f.endsWith('.sql')).sort()) {
+    db.exec(readFileSync(join(migrations, file), 'utf8'));
+  }
 
   const statement = (sql: string, values: unknown[] = []): D1PreparedStatement & { exec(): void } => ({
     bind: (...next) => statement(sql, next),
