@@ -6,9 +6,10 @@ import { SUGGESTED_CONTEXTS } from '../../domain/suggestion';
 import { cleanName, nameKey } from '../../domain/text';
 import { capitalize } from '../../domain/entry-text';
 import { Say } from '../components/Say';
-import { useServices } from '../services';
+import { useServices, useSyncState } from '../services';
 import { Tata } from '../Tata';
 import { tata } from '../tata-lines';
+import { backFromLogin, welcomeGate } from '../welcome-gate';
 
 /** How long a tapped capsule fades before the next suggestion takes its place (spec/setup.md). */
 const CAPSULE_FADE_MS = 300;
@@ -45,6 +46,13 @@ export function Setup({ snapshot, redo, onFinish }: { snapshot: Snapshot; redo: 
     if (!redo && step.kind === 'welcome' && existing.length > 0) onFinish();
   }, [redo, step.kind, existing.length, onFinish]);
 
+  // The Google login comes before the welcome, so a new device brings its data first.
+  const gate = welcomeGate(useSyncState(), backFromLogin());
+  useEffect(() => {
+    // Same-origin navigation: Cloudflare Access shows the Google login and comes back.
+    if (!redo && step.kind === 'welcome' && gate === 'login') window.location.assign(loginPath);
+  }, [redo, step.kind, gate, loginPath]);
+
   // Items already in the catalog, with a context, never show as suggestions.
   const inCatalog = useMemo(
     () => new Set(snapshot.items.filter((i) => i.deletedAt === null && i.defaultContextId !== null).map((i) => nameKey(i.name))),
@@ -74,6 +82,7 @@ export function Setup({ snapshot, redo, onFinish }: { snapshot: Snapshot; redo: 
   }
 
   if (step.kind === 'welcome') {
+    if (gate !== 'show') return <main className="screen setup" aria-busy="true" />;
     return (
       <main className="screen setup">
         <div className="setup__hero">
@@ -93,10 +102,6 @@ export function Setup({ snapshot, redo, onFinish }: { snapshot: Snapshot; redo: 
             Começar
           </button>
         </div>
-        <p className="setup__other">
-          {/* Same-origin navigation: Cloudflare Access shows the Google login and comes back. */}
-          Já uso em outro aparelho: <a href={loginPath}>entrar e trazer os meus dados</a>
-        </p>
       </main>
     );
   }
