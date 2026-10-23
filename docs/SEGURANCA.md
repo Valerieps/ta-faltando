@@ -15,7 +15,8 @@ entre o celular e o computador (ADR-007); na fase 1b o mesmo servidor lê a nota
 - O navegador fala só com a própria origem (`/api`), declarada em `network-policy.ts`; a CSP abre
   `connect-src` só para ela.
 - As chamadas de rede do app ficam em `src/infrastructure/`; o resto do código não as faz.
-- `/api` só responde a quem entrou com a conta Google da dona (Cloudflare Access, ADR-004). O
+- `/api` só responde a quem entrou com uma das contas Google liberadas (Cloudflare Access,
+  ADR-004), e cada conta só lê e grava os próprios dados (ADR-011). O
   app em si abre sem login, porque não traz dados.
 - Os dados ficam no IndexedDB do aparelho e no banco D1 do app, que só `/api` lê e escreve; o
   navegador nunca fala com o banco direto.

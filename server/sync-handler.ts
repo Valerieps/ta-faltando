@@ -16,28 +16,30 @@ const json = (body: unknown, status = 200) =>
 
 /**
  * POST /api/sync (ADR-007): stores the pushed changes where they win (last write wins, ties by
- * device id) with a new server sequence, then returns the records after the device's cursor.
+ * device id) with a new server sequence, then returns the user's records after the device's cursor.
  */
 export async function handleSync(request: Request, env: Env): Promise<Response> {
-  if (!isOwner(request, env)) return json({ error: 'forbidden' }, 403);
+  const user = allowedUser(request, env);
+  if (!user) return json({ error: 'forbidden' }, 403);
 
   const text = await request.text();
   if (text.length > MAX_BODY_BYTES) return json({ error: 'too large' }, 413);
   const parsed = parseRequest(text);
   if (!parsed) return json({ error: 'bad request' }, 400);
 
-  await push(env.DB, parsed.changes);
-  return json(await pull(env.DB, parsed.cursor));
+  await push(env.DB, user, parsed.changes);
+  return json(await pull(env.DB, user, parsed.cursor));
 }
 
 /**
- * Cloudflare Access lets only the owner reach /api and adds her e-mail to the request; checking
- * it here as well keeps the data closed if the Access application is ever misconfigured.
+ * Cloudflare Access lets only the allowed users reach /api and adds the e-mail to the request;
+ * checking it here as well keeps the data closed if the Access application is ever misconfigured.
+ * The e-mail, lower-cased, owns the records the request reads and writes (ADR-011).
  */
-function isOwner(request: Request, env: Env): boolean {
-  const email = request.headers.get('Cf-Access-Authenticated-User-Email');
-  const owner = env.OWNER_EMAIL?.trim().toLowerCase();
-  return Boolean(owner) && email?.trim().toLowerCase() === owner;
+function allowedUser(request: Request, env: Env): string | null {
+  const email = request.headers.get('Cf-Access-Authenticated-User-Email')?.trim().toLowerCase();
+  const allowed = (env.ALLOWED_EMAILS ?? '').split(',').map((e) => e.trim().toLowerCase());
+  return email && allowed.includes(email) ? email : null;
 }
 
 interface ParsedRequest {
@@ -76,9 +78,9 @@ function isValidChange(change: unknown): change is Change {
 
 // Inserts or replaces a record only when the pushed version wins; each write takes the next sequence.
 const UPSERT = `
-INSERT INTO records (tbl, id, updated_at, updated_by, deleted_at, data, seq)
-VALUES (?1, ?2, ?3, ?4, ?5, ?6, (SELECT COALESCE(MAX(seq), 0) + 1 FROM records))
-ON CONFLICT (tbl, id) DO UPDATE SET
+INSERT INTO records (owner, tbl, id, updated_at, updated_by, deleted_at, data, seq)
+VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, (SELECT COALESCE(MAX(seq), 0) + 1 FROM records))
+ON CONFLICT (owner, tbl, id) DO UPDATE SET
   updated_at = excluded.updated_at,
   updated_by = excluded.updated_by,
   deleted_at = excluded.deleted_at,
@@ -87,20 +89,20 @@ ON CONFLICT (tbl, id) DO UPDATE SET
 WHERE excluded.updated_at > records.updated_at
    OR (excluded.updated_at = records.updated_at AND excluded.updated_by > records.updated_by)`;
 
-async function push(db: D1Database, changes: readonly Change[]): Promise<void> {
+async function push(db: D1Database, owner: string, changes: readonly Change[]): Promise<void> {
   if (changes.length === 0) return;
   const upsert = db.prepare(UPSERT);
   await db.batch(
     changes.map(({ table, record }) =>
-      upsert.bind(table, record.id, record.updatedAt, record.updatedBy, record.deletedAt, JSON.stringify(record)),
+      upsert.bind(owner, table, record.id, record.updatedAt, record.updatedBy, record.deletedAt, JSON.stringify(record)),
     ),
   );
 }
 
-async function pull(db: D1Database, cursor: number) {
+async function pull(db: D1Database, owner: string, cursor: number) {
   const { results } = await db
-    .prepare('SELECT tbl, data, seq FROM records WHERE seq > ?1 ORDER BY seq LIMIT ?2')
-    .bind(cursor, PULL_PAGE)
+    .prepare('SELECT tbl, data, seq FROM records WHERE owner = ?1 AND seq > ?2 ORDER BY seq LIMIT ?3')
+    .bind(owner, cursor, PULL_PAGE)
     .all<{ tbl: string; data: string; seq: number }>();
   return {
     changes: results.map((row) => ({ table: row.tbl, record: JSON.parse(row.data) })),

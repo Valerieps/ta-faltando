@@ -26,6 +26,8 @@ com a API do Claude e não guarda a foto (ADR-004).
 - A chave de acesso de uma compra é única: uma nota lida duas vezes não é gravada de novo.
 - Um produto está ligado a um item ou marcado como ignorado, nunca os dois.
 - O CPF da nota nunca chega ao banco, nem ao IndexedDB nem ao D1.
+- No D1, todo registro pertence a uma conta (`owner`, o e-mail do login) e só ela o lê e grava
+  (ADR-011).
 - Todo registro sincronizado tem `id` gerado no aparelho, `updatedAt` e `deletedAt`; nada é
   apagado de verdade, só marcado, para o apagamento chegar ao outro aparelho.
 - Entre duas versões do mesmo registro, vale a de `updatedAt` maior (ADR-007).
@@ -71,7 +73,7 @@ meio-tempo, aplica a mesma regra aos que chegaram e avança o cursor, até não 
   backup; os ajustes não sincronizam). Uma versão que já foi publicada nunca muda: a mudança
   entra na versão seguinte.
 - Banco no servidor: o D1 guarda todos os registros numa tabela genérica, `records`, com o
-  registro inteiro em JSON (ADR-008); um campo novo no app não pede migração no D1. As migrações
+  registro inteiro em JSON e a conta dona dele (ADR-008, ADR-011); um campo novo no app não pede migração no D1. As migrações
   do D1 ficam em `migrations/`.
 - Backup: um arquivo JSON com `formato: "ta-faltando"` e `versao: 1`, com todas as tabelas do banco.
 - Regra para mudar: uma versão só acrescenta campos opcionais; remover um campo leva duas versões.

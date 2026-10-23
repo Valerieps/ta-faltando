@@ -33,8 +33,8 @@ nota, então o app não consegue lê-la sozinho (ADR-004).
 
 ## Login
 
-- Para ler uma nota, eu uso o mesmo login Google da sincronização (`sincronizacao.md`); só a
-  minha conta é aceita. *(1b)*
+- Para ler uma nota, eu uso o mesmo login Google da sincronização (`sincronizacao.md`); só as
+  contas que eu liberei são aceitas. *(1b)*
   Por quê: sem login, qualquer pessoa que descobrisse o endereço gastaria meus créditos da API do Claude.
 
 ## Ligação com o catálogo

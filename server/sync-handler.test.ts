@@ -11,6 +11,8 @@ import { sqliteD1 } from './sqlite-d1.test-support';
 import { handleSync, MAX_CHANGES, PULL_PAGE } from './sync-handler';
 
 const OWNER = 'dona@example.com';
+const OTHER = 'outro@example.com';
+const USERS = ` ${OWNER}, Outro@Example.com `;
 
 function call(env: Env, body: unknown, email: string | null = OWNER) {
   const headers = new Headers({ 'Content-Type': 'application/json' });
@@ -24,16 +26,31 @@ const item = (id: string, updatedAt: number, name: string, updatedBy = 'phone'):
 });
 
 describe('/api/sync', () => {
-  it('only answers to the owner', async () => {
-    const env = { DB: sqliteD1(), OWNER_EMAIL: OWNER };
+  it('only answers to the allowed users', async () => {
+    const env = { DB: sqliteD1(), ALLOWED_EMAILS: USERS };
     expect((await call(env, { cursor: 0, changes: [] }, null)).status).toBe(403);
     expect((await call(env, { cursor: 0, changes: [] }, 'outra@example.com')).status).toBe(403);
-    expect((await call({ ...env, OWNER_EMAIL: '' }, { cursor: 0, changes: [] }, '')).status).toBe(403);
+    expect((await call({ ...env, ALLOWED_EMAILS: '' }, { cursor: 0, changes: [] }, '')).status).toBe(403);
+    expect((await call({ ...env, ALLOWED_EMAILS: ' , ' }, { cursor: 0, changes: [] }, ' ')).status).toBe(403);
     expect((await call(env, { cursor: 0, changes: [] }, 'Dona@Example.com')).status).toBe(200);
+    expect((await call(env, { cursor: 0, changes: [] }, OTHER)).status).toBe(200);
+  });
+
+  it("keeps each user's records apart, even with the same id", async () => {
+    const env = { DB: sqliteD1(), ALLOWED_EMAILS: USERS };
+    await call(env, { cursor: 0, changes: [item('a', 10, 'leite')] }, OWNER);
+    // The other user's older "a" is a record of its own, not a losing version of the owner's.
+    await call(env, { cursor: 0, changes: [item('a', 5, 'ração'), item('b', 5, 'areia')] }, OTHER);
+
+    const mine = await (await call(env, { cursor: 0, changes: [] }, OWNER)).json();
+    expect(mine.changes.map((c: Change) => (c.record as Item).name)).toEqual(['leite']);
+    const theirs = await (await call(env, { cursor: 0, changes: [] }, 'OUTRO@example.com')).json();
+    expect(theirs.changes.map((c: Change) => (c.record as Item).name)).toEqual(['ração', 'areia']);
+    expect((await (await call(env, { cursor: mine.cursor, changes: [] }, OWNER)).json()).changes).toEqual([]);
   });
 
   it('rejects malformed requests', async () => {
-    const env = { DB: sqliteD1(), OWNER_EMAIL: OWNER };
+    const env = { DB: sqliteD1(), ALLOWED_EMAILS: USERS };
     const bad = [
       {},
       { cursor: -1, changes: [] },
@@ -46,7 +63,7 @@ describe('/api/sync', () => {
   });
 
   it('keeps the version with the larger updatedAt and pulls by sequence', async () => {
-    const env = { DB: sqliteD1(), OWNER_EMAIL: OWNER };
+    const env = { DB: sqliteD1(), ALLOWED_EMAILS: USERS };
     await call(env, { cursor: 0, changes: [item('a', 10, 'leite'), item('b', 10, 'ovos')] });
     // An older version of "a" loses; a newer version of "b" wins and moves to the end.
     const body = await (await call(env, { cursor: 0, changes: [item('a', 5, 'velho'), item('b', 20, 'ovos caipira')] })).json();
@@ -58,7 +75,7 @@ describe('/api/sync', () => {
   });
 
   it('pulls in pages', async () => {
-    const env = { DB: sqliteD1(), OWNER_EMAIL: OWNER };
+    const env = { DB: sqliteD1(), ALLOWED_EMAILS: USERS };
     const changes = Array.from({ length: PULL_PAGE + 1 }, (_, i) => item(`i${i}`, 1, 'x'));
     await call(env, { cursor: 0, changes: changes.slice(0, MAX_CHANGES) });
     await call(env, { cursor: 0, changes: changes.slice(MAX_CHANGES) });
@@ -87,7 +104,7 @@ describe('sync between two devices', () => {
   }
 
   it('brings the changes of one device to the other, deletes included', async () => {
-    const env = { DB: sqliteD1(), OWNER_EMAIL: OWNER };
+    const env = { DB: sqliteD1(), ALLOWED_EMAILS: USERS };
     const clock = { now: 1000 };
     const phone = device('phone', env, clock);
     const desktop = device('desktop', env, clock);
@@ -107,7 +124,7 @@ describe('sync between two devices', () => {
   });
 
   it('the last change wins when both devices changed the same record', async () => {
-    const env = { DB: sqliteD1(), OWNER_EMAIL: OWNER };
+    const env = { DB: sqliteD1(), ALLOWED_EMAILS: USERS };
     const clock = { now: 1000 };
     const phone = device('phone', env, clock);
     const desktop = device('desktop', env, clock);
@@ -130,7 +147,7 @@ describe('sync between two devices', () => {
   });
 
   it('a new device downloads everything on its first sync', async () => {
-    const env = { DB: sqliteD1(), OWNER_EMAIL: OWNER };
+    const env = { DB: sqliteD1(), ALLOWED_EMAILS: USERS };
     const clock = { now: 1000 };
     const phone = device('phone', env, clock);
     for (const name of ['arroz', 'feijão', 'café']) await phone.lists.add(name);

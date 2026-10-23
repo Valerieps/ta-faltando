@@ -19,8 +19,10 @@ Eu uso o app no celular e no navegador do computador, e os dois mostram os mesmo
 
 ## Login
 
-- Para sincronizar, eu entro com a minha conta Google; só a minha conta é aceita. *(1a)*
+- Para sincronizar, eu entro com a minha conta Google; só as contas que eu liberei são aceitas. *(1a)*
   Por quê: as minhas listas passam a ficar num servidor, e só eu posso lê-las.
+- O Cesar também usa o app, com a conta Google dele. Os dados de cada conta ficam separados: ele
+  não vê as minhas listas, nem eu as dele. *(1a)*
 - O mesmo login vale para a leitura de nota. *(1b)*
 - Sem login, o app abre e funciona com os dados que já estão no aparelho; ele sincroniza quando
   eu entro de novo. *(1a)*

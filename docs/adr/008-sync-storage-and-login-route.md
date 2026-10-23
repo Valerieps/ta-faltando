@@ -1,6 +1,6 @@
 # ADR-008: Sync storage layout, own-origin network policy and the login route
 
-**Status:** Accepted
+**Status:** Accepted, updated by ADR-011
 **Date:** 2026-10-23
 **Decision:** How ADR-007 is built in phase 1a.
 - **Device:** Dexie schema version 1 (`src/infrastructure/dexie-store.ts`) has one table per
@@ -16,7 +16,8 @@
   `node:sqlite`; `functions/api/` only holds the thin Pages Function entry points.
 - **Auth:** besides Cloudflare Access in front of `/api/*`, the function compares the
   `Cf-Access-Authenticated-User-Email` header with the `OWNER_EMAIL` variable and answers 403
-  otherwise, failing closed when the variable is missing.
+  otherwise, failing closed when the variable is missing. ADR-011 replaces it with a list of
+  users, each with their own records.
 - **Login:** `fetch` uses `redirect: 'manual'`, so an expired Access session reads as "signed out"
   and the sync indicator shows "Entrar", a link to `GET /api/login`. Access asks for the Google
   login on that navigation; the function then redirects to `/`.
