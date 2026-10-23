@@ -42,32 +42,39 @@ export class Lists {
    * the context of its setup suggestion if there is one. An item already pending there stays as
    * it is; a new quantity or note given in the text replaces the old one.
    */
-  async add(text: string | EntryText, via: ItemOrigin = 'manual'): Promise<AddResult | null> {
+  async add(text: string | EntryText, via: ItemOrigin = 'manual', chosenContextId?: string | null): Promise<AddResult | null> {
     const parsed = typeof text === 'string' ? parseEntryText(text) : text;
     if (!parsed.name) return null;
     const author = await this.author();
     const snapshot = await this.snapshot();
     const destination = destinationFor(snapshot, parsed.name);
+    const contextId = chosenContextId === undefined ? destination.contextId : chosenContextId;
 
     let item = destination.item;
     if (!item) {
       item = {
         ...created(this.ids.newId(), author),
         name: parsed.name,
-        defaultContextId: destination.contextId,
+        defaultContextId: contextId,
         category: destination.category,
         createdVia: via,
       };
       await this.store.save('items', item);
+    } else if (contextId !== destination.contextId) {
+      await this.changeItem(item.id, { defaultContextId: contextId }, author);
+      item = { ...item, defaultContextId: contextId };
     }
-    return this.putOnList(snapshot, item, destination.contextId, parsed, author);
+    return this.putOnList(snapshot, item, contextId, parsed, author);
   }
 
-  /** Adds several items at once (batch and voice), after the owner checked them. */
-  async addMany(texts: readonly EntryText[], via: ItemOrigin): Promise<AddResult[]> {
+  /**
+   * Adds several items at once (batch and voice), after the owner checked them. A context she
+   * picked in the check (`contextIds[i]`, when not undefined) becomes the item's default context.
+   */
+  async addMany(texts: readonly EntryText[], via: ItemOrigin, contextIds: readonly (string | null | undefined)[] = []): Promise<AddResult[]> {
     const results: AddResult[] = [];
-    for (const text of texts) {
-      const result = await this.add(text, via);
+    for (const [i, text] of texts.entries()) {
+      const result = await this.add(text, via, contextIds[i]);
       if (result) results.push(result);
     }
     return results;

@@ -45,6 +45,7 @@ O que ainda não está pronto.
 - [ ] No computador, os riscados de uma lista saem por um "Finalizar compra" no pé da coluna, já que lá não há modo compra. ([spec/sincronizacao.md](spec/sincronizacao.md))
 - [ ] As categorias do app e a categoria de cada sugestão (ex.: ovos em Laticínios, papel higiênico em Higiene) foram escolhidas pelo agente, em `src/data/sugestoes.json`. ([spec/setup.md](spec/setup.md))
 - [ ] O tablet (600 a 1023 px) usa as telas do celular, não as duas colunas do rascunho; o layout do computador começa em 1024 px. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
+- [ ] O contexto escolhido na conferência do lote no computador vira o padrão do item, não vale "só daquela vez". ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
 - [ ] O lápis da cápsula também move o contexto entre as abas e o desativa; um contexto desativado volta quando eu crio um com o mesmo nome no +. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
 - [ ] A mão, o setup feito e a data do último backup são de cada aparelho e não sincronizam. ([spec/modo-compra.md](spec/modo-compra.md), [spec/backup.md](spec/backup.md))
 - [ ] O setup só abre num aparelho sem contextos; as boas-vindas têm "Já uso em outro aparelho", que leva ao login para trazer os dados. ([spec/setup.md](spec/setup.md), [spec/sincronizacao.md](spec/sincronizacao.md))

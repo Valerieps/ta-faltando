@@ -52,6 +52,37 @@ describe('Lists', () => {
     expect(await store.list('items')).toHaveLength(1);
   });
 
+  it('a context picked in the batch check becomes the default context, new item or not', async () => {
+    const { store, lists } = setup();
+    await store.save('contexts', context('mercado'));
+    await store.save('contexts', context('pet'));
+    await store.save('items', {
+      id: 'leite',
+      updatedAt: 1,
+      updatedBy: 'phone',
+      deletedAt: null,
+      name: 'Leite',
+      defaultContextId: 'mercado',
+      category: null,
+      createdVia: 'setup',
+    });
+    const results = await lists.addMany(
+      [
+        { name: 'Areia de gato', quantity: null, note: null },
+        { name: 'Leite', quantity: null, note: null },
+        { name: 'Pão', quantity: null, note: null },
+      ],
+      'batch',
+      ['pet', null],
+    );
+    expect(results.map((r) => [r.item.name, r.entry.contextId, r.item.defaultContextId])).toEqual([
+      ['Areia de gato', 'pet', 'pet'],
+      ['Leite', null, null],
+      ['Pão', null, null],
+    ]);
+    expect((await store.get('items', 'leite'))?.defaultContextId).toBeNull();
+  });
+
   it('does not put the same item on a list twice', async () => {
     const { store, lists } = setup();
     const first = await lists.add('ovos');

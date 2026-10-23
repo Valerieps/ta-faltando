@@ -43,6 +43,9 @@ contexto", sem nenhuma pergunta na hora.
   estava lá. Se eu digito uma quantidade ou observação nova, ela substitui a antiga. *(1a)*
 - No microfone e no lote, os itens se separam por vírgula, quebra de linha e a palavra "e". Antes de
   salvar, uma tela mostra os itens separados para eu conferir. *(1a)*
+- No computador, nessa conferência do lote, o contexto de cada item é uma lista de escolha, mesmo
+  quando o app não achou nenhum ("Sem contexto"). O contexto que eu escolho ali vira o padrão do
+  item. *(1a)*
 - Um item que não está no catálogo entra no catálogo quando eu o adiciono. *(1a)*
 - Depois de adicionado, um toque no item me deixa mudar o contexto, só daquela vez ou como novo
   padrão. *(1a)*

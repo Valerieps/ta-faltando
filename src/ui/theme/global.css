@@ -984,6 +984,16 @@ button.check::before {
   font-weight: 600;
 }
 
+.parsed__pick {
+  max-width: 10rem;
+  padding: var(--space-1) var(--space-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  font-family: inherit;
+  cursor: pointer;
+}
+
 /* ---- Shopping mode ---- */
 
 .shop__bar {
