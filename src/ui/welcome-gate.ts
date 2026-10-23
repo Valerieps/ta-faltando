@@ -3,8 +3,23 @@ import type { SyncState } from '../application/synchronizer';
 /** The query `/api/login` adds when it sends the owner back to the app (ADR-008). */
 const BACK_FROM_LOGIN = 'login';
 
+let cameBack = false;
+
+/**
+ * Reads the query once, at startup, and takes it out of the address bar, so it does not stay on
+ * every screen; the hash route is kept.
+ */
+export function takeBackFromLogin(location: Location, history: History): void {
+  const query = new URLSearchParams(location.search);
+  if (!query.has(BACK_FROM_LOGIN)) return;
+  cameBack = true;
+  query.delete(BACK_FROM_LOGIN);
+  const search = query.toString();
+  history.replaceState(history.state, '', `${location.pathname}${search ? `?${search}` : ''}${location.hash}`);
+}
+
 export function backFromLogin(): boolean {
-  return typeof window !== 'undefined' && new URLSearchParams(window.location.search).has(BACK_FROM_LOGIN);
+  return cameBack;
 }
 
 /**

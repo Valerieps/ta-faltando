@@ -12,6 +12,7 @@ import { HttpSyncApi, LOGIN_PATH } from './infrastructure/http-sync-api';
 import { browserSpeech } from './infrastructure/speech';
 import { App } from './ui/App';
 import { ServicesProvider, type Services } from './ui/services';
+import { takeBackFromLogin } from './ui/welcome-gate';
 import '@fontsource/nunito/latin-700.css';
 import '@fontsource/nunito/latin-800.css';
 import './ui/theme/tokens.css';
@@ -34,6 +35,7 @@ const services: Services = {
   loginPath: LOGIN_PATH,
 };
 
+takeBackFromLogin(window.location, window.history);
 void requestPersistentStorage();
 startSyncTriggers(() => void sync.sync(), (listener) => store.onChange(listener));
 

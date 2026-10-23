@@ -31,6 +31,7 @@ const lower = (text: string) => text.toLocaleLowerCase('pt-BR');
 const items = (n: number) => (n === 1 ? '1 item' : `${n} itens`);
 
 export const tata = {
+  login: 'Oi, eu sou a Tatá. Entre com a sua conta Google e as suas listas ficam iguais no celular e no computador.',
   welcome: 'Oi, eu sou a Tatá. Eu anoto o que tá faltando e coloco cada coisa na lista do lugar certo.',
   ask: 'O que tá faltando?',
   listening: 'Tô ouvindo. Pode falar os itens.',

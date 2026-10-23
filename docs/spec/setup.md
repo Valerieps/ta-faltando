@@ -8,8 +8,9 @@ No primeiro uso, o setup me leva da escolha dos contextos a um catálogo inicial
 
 ## Telas
 
-- Antes das boas-vindas, o app me pede o login Google (`sincronizacao.md`). Se eu já uso o app em
-  outro aparelho, os meus dados chegam e o setup nem abre. *(1a)*
+- Antes das boas-vindas, uma tela da Tatá me recebe e oferece "Entrar com Google"
+  (`sincronizacao.md`). Se eu já uso o app em outro aparelho, os meus dados chegam e o setup nem
+  abre. "Agora não" leva às boas-vindas sem login. *(1a)*
   Por quê: num aparelho novo eu quero os meus dados, não um catálogo do zero.
 
 1. **Boas-vindas:** uma tela curta explica o que o app faz e quanto tempo o setup leva. *(1a)*

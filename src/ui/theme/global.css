@@ -168,6 +168,13 @@ a {
   font-weight: 700;
 }
 
+a.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
 .btn--huge {
   min-height: var(--row-shopping);
   font-size: var(--font-size-item);

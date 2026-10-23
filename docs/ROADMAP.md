@@ -49,7 +49,7 @@ O que ainda não está pronto.
 - [ ] O contexto escolhido na conferência do lote no computador vira o padrão do item, não vale "só daquela vez". ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
 - [ ] O lápis da cápsula também move o contexto entre as abas e o desativa; um contexto desativado volta quando eu crio um com o mesmo nome no +. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
 - [ ] A mão, o setup feito e a data do último backup são de cada aparelho e não sincronizam. ([spec/modo-compra.md](spec/modo-compra.md), [spec/backup.md](spec/backup.md))
-- [ ] O setup só abre num aparelho sem contextos; sem internet, ou se eu voltar do login ainda sem entrar, as boas-vindas abrem sem login. ([spec/setup.md](spec/setup.md), [spec/sincronizacao.md](spec/sincronizacao.md))
+- [ ] O setup só abre num aparelho sem contextos; sem internet, com "Agora não" ou se eu voltar do login ainda sem entrar, as boas-vindas abrem sem login. ([spec/setup.md](spec/setup.md), [spec/sincronizacao.md](spec/sincronizacao.md))
 - [ ] Refazer o setup só acrescenta: os itens que já estão no catálogo ficam, e um item que já tem contexto não muda. ([spec/setup.md](spec/setup.md))
 - [ ] Na captura, o enter anota exatamente o que digitei; a sugestão do autocompletar entra com um toque nela. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
 - [ ] No catálogo, o campo filtra os itens, e o enter põe um nome novo no catálogo e já na lista. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
