@@ -48,7 +48,7 @@ async function setup() {
   };
   const snapshot = await lists.snapshot();
   const render = (node: React.ReactNode) => renderToStaticMarkup(<ServicesProvider services={services}>{node}</ServicesProvider>);
-  return { snapshot, render };
+  return { snapshot, render, services };
 }
 
 describe('screens', () => {
@@ -111,8 +111,14 @@ describe('screens', () => {
   });
 
   it('the other screens render', async () => {
-    const { snapshot, render } = await setup();
-    expect(render(<Setup snapshot={{ contexts: [], items: [], entries: [] }} redo={false} onFinish={() => {}} />)).toContain('Oi, eu sou a Tatá');
+    const { snapshot, render, services } = await setup();
+    const empty = { contexts: [], items: [], entries: [] };
+    // The welcome waits for the first sync, which here runs offline.
+    expect(render(<Setup snapshot={empty} redo={false} onFinish={() => {}} />)).not.toContain('Oi, eu sou a Tatá');
+    await services.sync.sync();
+    const welcome = render(<Setup snapshot={empty} redo={false} onFinish={() => {}} />);
+    expect(welcome).toContain('Oi, eu sou a Tatá');
+    expect(welcome).not.toContain('outro aparelho');
     expect(render(<Setup snapshot={snapshot} redo onFinish={() => {}} />)).toContain('Onde você costuma comprar?');
     expect(render(<CatalogScreen snapshot={snapshot} contextId="mercado" />)).toContain('Leite');
     expect(render(<BatchScreen snapshot={snapshot} />)).toContain('Separar os itens');
