@@ -12,9 +12,10 @@ interface PendingRow {
   updatedAt: number;
 }
 
+/** The device id, the sync cursor and this device's settings (`setting:<key>`). */
 interface MetaRow {
-  key: 'deviceId' | 'cursor';
-  value: string | number;
+  key: string;
+  value: unknown;
 }
 
 /**
@@ -127,6 +128,14 @@ export class DexieStore implements LocalStore {
   onChange(listener: (origin: ChangeOrigin) => void) {
     this.listeners.add(listener);
     return () => void this.listeners.delete(listener);
+  }
+
+  async getSetting(key: string) {
+    return (await this.db.meta.get(`setting:${key}`))?.value;
+  }
+
+  async setSetting(key: string, value: unknown) {
+    await this.db.meta.put({ key: `setting:${key}`, value });
   }
 
   private emit(origin: ChangeOrigin) {

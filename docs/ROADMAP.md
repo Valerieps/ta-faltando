@@ -12,13 +12,6 @@ O que ainda não está pronto.
 | Feature | Fase | Spec | Observação |
 | --- | --- | --- | --- |
 | Sincronização: criar o banco D1 e o login Google do Cloudflare Access no painel | 1a | [spec/sincronizacao.md](spec/sincronizacao.md) | O código está pronto (ADR-008); falta o passo a passo da [issue #6](https://github.com/Valerieps/ta-faltando/issues/6) |
-| Layout para a tela larga do computador | 1a | [spec/sincronizacao.md](spec/sincronizacao.md) | Sem microfone, QR code e modo compra obrigatórios |
-| Setup: contextos, cápsulas, resumo | 1a | [spec/setup.md](spec/setup.md) | As filas saem da tabela do spec para um arquivo de dados |
-| Catálogo, listas por contexto e "Sem contexto" | 1a | [spec/itens-e-contextos.md](spec/itens-e-contextos.md) | |
-| Adicionar pelo catálogo, botão + com autocompletar, microfone, em lote | 1a | [spec/itens-e-contextos.md](spec/itens-e-contextos.md) | Microfone: ADR-006 |
-| Captura como tela inicial do celular, telas de listas e contextos, uso com uma mão | 1a | [spec/itens-e-contextos.md](spec/itens-e-contextos.md) | Layout e falas da Tatá no [rascunho da identidade](rascunhos/identidade-visual.html) |
-| Modo compra, com os gestos e a lixeira | 1a | [spec/modo-compra.md](spec/modo-compra.md) | |
-| Exportar, importar, lembrete de backup | 1a | [spec/backup.md](spec/backup.md) | |
 | App instalável e offline (service worker) | 1a | [spec/modo-compra.md](spec/modo-compra.md) | |
 | Função `/api` da leitura de nota | 1b | [spec/nota-fiscal.md](spec/nota-fiscal.md) | ADR-004; o login já vem da 1a |
 | Leitura de nota: foto, QR code, ligação com o catálogo, revisão | 1b | [spec/nota-fiscal.md](spec/nota-fiscal.md) | |
@@ -26,7 +19,8 @@ O que ainda não está pronto.
 
 ## O código ainda não segue o spec
 
-- O app ainda mostra uma tela provisória, só com o nome e o indicador de sincronização (`src/ui/App.tsx`).
+- A Tatá ainda não pisca na captura (rascunho da identidade, "Movimento").
+- O lembrete de backup aparece como fala da Tatá na captura e nos ajustes; não há notificação fora do app.
 - O modelo de dados no aparelho ainda não tem as tabelas da fase 1b (produto, loja, compra, linha de compra); elas entram numa nova versão do esquema Dexie.
 
 ## Adiado
@@ -48,3 +42,14 @@ O que ainda não está pronto.
 - [ ] O item que sai da lista pelo segundo deslize ou pela lixeira esmaece por 3 segundos. ([spec/modo-compra.md](spec/modo-compra.md))
 - [ ] A lixeira também existe no modo compra, e o "Desfazer" aparece no próprio item enquanto ele esmaece. ([spec/modo-compra.md](spec/modo-compra.md))
 - [ ] "Sem gestos, só a lixeira" vale para a tela das listas do celular; no computador eu continuo riscando nas listas. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md), [spec/sincronizacao.md](spec/sincronizacao.md))
+- [ ] No computador, os riscados de uma lista saem por um "Finalizar compra" no pé da coluna, já que lá não há modo compra. ([spec/sincronizacao.md](spec/sincronizacao.md))
+- [ ] As categorias do app e a categoria de cada sugestão (ex.: ovos em Laticínios, papel higiênico em Higiene) foram escolhidas pelo agente, em `src/data/sugestoes.json`. ([spec/setup.md](spec/setup.md))
+- [ ] O tablet (600 a 1023 px) usa as telas do celular, não as duas colunas do rascunho; o layout do computador começa em 1024 px. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
+- [ ] A mão, o setup feito e a data do último backup são de cada aparelho e não sincronizam. ([spec/modo-compra.md](spec/modo-compra.md), [spec/backup.md](spec/backup.md))
+- [ ] O setup só abre num aparelho sem contextos; as boas-vindas têm "Já uso em outro aparelho", que leva ao login para trazer os dados. ([spec/setup.md](spec/setup.md), [spec/sincronizacao.md](spec/sincronizacao.md))
+- [ ] Refazer o setup só acrescenta: os itens que já estão no catálogo ficam, e um item que já tem contexto não muda. ([spec/setup.md](spec/setup.md))
+- [ ] Na captura, o enter anota exatamente o que digitei; a sugestão do autocompletar entra com um toque nela. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
+- [ ] No catálogo, o campo filtra os itens, e o enter põe um nome novo no catálogo e já na lista. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
+- [ ] Um contexto desativado sai das abas, e os seus itens aparecem em "Sem contexto" até eu vinculá-los de novo. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
+- [ ] Os Ajustes (mão, backup, refazer o setup) abrem pela tela dos Contextos no celular e pelo menu no computador. ([spec/modo-compra.md](spec/modo-compra.md), [spec/backup.md](spec/backup.md))
+- [ ] O modo compra tem um "Desfazer" na barra, para o último gesto, além do "Desfazer" no próprio item. ([spec/modo-compra.md](spec/modo-compra.md))

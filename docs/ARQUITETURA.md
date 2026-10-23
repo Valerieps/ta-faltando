@@ -39,12 +39,12 @@ aparece na nota, ex.: "LEITE INTEG ITALAC 1L"). Um item tem vários produtos.
 | --- | --- | --- |
 | Contexto | nome, ícone, ordem, ativo, agrupar por categoria, ordem das categorias | Uma lista de compras |
 | Item | nome, contexto padrão (vazio = sem contexto), categoria, criado via (setup, manual, voz, lote, nota) | O catálogo é o conjunto dos itens |
-| Entrada de lista | item, contexto, quantidade, observação, status (pendente, comprado), data de adição, data da compra | O contexto pode diferir do padrão do item ("só daquela vez") |
+| Entrada de lista | item, contexto, quantidade, observação, status (pendente, comprado), riscado em, data de adição, data da compra | O contexto pode diferir do padrão do item ("só daquela vez") |
 | Produto | descrição original, item ligado, ignorado | *(1b)* |
 | Loja | nome, CNPJ, contexto padrão | *(1b)* |
 | Compra | loja, data, total, chave de acesso (única), origem (foto, QR) | *(1b)* |
 | Linha de compra | compra, produto, quantidade, unidade, valor unitário, valor total | *(1b)* |
-| Sugestão | nome, contexto, categoria, posição | Dado estático do projeto, não fica no banco |
+| Sugestão | nome, contexto, categoria, posição | Dado estático do projeto (`src/data/sugestoes.json`), não fica no banco. Os contextos sugeridos têm id fixo (`mercado`), para o setup feito em dois aparelhos não duplicar o contexto |
 
 Regras derivadas:
 
@@ -67,7 +67,8 @@ meio-tempo, aplica a mesma regra aos que chegaram e avança o cursor, até não 
 
 - Banco no aparelho: versão 1 do esquema Dexie (`src/infrastructure/dexie-store.ts`), com
   contextos, itens e entradas de lista, mais as tabelas internas `pending` (o que ainda não subiu)
-  e `meta` (o id do aparelho e o cursor). Uma versão que já foi publicada nunca muda: a mudança
+  e `meta` (o id do aparelho, o cursor e os ajustes deste aparelho: mão, setup feito, último
+  backup; os ajustes não sincronizam). Uma versão que já foi publicada nunca muda: a mudança
   entra na versão seguinte.
 - Banco no servidor: o D1 guarda todos os registros numa tabela genérica, `records`, com o
   registro inteiro em JSON (ADR-008); um campo novo no app não pede migração no D1. As migrações

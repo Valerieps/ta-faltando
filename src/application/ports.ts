@@ -29,6 +29,10 @@ export interface LocalStore {
 
   /** Calls `listener` after each change to the records; returns the unsubscribe function. */
   onChange(listener: (origin: ChangeOrigin) => void): () => void;
+
+  /** A setting of this device only (hand, setup done…); settings never sync. */
+  getSetting(key: string): Promise<unknown>;
+  setSetting(key: string, value: unknown): Promise<void>;
 }
 
 export interface SyncRequest {
@@ -55,4 +59,19 @@ export interface Clock {
 
 export interface IdGenerator {
   newId(): string;
+}
+
+/** Speech to text (Web Speech, ADR-006). Not every browser has it: then the mic button goes away. */
+export interface SpeechInput {
+  readonly supported: boolean;
+  /** Listens once; calls `onText` with what was understood and `onEnd` when it stops. Returns a stop function. */
+  listen(onText: (text: string) => void, onEnd: (error?: 'denied' | 'failed') => void): () => void;
+}
+
+/** Saving and opening the backup file where the owner chooses (spec/backup.md). */
+export interface FileAccess {
+  /** false when the owner cancelled. */
+  save(fileName: string, text: string): Promise<boolean>;
+  /** The text of the chosen file, or null when the owner cancelled. */
+  open(): Promise<string | null>;
 }

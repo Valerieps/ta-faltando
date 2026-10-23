@@ -22,6 +22,9 @@ A lista de um contexto em tela cheia, para eu usar com uma mão só dentro da lo
 - Cada grupo é uma seção recolhível, com o contador do que falta comprar. *(1a)*
 - A categoria vem da sugestão do setup. Itens criados à mão, pelo microfone ou em lote ficam em
   "Outros" até eu escolher uma categoria no detalhe do item. *(1a)*
+- No detalhe do item, um "+" ao lado das categorias cria uma categoria minha, e um "+" ao lado dos
+  contextos cria um contexto novo. As categorias minhas entram depois das do app, antes de
+  "Outros", até eu arrastar a ordem. *(1a)*
 - Eu arrasto a ordem dos grupos para seguir o caminho da loja que eu frequento. *(1a)*
 
 ## Marcar e finalizar

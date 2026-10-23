@@ -12,6 +12,7 @@ export class MemoryStore implements LocalStore {
   private readonly pending = new Map<string, { table: TableName; id: string; updatedAt: number }>();
   private readonly listeners = new Set<(origin: ChangeOrigin) => void>();
   private serverCursor = 0;
+  private readonly settings = new Map<string, unknown>();
 
   constructor(private readonly device = 'memory-device') {}
 
@@ -73,6 +74,14 @@ export class MemoryStore implements LocalStore {
   onChange(listener: (origin: ChangeOrigin) => void) {
     this.listeners.add(listener);
     return () => void this.listeners.delete(listener);
+  }
+
+  async getSetting(key: string) {
+    return this.settings.get(key);
+  }
+
+  async setSetting(key: string, value: unknown) {
+    this.settings.set(key, value);
   }
 
   private rows(table: TableName) {

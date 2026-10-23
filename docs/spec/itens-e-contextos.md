@@ -7,10 +7,6 @@ Eu adiciono o que está faltando sem pensar em qual lista: o app coloca cada ite
 - **Não entra aqui:** a lista em tela cheia dentro da loja (`modo-compra.md`) e o último preço
   mostrado em cada item (`precos.md`).
 
-## Em aberto
-
-- [ ] Um item que já está na lista e é adicionado de novo: soma a quantidade ou fica como está?
-
 ## Telas do celular e do computador
 
 - No celular, o app abre na captura: o campo de adicionar já vem focado, com o teclado aberto. O
@@ -36,8 +32,11 @@ contexto", sem nenhuma pergunta na hora.
 | Em lote | Uma caixa de texto em que cada linha ou vírgula vira um item; aceita colar uma lista de outro app ou de uma mensagem | Migrar listas antigas ou copiar de uma conversa |
 
 - As quatro formas valem desde a fase 1a. *(1a)*
-- Quantidade e observação são opcionais e podem vir no próprio texto ("2 leite", "leite sem
-  lactose"). *(1a)*
+- Quantidade e observação são opcionais e vêm no próprio texto: o número no começo é a
+  quantidade, e o que vem depois de dois-pontos é a observação ("2 leite: sem lactose"). Sem
+  dois-pontos, tudo é o nome: "leite sem lactose" é um item próprio. *(1a)*
+- Um item que já está na lista e é adicionado de novo fica como está, e a Tatá avisa que ele já
+  estava lá. Se eu digito uma quantidade ou observação nova, ela substitui a antiga. *(1a)*
 - No microfone e no lote, os itens se separam por vírgula, quebra de linha e a palavra "e". Antes de
   salvar, uma tela mostra os itens separados para eu conferir. *(1a)*
 - Um item que não está no catálogo entra no catálogo quando eu o adiciono. *(1a)*
