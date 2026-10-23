@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { parseRoute } from './ui/router';
 
 /** The app identity files (manifest, icons, theme-color) follow the palette in tokens.css. */
 
@@ -10,6 +11,7 @@ const manifest = JSON.parse(read('public/manifest.webmanifest')) as {
   theme_color: string;
   background_color: string;
   icons: { src: string; purpose: string }[];
+  shortcuts: { name: string; url: string; icons: { src: string }[] }[];
 };
 const tokens = read('src/ui/theme/tokens.css');
 const [light, dark] = tokens.split('@media (prefers-color-scheme: dark)');
@@ -35,6 +37,15 @@ describe('app identity', () => {
       const icon = manifest.icons.find((i) => i.purpose === purpose);
       expect(icon).toBeDefined();
       expect(read(`public/${icon!.src}`)).toContain(token(light, 'color-brand'));
+    }
+  });
+
+  it('has icon shortcuts that open the capture, the lists, the catalog and the batch', () => {
+    const routes = manifest.shortcuts.map((s) => parseRoute(s.url.replace(/^\.\/?/, '')).name);
+    expect(routes).toEqual(['home', 'lists', 'catalog', 'batch']);
+    for (const shortcut of manifest.shortcuts) {
+      expect(shortcut.icons).toHaveLength(1);
+      expect(read(`public/${shortcut.icons[0]!.src}`)).toContain(token(light, 'color-brand'));
     }
   });
 });

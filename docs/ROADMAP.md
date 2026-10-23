@@ -56,3 +56,4 @@ O que ainda não está pronto.
 - [ ] Um contexto desativado sai das abas, e os seus itens aparecem em "Sem contexto" até eu vinculá-los de novo. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
 - [ ] Os Ajustes (mão, backup, refazer o setup) abrem por um botão na tela das listas no celular e pelo menu no computador. ([spec/modo-compra.md](spec/modo-compra.md), [spec/backup.md](spec/backup.md))
 - [ ] O modo compra tem um "Desfazer" na barra, para o último gesto, além do "Desfazer" no próprio item. ([spec/modo-compra.md](spec/modo-compra.md))
+- [ ] Os atalhos do ícone são Adicionar, Listas, Catálogo e Em lote; o modo compra ficou de fora, porque um atalho não sabe em qual contexto entrar. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
