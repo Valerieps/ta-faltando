@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { ALLOWED_ORIGINS, LOCAL_ONLY } from '../network-policy.ts';
+import { ALLOWED_ORIGINS, CONNECT_SOURCES, LOCAL_ONLY, USES_OWN_API } from '../network-policy.ts';
 import { CONTENT_SECURITY_POLICY } from '../vite.config';
 
 /**
@@ -66,9 +66,22 @@ describe('security rules', () => {
 
   it('the production CSP opens connections only to the allowed origins', () => {
     const connect = CONTENT_SECURITY_POLICY.split('; ').find((rule) => rule.startsWith('connect-src'));
-    expect(connect).toBe(LOCAL_ONLY ? "connect-src 'none'" : `connect-src ${ALLOWED_ORIGINS.join(' ')}`);
+    expect(connect).toBe(`connect-src ${CONNECT_SOURCES.join(' ')}`);
+    expect(CONNECT_SOURCES).toEqual(
+      LOCAL_ONLY ? ["'none'"] : [...(USES_OWN_API ? ["'self'"] : []), ...ALLOWED_ORIGINS],
+    );
     expect(CONTENT_SECURITY_POLICY).toContain("script-src 'self'");
     expect(CONTENT_SECURITY_POLICY).toContain("object-src 'none'");
+  });
+
+  it('requests to the own origin go only to /api', () => {
+    const offenders = files.flatMap((file) =>
+      [...read(file).matchAll(/fetch\s*\(\s*(['"`])(.*?)/g)]
+        .map(([, , target]) => target)
+        .filter((target) => !(USES_OWN_API && target.startsWith('/api/')) && !ALLOWED_ORIGINS.some((o) => target.startsWith(o)))
+        .map((target) => `${rel(file)}: ${target}`),
+    );
+    expect(offenders).toEqual([]);
   });
 
   it('allowed origins are bare https origins', () => {

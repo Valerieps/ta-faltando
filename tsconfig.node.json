@@ -3,6 +3,6 @@
   "compilerOptions": {
     "types": ["vite/client", "node"]
   },
-  "include": ["src/**/*.test.ts", "src/**/*.test.tsx", "vite.config.ts", "network-policy.ts"],
+  "include": ["src/**/*.test.ts", "src/**/*.test.tsx", "server/**/*.test.ts", "server/**/*.test-support.ts", "vite.config.ts", "network-policy.ts"],
   "exclude": []
 }

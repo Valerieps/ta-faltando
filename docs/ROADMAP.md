@@ -11,8 +11,7 @@ O que ainda não está pronto.
 
 | Feature | Fase | Spec | Observação |
 | --- | --- | --- | --- |
-| Banco no aparelho (IndexedDB) e o modelo de dados | 1a | [ARQUITETURA.md](ARQUITETURA.md) | Base de tudo; ADR-005. Já com `id`, `updatedAt` e `deletedAt` (ADR-007) |
-| Sincronização: `/api/sync`, banco D1, login Google pelo Cloudflare Access, indicador de pendências | 1a | [spec/sincronizacao.md](spec/sincronizacao.md) | ADR-007; abre `connect-src` para a própria origem em `network-policy.ts` |
+| Sincronização: criar o banco D1 e o login Google do Cloudflare Access no painel | 1a | [spec/sincronizacao.md](spec/sincronizacao.md) | O código está pronto (ADR-008); falta o passo a passo da [issue #6](https://github.com/Valerieps/ta-faltando/issues/6) |
 | Layout para a tela larga do computador | 1a | [spec/sincronizacao.md](spec/sincronizacao.md) | Sem microfone, QR code e modo compra obrigatórios |
 | Setup: contextos, cápsulas, resumo | 1a | [spec/setup.md](spec/setup.md) | As filas saem da tabela do spec para um arquivo de dados |
 | Catálogo, listas por contexto e "Sem contexto" | 1a | [spec/itens-e-contextos.md](spec/itens-e-contextos.md) | |
@@ -26,7 +25,8 @@ O que ainda não está pronto.
 
 ## O código ainda não segue o spec
 
-- O app ainda mostra a tela de exemplo do template (`src/ui/App.tsx`).
+- O app ainda mostra uma tela provisória, só com o nome e o indicador de sincronização (`src/ui/App.tsx`).
+- O modelo de dados no aparelho ainda não tem as tabelas da fase 1b (produto, loja, compra, linha de compra); elas entram numa nova versão do esquema Dexie.
 
 ## Adiado
 

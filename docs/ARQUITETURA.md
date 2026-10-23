@@ -57,15 +57,21 @@ Regras derivadas:
 O app não guarda um histórico de eventos: o estado atual é a fonte. As compras e as linhas de
 compra são o histórico que importa.
 
-Sincronização (ADR-007): uma mudança grava no IndexedDB e marca o registro como pendente. O
-aparelho manda os pendentes para `/api/sync`, que guarda no D1 a versão vencedora de cada registro
-e lhe dá um número de sequência do servidor. Depois o aparelho pede os registros com sequência
-acima do seu cursor, aplica a mesma regra e avança o cursor.
+Sincronização (ADR-007, ADR-008): uma mudança grava no IndexedDB e marca o registro como pendente.
+Numa só requisição, o aparelho manda os pendentes e o seu cursor para `/api/sync`; o servidor
+guarda no D1 a versão vencedora de cada registro, com um novo número de sequência, e devolve os
+registros com sequência acima do cursor. O aparelho desmarca os pendentes que não mudaram nesse
+meio-tempo, aplica a mesma regra aos que chegaram e avança o cursor, até não haver mais nada.
 
 ## Migrações
 
-- Banco: versão 1 do esquema Dexie, ainda não criada. O esquema do D1 espelha as mesmas tabelas,
-  com as migrações do D1 versionadas no repositório; as duas mudam juntas.
+- Banco no aparelho: versão 1 do esquema Dexie (`src/infrastructure/dexie-store.ts`), com
+  contextos, itens e entradas de lista, mais as tabelas internas `pending` (o que ainda não subiu)
+  e `meta` (o id do aparelho e o cursor). Uma versão que já foi publicada nunca muda: a mudança
+  entra na versão seguinte.
+- Banco no servidor: o D1 guarda todos os registros numa tabela genérica, `records`, com o
+  registro inteiro em JSON (ADR-008); um campo novo no app não pede migração no D1. As migrações
+  do D1 ficam em `migrations/`.
 - Backup: um arquivo JSON com `formato: "ta-faltando"` e `versao: 1`, com todas as tabelas do banco.
 - Regra para mudar: uma versão só acrescenta campos opcionais; remover um campo leva duas versões.
   A importação aceita backups de qualquer versão anterior e os migra.

@@ -103,7 +103,10 @@ Each step rereads the whole conversation, so long sessions and back-and-forth co
 - `src/infrastructure` - storage, browser APIs and, if `network-policy.ts` allows it, network calls.
 - `src/ui` - React components. All colors, fonts and spacing live in `src/ui/theme/tokens.css`.
 - `public/` - static files: manifest, icons, Cloudflare `_headers`.
-- `network-policy.ts` - the servers the app may talk to; empty means local-only.
+- `server/` - the logic of the Pages Functions (sync), tested over `node:sqlite`.
+- `functions/api/` - thin Cloudflare Pages Function entry points that call `server/`.
+- `migrations/` - D1 migrations, applied in the Cloudflare console.
+- `network-policy.ts` - the servers the app may talk to: its own `/api` and any other origin.
 - `scripts/` - `check-docs.mjs` (run by CI) and `setup-repo.mjs` (once per new repository).
 
 ## Commands
