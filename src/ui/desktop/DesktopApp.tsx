@@ -261,6 +261,7 @@ function BatchPanel({ snapshot }: { snapshot: Snapshot }) {
           entries={entries}
           snapshot={snapshot}
           via="batch"
+          pickContext
           onDone={(results) => {
             setText('');
             setSaid(tata.addedMany(results.length));
