@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { activeContexts, contextName, itemsById, listEntries, missingCount, type Snapshot } from '../../domain/list-view';
 import { AddChip } from '../components/AddChip';
+import { BottomNav } from '../components/BottomNav';
 import { ContextSheet } from '../components/ContextSheet';
 import { ItemSheet } from '../components/ItemSheet';
 import { ListRows } from '../components/ListRows';
-import { ProfileMenu } from '../components/ProfileMenu';
 import { Say } from '../components/Say';
 import { Uncontexted } from '../components/Uncontexted';
 import { useFading, withFading } from '../components/useFading';
@@ -16,7 +16,8 @@ import { tata } from '../tata-lines';
 /**
  * The phone's lists: a tab per context plus "Sem contexto", near the thumb; no gestures and no
  * striking here, only the trash (spec/itens-e-contextos.md, "Tela das listas"). The pencil by
- * the name edits the context, and the big button enters shopping mode in it.
+ * the name edits the context, the big button enters shopping mode in it, and the round + on the
+ * thumb's side opens the capture.
  */
 export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snapshot; contextId: string | null | undefined }) {
   const { lists, contexts: contextUseCases } = useServices();
@@ -47,7 +48,6 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
             <PencilIcon />
           </button>
         )}
-        <ProfileMenu />
       </header>
 
       <div className="lists__body">
@@ -77,9 +77,6 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
       <div className="lists__controls">
         {context && (
           <div className="reach reach--quiet">
-            <button type="button" className="link-button" onClick={() => navigate({ name: 'catalog', contextId: context.id })}>
-              Catálogo
-            </button>
             <label className="switch">
               <input type="checkbox" checked={context.groupByCategory} onChange={(event) => void contextUseCases.setGroupByCategory(context.id, event.target.checked)} />
               <span>Agrupar por categoria</span>
@@ -112,16 +109,17 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
           />
         </nav>
         <div className="reach">
-          <button type="button" className="pill pill--icon" aria-label="Anotar" onClick={() => navigate({ name: 'home' })}>
-            <PlusIcon />
-          </button>
           {context && (
             <button type="button" className="btn btn--icon" onClick={() => navigate({ name: 'shop', contextId: context.id })}>
               <CartIcon /> Comprar no {name}
             </button>
           )}
+          <button type="button" className="fab" aria-label="Anotar" title="Anotar" onClick={() => navigate({ name: 'capture' })}>
+            <PlusIcon />
+          </button>
         </div>
       </div>
+      <BottomNav current="lists" contextId={contextId} />
 
       {editing && context && <ContextSheet context={context} snapshot={snapshot} onClose={() => setEditing(false)} />}
       {open && <ItemSheet snapshot={snapshot} itemId={open.itemId} entryId={open.entryId} onClose={() => setOpen(null)} onRemoveEntry={trash} />}

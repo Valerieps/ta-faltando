@@ -9,8 +9,11 @@ import { Say } from './Say';
 
 const DATE = new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
 
-/** Settings: the hand (phone only), redoing the setup, and the backup file (spec/backup.md). */
-export function SettingsPanel({ showHand }: { showHand: boolean }) {
+/**
+ * Settings: the hand (phone only), redoing the setup, the backup file (spec/backup.md) and the
+ * sync, unless the screen already shows it above.
+ */
+export function SettingsPanel({ showHand, showSync = true }: { showHand: boolean; showSync?: boolean }) {
   const { settings, backup, files, now } = useServices();
   const state = useSettings();
   const [message, setMessage] = useState<string | null>(null);
@@ -92,10 +95,12 @@ export function SettingsPanel({ showHand }: { showHand: boolean }) {
         </button>
       </section>
 
-      <section className="settings__section">
-        <h3>Sincronização</h3>
-        <SyncIndicator />
-      </section>
+      {showSync && (
+        <section className="settings__section">
+          <h3>Sincronização</h3>
+          <SyncIndicator />
+        </section>
+      )}
     </div>
   );
 }

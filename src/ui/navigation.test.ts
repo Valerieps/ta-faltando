@@ -7,6 +7,7 @@ import { tata } from './tata-lines';
 describe('routes', () => {
   const routes: Route[] = [
     { name: 'home' },
+    { name: 'capture' },
     { name: 'lists' },
     { name: 'lists', contextId: 'mercado' },
     { name: 'lists', contextId: null },
@@ -15,6 +16,7 @@ describe('routes', () => {
     { name: 'batch' },
     { name: 'uncontexted' },
     { name: 'settings' },
+    { name: 'profile' },
     { name: 'setup' },
   ];
 

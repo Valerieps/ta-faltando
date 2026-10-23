@@ -28,6 +28,8 @@ function pageOf(route: Route): Page {
     case 'uncontexted':
     case 'settings':
       return route.name;
+    case 'profile':
+      return 'settings';
     default:
       return 'lists';
   }

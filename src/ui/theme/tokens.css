@@ -50,6 +50,7 @@
 
   /* Thumb targets: at least 44px; rows in shopping mode at least 56px (spec/modo-compra.md) */
   --touch-min: 44px;
+  --fab-size: 56px;
   --row-shopping: 56px;
   /* Swiping twice or deleting fades the item out before it leaves the list (spec/modo-compra.md) */
   --fade-out: 3s;

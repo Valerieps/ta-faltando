@@ -9,10 +9,13 @@ Eu adiciono o que está faltando sem pensar em qual lista: o app coloca cada ite
 
 ## Telas do celular e do computador
 
-- No celular, o app abre na captura: o campo de adicionar já vem focado, com o teclado aberto. O
-  enter adiciona o item e limpa o campo para o próximo. *(1a)*
-  Por quê: no celular eu quase sempre adiciono um item por vez, no meio do dia.
-- No celular, a tela das listas fica separada da captura, a um toque dela. *(1a)*
+- No celular, o app abre nas listas. Um **+** redondo no pé da tela, do lado da mão escolhida,
+  abre a captura: o campo de adicionar já vem focado, com o teclado aberto. O enter adiciona o
+  item e limpa o campo para o próximo. *(1a)*
+  Por quê: no celular eu quase sempre adiciono um item por vez, no meio do dia; o + fica a um
+  toque, sob o polegar.
+- No celular, uma barra no pé das telas leva a **Perfil**, **Catálogo** e **Listas**, nessa
+  ordem. A captura, o lote e o modo compra não têm a barra. *(1a)*
 - No celular, tudo que eu toco fica na parte de baixo da tela, do lado da mão escolhida
   (`modo-compra.md`). Na captura, o campo fica colado no teclado e o autocompletar abre para
   cima. *(1a)*
@@ -30,10 +33,9 @@ Eu adiciono o que está faltando sem pensar em qual lista: o app coloca cada ite
   edita aquele contexto (nome, posição nas abas, categorias, desativar), e um + no fim das abas
   cria um novo. *(1a)*
   Por quê: era difícil achar onde se editava um contexto.
-- No celular, a captura e a tela das listas têm no canto de cima, à direita, um círculo com as
-  minhas iniciais, tiradas do e-mail da conta Google. Um toque abre o menu do perfil: o meu
-  e-mail, o estado da sincronização, editar contextos, a mão, o backup, refazer o setup e sair
-  (ou entrar, se eu estiver sem login). *(1a)*
+- No celular, a tela Perfil reúne a conta e todos os ajustes: um círculo com as minhas
+  iniciais, tiradas do e-mail da conta Google, o meu e-mail, o estado da sincronização, a mão, o
+  backup, refazer o setup e sair (ou entrar, se eu estiver sem login). *(1a)*
   Por quê: é onde eu procuro os ajustes de um app.
 - No celular, eu entro no modo compra pelo botão grande "Comprar no …" no pé da lista, ou pelo
   carrinho ao lado do campo da captura, que pergunta em qual lista com itens faltando eu vou

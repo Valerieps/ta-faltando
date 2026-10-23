@@ -6,23 +6,27 @@ import { useSyncExternalStore } from 'react';
  */
 export type Route =
   | { readonly name: 'home' }
+  | { readonly name: 'capture' }
   | { readonly name: 'lists'; readonly contextId?: string | null }
   | { readonly name: 'catalog'; readonly contextId?: string | null }
   | { readonly name: 'shop'; readonly contextId: string }
   | { readonly name: 'batch' }
   | { readonly name: 'uncontexted' }
   | { readonly name: 'settings' }
+  | { readonly name: 'profile' }
   | { readonly name: 'setup' };
 
 const NO_CONTEXT = 'sem-contexto';
 
 const PATHS = {
+  capture: 'anotar',
   lists: 'listas',
   catalog: 'catalogo',
   shop: 'compra',
   batch: 'lote',
   uncontexted: NO_CONTEXT,
   settings: 'ajustes',
+  profile: 'perfil',
   setup: 'setup',
 } as const;
 
@@ -52,12 +56,16 @@ export function parseRoute(hash: string): Route {
       return { name: 'catalog', contextId };
     case PATHS.shop:
       return contextId ? { name: 'shop', contextId } : { name: 'lists' };
+    case PATHS.capture:
+      return { name: 'capture' };
     case PATHS.batch:
       return { name: 'batch' };
     case PATHS.uncontexted:
       return { name: 'uncontexted' };
     case PATHS.settings:
       return { name: 'settings' };
+    case PATHS.profile:
+      return { name: 'profile' };
     case PATHS.setup:
       return { name: 'setup' };
     default:

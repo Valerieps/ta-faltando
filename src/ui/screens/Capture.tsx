@@ -3,7 +3,6 @@ import { backupDue } from '../../application/backup';
 import type { AddResult } from '../../application/lists';
 import { contextName, itemsById, itemsWithoutContext, totalMissing, type Snapshot } from '../../domain/list-view';
 import { AddField } from '../components/AddField';
-import { ProfileMenu } from '../components/ProfileMenu';
 import { Say } from '../components/Say';
 import { ShopChooser } from '../components/ShopChooser';
 import { CartIcon } from '../icons';
@@ -15,8 +14,9 @@ import { tata } from '../tata-lines';
 const RECENT = 4;
 
 /**
- * The phone's home: just the field, focused with the keyboard open, at the bottom next to the
- * thumb; enter adds and clears it for the next item (spec/itens-e-contextos.md).
+ * The capture, opened by the round + on the lists: just the field, focused with the keyboard
+ * open, at the bottom next to the thumb; enter adds and clears it for the next item
+ * (spec/itens-e-contextos.md).
  */
 export function Capture({ snapshot }: { snapshot: Snapshot }) {
   const { now } = useServices();
@@ -53,7 +53,6 @@ export function Capture({ snapshot }: { snapshot: Snapshot }) {
       <header className="capture__head">
         <Tata mood={mood} size={36} />
         <h1 className="question">{tata.ask}</h1>
-        <ProfileMenu />
       </header>
 
       {recent.length > 0 && (
@@ -88,7 +87,7 @@ export function Capture({ snapshot }: { snapshot: Snapshot }) {
             {!said && !offline && balloon === tata.backupDue && (
               <>
                 {' '}
-                <button type="button" className="link-button" onClick={() => navigate({ name: 'settings' })}>
+                <button type="button" className="link-button" onClick={() => navigate({ name: 'profile' })}>
                   Fazer backup
                 </button>
               </>
