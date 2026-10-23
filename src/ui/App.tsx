@@ -6,7 +6,7 @@ import { Capture } from './screens/Capture';
 import { ListsScreen } from './screens/ListsScreen';
 import { Setup } from './screens/Setup';
 import { ShoppingMode } from './screens/ShoppingMode';
-import { BatchScreen, CatalogScreen, ContextsScreen, SettingsScreen } from './screens/SimpleScreens';
+import { BatchScreen, CatalogScreen, SettingsScreen } from './screens/SimpleScreens';
 import { useIsDesktop, useServices, useSettings, useSnapshot } from './services';
 
 /**
@@ -41,9 +41,6 @@ export function App() {
       case 'lists':
       case 'uncontexted':
         screen = <ListsScreen snapshot={snapshot} contextId={route.name === 'uncontexted' ? null : route.contextId} />;
-        break;
-      case 'contexts':
-        screen = <ContextsScreen snapshot={snapshot} />;
         break;
       case 'catalog':
         screen = <CatalogScreen snapshot={snapshot} contextId={route.contextId} />;

@@ -11,7 +11,7 @@ import { Capture } from './screens/Capture';
 import { ListsScreen } from './screens/ListsScreen';
 import { Setup } from './screens/Setup';
 import { ShoppingMode } from './screens/ShoppingMode';
-import { BatchScreen, CatalogScreen, ContextsScreen, SettingsScreen } from './screens/SimpleScreens';
+import { BatchScreen, CatalogScreen, SettingsScreen } from './screens/SimpleScreens';
 import { ServicesProvider, type Services } from './services';
 
 /** Renders each screen over real use cases and a store in memory: a smoke test for the layout code. */
@@ -95,11 +95,25 @@ describe('screens', () => {
     expect(html).toContain('Finalizar compra (1 riscado)');
   });
 
+  it('the desktop catalog creates and renames contexts from its chips, with no Contextos page', async () => {
+    const { snapshot, render } = await setup();
+    const html = render(<DesktopApp snapshot={snapshot} route={{ name: 'catalog', contextId: 'mercado' }} />);
+    expect(html).toContain('aria-label="Novo contexto"');
+    expect(html).toContain('Mudar o nome de Farmácia');
+    expect(html).not.toMatch(/side__link[^>]*>Contextos/);
+  });
+
+  it('the phone catalog has the same chips, with the pencil on the open one', async () => {
+    const { snapshot, render } = await setup();
+    const html = render(<CatalogScreen snapshot={snapshot} contextId="mercado" />);
+    expect(html).toContain('aria-label="Novo contexto"');
+    expect(html).toContain('Mudar o nome de Mercado');
+  });
+
   it('the other screens render', async () => {
     const { snapshot, render } = await setup();
     expect(render(<Setup snapshot={{ contexts: [], items: [], entries: [] }} redo={false} onFinish={() => {}} />)).toContain('Oi, eu sou a Tatá');
     expect(render(<Setup snapshot={snapshot} redo onFinish={() => {}} />)).toContain('Onde você costuma comprar?');
-    expect(render(<ContextsScreen snapshot={snapshot} />)).toContain('1 item sem contexto');
     expect(render(<CatalogScreen snapshot={snapshot} contextId="mercado" />)).toContain('Leite');
     expect(render(<BatchScreen snapshot={snapshot} />)).toContain('Separar os itens');
     expect(render(<SettingsScreen />)).toContain('Exportar backup');

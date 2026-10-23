@@ -12,7 +12,6 @@ describe('routes', () => {
     { name: 'lists', contextId: null },
     { name: 'catalog', contextId: 'pet-shop' },
     { name: 'shop', contextId: 'mercado' },
-    { name: 'contexts' },
     { name: 'batch' },
     { name: 'uncontexted' },
     { name: 'settings' },

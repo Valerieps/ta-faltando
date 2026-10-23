@@ -792,7 +792,6 @@ button.check::before {
 
 /* ---- Contexts and catalog ---- */
 
-.ctx-manager,
 .catalog,
 .settings {
   display: flex;
@@ -814,42 +813,74 @@ button.check::before {
   border-top: 1px solid var(--color-border);
 }
 
-.ctx-list__open {
+.ctx-categories {
   display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  min-height: var(--touch-min);
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: 0;
   padding: 0;
-  border: 0;
-  background: none;
-  font-size: var(--font-size-item);
-  text-align: start;
+  list-style: none;
 }
 
-.ctx-list__edit {
+.ctx-categories__row {
   display: flex;
-  flex: 1;
-  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-2) 0;
 }
 
-.ctx-list__edit input {
-  flex: 1 1 160px;
+.ctx-categories__row input {
+  flex: 1;
+  min-width: 0;
   min-height: var(--touch-min);
   padding: 0 var(--space-3);
-  border: 2px solid var(--color-brand);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-m);
   background: var(--color-surface);
 }
 
-.ctx-manager__inactive {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
+.ctx-chip {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+}
+
+.ctx-chip.is-editing {
+  gap: var(--space-1);
+}
+
+/* The pencil sits on the chip's corner and shows on hover or keyboard focus. */
+.ctx-chip__edit {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  color: var(--color-brand);
+  opacity: 0;
+  transition: opacity 120ms;
+}
+
+.ctx-chip__edit svg {
+  width: 13px;
+  height: 13px;
+}
+
+.ctx-chip:hover .ctx-chip__edit,
+.ctx-chip:focus-within .ctx-chip__edit {
+  opacity: 1;
+}
+
+/* No hover on a touch screen: the open chip always shows its pencil. */
+@media (hover: none) {
+  .ctx-chip:has(.is-on) .ctx-chip__edit {
+    opacity: 1;
+  }
 }
 
 /* ---- Setup ---- */
@@ -976,6 +1007,16 @@ button.check::before {
 .parsed__where.is-none {
   color: var(--color-blush-ink);
   font-weight: 600;
+}
+
+.parsed__pick {
+  max-width: 10rem;
+  padding: var(--space-1) var(--space-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  font-family: inherit;
+  cursor: pointer;
 }
 
 /* ---- Shopping mode ---- */

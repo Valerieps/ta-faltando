@@ -68,7 +68,10 @@ Product docs are written in Brazilian Portuguese; ADRs, code and this file in En
 - Business-rule questions found during a task go in one batch, before implementing.
 - When she asks what you think of the app, she wants a frank assessment, including the risks.
 - Verify with the typecheck and unit tests; use the browser only when she asks.
-- Merge your own PR once its build passes.
+- Every change starts in a new git worktree, on its own branch cut from `main`; never edit in the
+  main checkout.
+- When the implementation is done, open a PR and merge it yourself once its build passes, without
+  asking first.
 
 ### Fewer rounds, fewer tokens
 Each step rereads the whole conversation, so long sessions and back-and-forth cost the most.
