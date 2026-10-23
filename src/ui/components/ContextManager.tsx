@@ -2,17 +2,20 @@ import { useState } from 'react';
 import { activeContexts, catalogOf, type Snapshot } from '../../domain/list-view';
 import { navigate } from '../router';
 import { useServices } from '../services';
+import { CategoryEditor } from './CategoryEditor';
 
 /**
- * The contexts: each one opens its catalog, and can be renamed, moved among the tabs or
- * deactivated; a new one goes at the end.
+ * The contexts: each one opens its catalog, and can be renamed, moved among the tabs, have its
+ * categories edited or be deactivated; a new one goes at the end.
  */
 export function ContextManager({ snapshot }: { snapshot: Snapshot }) {
   const { contexts } = useServices();
   const [editing, setEditing] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
+  const [categoriesOf, setCategoriesOf] = useState<string | null>(null);
   const list = activeContexts(snapshot.contexts);
   const inactive = snapshot.contexts.filter((c) => c.deletedAt === null && !c.active);
+  const categoryContext = list.find((c) => c.id === categoriesOf);
 
   return (
     <div className="ctx-manager">
@@ -34,6 +37,9 @@ export function ContextManager({ snapshot }: { snapshot: Snapshot }) {
                 </button>
                 <button type="button" className="icon-button" aria-label="Descer" disabled={index === list.length - 1} onClick={() => void contexts.move(context.id, 1)}>
                   ↓
+                </button>
+                <button type="button" className="link-button" onClick={() => setCategoriesOf(context.id)}>
+                  Categorias
                 </button>
                 <button type="button" className="link-button" onClick={() => void contexts.setActive(context.id, false).then(() => setEditing(null))}>
                   Desativar
@@ -92,6 +98,8 @@ export function ContextManager({ snapshot }: { snapshot: Snapshot }) {
           </div>
         </div>
       )}
+
+      {categoryContext && <CategoryEditor context={categoryContext} snapshot={snapshot} onClose={() => setCategoriesOf(null)} />}
     </div>
   );
 }

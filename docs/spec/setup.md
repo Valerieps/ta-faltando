@@ -44,7 +44,6 @@ categorias, para a tela não ficar toda de um tipo; as demais entram uma a uma, 
   mexer no código: cada contexto com a sua fila, na ordem, e cada sugestão com a sua categoria.
   O mesmo arquivo lista as categorias do app. *(1a)*
 - Cada sugestão traz uma categoria (ex.: hortifrúti, laticínios, limpeza, higiene), usada para
-  agrupar a lista no modo compra. Essas são as categorias do app; no detalhe do item eu também
-  crio uma categoria minha, pelo "+" ao lado das categorias. *(1a)*
-  Por quê: nem tudo cabe nas categorias do app. A categoria minha vive nos itens que a usam e sai
-  da lista quando nenhum item a usa mais.
+  agrupar a lista no modo compra. Essas são as categorias do app; cada contexto começa com as das
+  suas sugestões, e eu mudo as de cada um (`modo-compra.md`). *(1a)*
+  Por quê: nem tudo cabe nas categorias do app.

@@ -17,7 +17,7 @@ Um termo, um sentido. Estes nomes valem para os textos da interface e para as do
 - **Contexto padrão:** o único contexto de um item, para onde ele vai quando eu o adiciono. (`spec/itens-e-contextos.md`)
 - **Sem contexto:** a aba dos itens que ainda não têm contexto padrão. (`spec/itens-e-contextos.md`)
 - **Categoria:** o tipo do item (hortifrúti, laticínios, limpeza, higiene…), usado para agrupar a
-  lista no modo compra. Além das categorias do app, eu crio as minhas no detalhe do item. (`spec/modo-compra.md`)
+  lista no modo compra. Cada contexto tem as suas, que eu crio, renomeio, ordeno e apago. (`spec/modo-compra.md`)
 - **Captura:** a tela inicial do celular, só com o campo de adicionar. (`spec/itens-e-contextos.md`)
 - **Tatá:** o bot do app, uma sacolinha que fala em primeira pessoa nos momentos certos. A voz e
   o desenho estão no rascunho da identidade visual (`rascunhos/README.md`).

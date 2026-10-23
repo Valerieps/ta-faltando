@@ -9,6 +9,14 @@ export interface Context extends SyncedRecord {
   readonly active: boolean;
   /** Shopping mode groups the list by category (spec/modo-compra.md). */
   readonly groupByCategory: boolean;
-  /** Category ids in the order of the store's aisles. */
+  /**
+   * The order dragged before categories belonged to each context; read only while `categories`
+   * is absent (docs/ARQUITETURA.md "Migrações").
+   */
   readonly categoryOrder: readonly string[];
+  /**
+   * The context's own categories, in the order of the store's aisles. Absent until she edits
+   * them: then they come from its suggestions and items (`contextCategories`).
+   */
+  readonly categories?: readonly string[];
 }

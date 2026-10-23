@@ -43,8 +43,8 @@ export const SUGGESTED_CONTEXTS: readonly SuggestedContext[] = file.contextos.ma
 }));
 
 /**
- * A category the owner created lives only in its items: its id carries its name, so it needs no
- * table of its own and leaves the list when no item uses it any more.
+ * A category the owner created: its id carries its name, so it needs no table of its own; each
+ * context lists the ones it has (`Context.categories`).
  */
 const CUSTOM_PREFIX = 'propria:';
 
@@ -63,12 +63,6 @@ export function categoryIdFor(name: string): string | null {
 
 export const categoryName = (id: string | null): string =>
   CATEGORIES.find((c) => c.id === id)?.name ?? (isCustomCategory(id) ? id.slice(CUSTOM_PREFIX.length) : OTHER_CATEGORY_NAME);
-
-/** The categories she created that some item still uses, by name. */
-export function customCategories(items: readonly { category: string | null; deletedAt: number | null }[]): string[] {
-  const ids = new Set(items.filter((i) => i.deletedAt === null && isCustomCategory(i.category)).map((i) => i.category!));
-  return [...ids].sort((a, b) => categoryName(a).localeCompare(categoryName(b), 'pt-BR'));
-}
 
 /** The suggestion with this name, in any queue, ignoring case and accents. */
 export function findSuggestion(name: string): Suggestion | undefined {

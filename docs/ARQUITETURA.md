@@ -37,7 +37,7 @@ aparece na nota, ex.: "LEITE INTEG ITALAC 1L"). Um item tem vários produtos.
 
 | Entidade | Campos principais | Observação |
 | --- | --- | --- |
-| Contexto | nome, ícone, ordem, ativo, agrupar por categoria, ordem das categorias | Uma lista de compras |
+| Contexto | nome, ícone, ordem, ativo, agrupar por categoria, categorias (em ordem) | Uma lista de compras. Sem o campo categorias (contexto que nunca teve as categorias editadas), elas vêm das sugestões e dos itens dele, na ordem antiga (`ordem das categorias`), lida só nesse caso |
 | Item | nome, contexto padrão (vazio = sem contexto), categoria, criado via (setup, manual, voz, lote, nota) | O catálogo é o conjunto dos itens |
 | Entrada de lista | item, contexto, quantidade, observação, status (pendente, comprado), riscado em, data de adição, data da compra | O contexto pode diferir do padrão do item ("só daquela vez") |
 | Produto | descrição original, item ligado, ignorado | *(1b)* |

@@ -2,8 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { Context } from './context';
 import type { Item } from './item';
 import type { ListEntry } from './list-entry';
-import { activeContexts, categoryOrder, destinationFor, groupByCategory, itemsById, itemsWithoutContext, listEntries, missingCount, type Snapshot } from './list-view';
-import { CATEGORIES } from './suggestion';
+import { activeContexts, destinationFor, groupByCategory, itemsById, itemsWithoutContext, listEntries, missingCount, type Snapshot } from './list-view';
 
 const base = { updatedAt: 1, updatedBy: 'd', deletedAt: null };
 const context = (id: string, changes: Partial<Context> = {}): Context => ({
@@ -65,23 +64,17 @@ describe('list views', () => {
     expect(itemsWithoutContext(snapshot).map((i) => i.id)).toEqual(['bala', 'pilha']);
   });
 
-  it('groups by category in the context order, the app order, then "Outros"', () => {
-    const items = itemsById([...snapshot.items, item('x', 'mercado', 'inventada')]);
-    const entries = [...listEntries(snapshot, 'mercado'), entry('e9', 'x', 'mercado')];
-    const groups = groupByCategory(entries, items, { categoryOrder: ['limpeza'] });
-    expect(groups.map((g) => [g.name, g.missing])).toEqual([
+  it('groups by the context categories, in their order, with the others in "Outros" last', () => {
+    const items = itemsById([...snapshot.items, item('x', 'mercado', 'inventada'), item('y', 'mercado', 'propria:Festa')]);
+    const entries = [...listEntries(snapshot, 'mercado'), entry('e9', 'x', 'mercado'), entry('e10', 'y', 'mercado')];
+    expect(groupByCategory(entries, items, ['propria:Festa', 'limpeza', 'laticinios']).map((g) => [g.name, g.missing])).toEqual([
+      ['Festa', 1],
       ['Limpeza', 1],
       ['Laticínios', 0],
       ['Outros', 1],
     ]);
-    expect(categoryOrder({ categoryOrder: ['limpeza', 'nada'] })).toEqual(['limpeza', ...CATEGORIES.map((c) => c.id).filter((id) => id !== 'limpeza'), null]);
-  });
-
-  it('groups the categories she created after the app ones, unless the context ordered them', () => {
-    const items = itemsById([...snapshot.items, item('x', 'mercado', 'propria:Festa')]);
-    const entries = [...listEntries(snapshot, 'mercado'), entry('e9', 'x', 'mercado')];
-    expect(groupByCategory(entries, items, undefined).map((g) => g.name)).toEqual(['Laticínios', 'Limpeza', 'Festa']);
-    expect(groupByCategory(entries, items, { categoryOrder: ['propria:Festa'] }).map((g) => g.name)).toEqual(['Festa', 'Laticínios', 'Limpeza']);
+    // A category the context does not have goes to "Outros".
+    expect(groupByCategory(entries, items, ['limpeza']).map((g) => g.name)).toEqual(['Limpeza', 'Outros']);
   });
 
   it('chooses the context: the catalog first, then the setup suggestions, else none', () => {
