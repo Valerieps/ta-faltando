@@ -12,12 +12,16 @@ Eu adiciono o que está faltando sem pensar em qual lista: o app coloca cada ite
 - No celular, o app abre na captura: o campo de adicionar já vem focado, com o teclado aberto. O
   enter adiciona o item e limpa o campo para o próximo. *(1a)*
   Por quê: no celular eu quase sempre adiciono um item por vez, no meio do dia.
-- No celular, a tela das listas e a dos contextos ficam separadas da captura, a um toque dela. *(1a)*
+- No celular, a tela das listas fica separada da captura, a um toque dela. *(1a)*
 - No celular, tudo que eu toco fica na parte de baixo da tela, do lado da mão escolhida
   (`modo-compra.md`). Na captura, o campo fica colado no teclado e o autocompletar abre para
   cima. *(1a)*
 - No computador, o app abre nas listas, uma coluna por contexto, com a caixa do lote ao lado. *(1a)*
   Por quê: no computador eu vejo tudo de uma vez e adiciono em lote.
+
+- Eu crio e edito os contextos no Catálogo: um + antes das cápsulas cria um contexto novo, e o
+  lápis numa cápsula muda o nome dela. No computador, o lápis aparece quando passo o mouse; no
+  celular, ele fica na cápsula aberta. Não há uma tela de Contextos. *(1a)*
 
 ## Formas de adicionar
 

@@ -6,26 +6,25 @@ import { activeContexts, contextName, itemsById, itemsWithoutContext, listEntrie
 import { AddField } from '../components/AddField';
 import { BatchReview } from '../components/BatchReview';
 import { Catalog } from '../components/Catalog';
-import { ContextManager } from '../components/ContextManager';
 import { ItemSheet } from '../components/ItemSheet';
 import { ListRows } from '../components/ListRows';
 import { Say } from '../components/Say';
 import { SettingsPanel } from '../components/SettingsPanel';
 import { Uncontexted } from '../components/Uncontexted';
 import { useFading, withFading } from '../components/useFading';
+import { ContextChips } from '../components/ContextChips';
 import { navigate, routeHash, type Route } from '../router';
 import { useServices } from '../services';
 import { SyncIndicator } from '../SyncIndicator';
 import { Tata } from '../Tata';
 import { tata } from '../tata-lines';
 
-type Page = 'lists' | 'catalog' | 'contexts' | 'uncontexted' | 'settings';
+type Page = 'lists' | 'catalog' | 'uncontexted' | 'settings';
 
 /** The phone's screens that have no page of their own here open the lists (no shopping mode on the computer). */
 function pageOf(route: Route): Page {
   switch (route.name) {
     case 'catalog':
-    case 'contexts':
     case 'uncontexted':
     case 'settings':
       return route.name;
@@ -44,7 +43,6 @@ export function DesktopApp({ snapshot, route }: { snapshot: Snapshot; route: Rou
   const links: { page: Page; label: string; count?: number; quiet?: boolean; to: Route }[] = [
     { page: 'lists', label: 'Listas', count: totalMissing(snapshot), to: { name: 'home' } },
     { page: 'catalog', label: 'Catálogo', to: { name: 'catalog' } },
-    { page: 'contexts', label: 'Contextos', to: { name: 'contexts' } },
     { page: 'uncontexted', label: 'Sem contexto', count: loose, quiet: true, to: { name: 'uncontexted' } },
     { page: 'settings', label: 'Ajustes', to: { name: 'settings' } },
   ];
@@ -79,12 +77,6 @@ export function DesktopApp({ snapshot, route }: { snapshot: Snapshot; route: Rou
       <main className="desk__main">
         {page === 'lists' && <ListsPage snapshot={snapshot} />}
         {page === 'catalog' && <CatalogPage snapshot={snapshot} contextId={route.name === 'catalog' ? route.contextId : undefined} />}
-        {page === 'contexts' && (
-          <>
-            <h1 className="title">Contextos</h1>
-            <ContextManager snapshot={snapshot} />
-          </>
-        )}
         {page === 'uncontexted' && (
           <>
             <h1 className="title">Sem contexto</h1>
@@ -136,7 +128,7 @@ function ListsPage({ snapshot }: { snapshot: Snapshot }) {
         </div>
       </div>
       {contexts.length === 0 && !hasLoose ? (
-        <Say mood="attentive">Ainda não há contextos. Crie um em Contextos, ou refaça o setup nos Ajustes.</Say>
+        <Say mood="attentive">Ainda não há contextos. Crie um no Catálogo, com o +, ou refaça o setup nos Ajustes.</Say>
       ) : (
         <div className="cols">
           {contexts.map((context) => (
@@ -217,19 +209,7 @@ function CatalogPage({ snapshot, contextId }: { snapshot: Snapshot; contextId: s
   return (
     <>
       <h1 className="title">Catálogo</h1>
-      <nav className="chips" aria-label="Contextos">
-        {[...contexts.map((c) => c.id), null].map((cid) => (
-          <button
-            key={cid ?? 'none'}
-            type="button"
-            className={cid === id ? 'chip is-on' : 'chip'}
-            aria-current={cid === id ? 'page' : undefined}
-            onClick={() => navigate({ name: 'catalog', contextId: cid }, { replace: true })}
-          >
-            {contextName(snapshot, cid)}
-          </button>
-        ))}
-      </nav>
+      <ContextChips snapshot={snapshot} current={id} />
       <Catalog key={id ?? 'none'} snapshot={snapshot} contextId={id} />
     </>
   );

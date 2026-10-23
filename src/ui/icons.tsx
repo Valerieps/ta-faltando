@@ -33,6 +33,12 @@ export const PlusIcon = () => (
   </svg>
 );
 
+export const PencilIcon = () => (
+  <svg {...base}>
+    <path d="M4 20h4L19 9l-4-4L4 16v4zM13.5 6.5l4 4" />
+  </svg>
+);
+
 export const BackIcon = () => (
   <svg {...base}>
     <path d="M15 5l-7 7 7 7" />
