@@ -47,11 +47,8 @@ export function Setup({ snapshot, redo, onFinish }: { snapshot: Snapshot; redo: 
   }, [redo, step.kind, existing.length, onFinish]);
 
   // The Google login comes before the welcome, so a new device brings its data first.
-  const gate = welcomeGate(useSyncState(), backFromLogin());
-  useEffect(() => {
-    // Same-origin navigation: Cloudflare Access shows the Google login and comes back.
-    if (!redo && step.kind === 'welcome' && gate === 'login') window.location.assign(loginPath);
-  }, [redo, step.kind, gate, loginPath]);
+  const [loginDeclined, setLoginDeclined] = useState(false);
+  const gate = welcomeGate(useSyncState(), backFromLogin() || loginDeclined);
 
   // Items already in the catalog, with a context, never show as suggestions.
   const inCatalog = useMemo(
@@ -82,7 +79,28 @@ export function Setup({ snapshot, redo, onFinish }: { snapshot: Snapshot; redo: 
   }
 
   if (step.kind === 'welcome') {
-    if (gate !== 'show') return <main className="screen setup" aria-busy="true" />;
+    if (gate === 'wait') return <main className="screen setup" aria-busy="true" />;
+    if (gate === 'login') {
+      return (
+        <main className="screen setup">
+          <div className="setup__hero">
+            <Tata mood="happy" size={96} />
+            <h1 className="question">Tá faltando</h1>
+            <Say>{tata.login}</Say>
+            <p className="muted">Se você já usa o app em outro aparelho, as suas listas e o seu catálogo chegam aqui.</p>
+          </div>
+          <div className="reach">
+            <button type="button" className="pill" onClick={() => setLoginDeclined(true)}>
+              Agora não
+            </button>
+            {/* Same-origin navigation: Cloudflare Access shows the Google login and comes back. */}
+            <a className="btn" href={loginPath}>
+              Entrar com Google
+            </a>
+          </div>
+        </main>
+      );
+    }
     return (
       <main className="screen setup">
         <div className="setup__hero">
