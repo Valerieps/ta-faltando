@@ -10,6 +10,11 @@ export async function requestPersistentStorage(): Promise<void> {
   await navigator.storage.persist();
 }
 
+/** A short vibration when an item is struck in shopping mode (identity draft, "Movimento"). */
+export function haptic(): void {
+  navigator.vibrate?.(15);
+}
+
 /** How long after a local change the app waits before syncing, so a burst of taps goes in one request. */
 export const LOCAL_CHANGE_DELAY_MS = 3000;
 

@@ -28,6 +28,13 @@
   /* Questions, screen titles and Tatá's voice; bundled from @fontsource/nunito (700 and 800, latin) */
   --font-display: 'Nunito', ui-rounded, var(--font-sans);
   --font-size-base: 15px;
+  --font-size-small: 13px;
+  --font-size-label: 11px;
+  --font-size-item: 17px;
+  /* Shopping mode: everything bigger (identity draft) */
+  --font-size-shopping: 19px;
+  --font-size-title: 24px;
+  --font-size-question: 28px;
 
   --space-1: 4px;
   --space-2: 8px;
@@ -46,6 +53,10 @@
   --row-shopping: 56px;
   /* Swiping twice or deleting fades the item out before it leaves the list (spec/modo-compra.md) */
   --fade-out: 3s;
+  /* A tapped setup capsule fades before the next suggestion takes its place (spec/setup.md) */
+  --fade-capsule: 300ms;
+  /* Every other movement answers a tap and ends in under half a second */
+  --motion-fast: 200ms;
 }
 
 @media (prefers-color-scheme: dark) {

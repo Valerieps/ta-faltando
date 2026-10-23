@@ -12,7 +12,14 @@ export interface ListEntry extends SyncedRecord {
   readonly status: EntryStatus;
   readonly addedAt: number;
   readonly boughtAt: number | null;
+  /**
+   * When it was struck ("riscado") in shopping mode or on the desktop lists; it leaves the list when
+   * the purchase is finished. Optional: entries saved before this field existed have none.
+   */
+  readonly checkedAt?: number | null;
 }
+
+export const isChecked = (entry: ListEntry) => entry.checkedAt != null;
 
 /** An item is pending at most once on the list of a context (docs/ARQUITETURA.md). */
 export function pendingEntryFor(

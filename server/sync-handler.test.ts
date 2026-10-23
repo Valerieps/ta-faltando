@@ -92,12 +92,12 @@ describe('sync between two devices', () => {
     const phone = device('phone', env, clock);
     const desktop = device('desktop', env, clock);
 
-    const entry = (await phone.lists.add('leite'))!;
+    const { entry } = (await phone.lists.add('leite'))!;
     await phone.sync.sync();
     expect(phone.sync.getState()).toMatchObject({ status: 'idle', pending: 0 });
 
     await desktop.sync.sync();
-    expect((await desktop.store.list('items')).map((i) => i.name)).toEqual(['leite']);
+    expect((await desktop.store.list('items')).map((i) => i.name)).toEqual(['Leite']);
     expect(await desktop.store.pendingCount()).toBe(0);
 
     await desktop.lists.remove('listEntries', entry.id);
