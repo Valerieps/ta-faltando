@@ -1,6 +1,6 @@
 # ADR-004: Local-only in phase 1a; own API behind Cloudflare Access in phase 1b
 
-**Status:** Accepted
+**Status:** Accepted, updated by ADR-007
 **Date:** 2026-10-22
 **Decision:** Phase 1a makes no network calls: `network-policy.ts` stays empty and the CSP keeps
 `connect-src 'none'`. Phase 1b adds Cloudflare Pages Functions under `/api` on the app's own
@@ -24,3 +24,8 @@ functions, against the template's Cloudflare Pages. Google Identity Services in 
 the phone: simpler, but leaks with the phone's storage and has no revocation. The
 `claude-web-app-cloudflare-template` (server data and Google login): the data here stays local,
 so a server database is not needed.
+
+**Update (2026-10-23):** Phase 1a is no longer local-only: the owner wants the same data on her
+phone and in a desktop browser, so `/api/sync` and a D1 database arrive in phase 1a (ADR-007).
+The Access application and its Google login are created in phase 1a and protect sync as well as
+receipt reading; the data no longer stays only on the phone.

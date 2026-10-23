@@ -6,8 +6,9 @@
  * Listing origins (e.g. 'https://api.example.com') opens the CSP to exactly those origins and
  * lets src/infrastructure/ (and only it) make requests to them.
  *
- * Phase 1a is local-only. Phase 1b adds the app's own server functions under /api for the receipt
- * reading (ADR-004); that change opens `connect-src` to the app's own origin.
+ * Phase 1a adds the app's own server functions under /api to sync data between devices (ADR-007),
+ * and phase 1b uses them for the receipt reading (ADR-004): the sync work opens `connect-src` to
+ * the app's own origin. Until that code exists, the list stays empty.
  */
 export const ALLOWED_ORIGINS: readonly string[] = [];
 

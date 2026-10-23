@@ -1,22 +1,25 @@
 # Backup
 
-Tudo fica no meu celular, sem conta; o backup em arquivo é o que me protege de perder os dados.
+Os dados ficam no aparelho e numa cópia no servidor (`sincronizacao.md`); o backup em arquivo é a
+minha cópia fora dos dois, para quando algo der errado.
 
 - **Entra aqui:** exportar, importar, o lembrete de backup e os cuidados com o armazenamento.
 - **Não entra aqui:** o formato do arquivo e as migrações (`ARQUITETURA.md`).
 
 ## Em aberto
 
-- [ ] Importar um backup substitui tudo o que está no celular, ou junta com o que já existe?
+- [ ] Importar um backup substitui tudo o que está no app, ou junta com o que já existe? Com a
+  sincronização, o resultado vai também para o servidor e para o outro aparelho.
 
 ## Exportar e importar
 
 - Eu exporto um arquivo com todos os meus dados (catálogo, listas, lojas, compras e preços) e
   escolho onde salvá-lo. *(1a)*
-- Eu importo esse arquivo, no mesmo celular ou num celular novo. Antes de importar, o app mostra o
+- Eu importo esse arquivo, no celular ou no computador. Antes de importar, o app mostra o
   que o arquivo contém e pede confirmação. *(1a)*
 - Uma vez por mês, o app me lembra de exportar um backup. *(1a)*
-  Por quê: limpar os dados do navegador ou trocar de celular apaga tudo.
+  Por quê: uma importação errada ou um erro na sincronização chega a todos os aparelhos; o
+  arquivo é a cópia que ele não alcança.
 
 ## Armazenamento
 
