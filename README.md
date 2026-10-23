@@ -1,22 +1,7 @@
-# Nome do app
+# Tá faltando
 
-<Uma frase sobre o que o app faz.>
-
-## Usar o template
-
-Este repositório é um template para apps web construídos com o Claude Code: Vite + React +
-TypeScript, testes com Vitest, CI no GitHub Actions e deploy no Cloudflare Pages, com as docs
-organizadas para o Claude ler só o que precisa. Os dados ficam no navegador; para um app de grupo,
-com servidor e login com Google, use o
-[claude-web-app-cloudflare-template](https://github.com/Valerieps/claude-web-app-cloudflare-template).
-
-1. No GitHub, **Use this template > Create a new repository**.
-2. Clone o repositório novo e rode `npm ci`.
-3. Abra o Claude Code na pasta e diga **"leia o BOOTSTRAP.md e siga"**. Ele faz uma entrevista
-   sobre o app, preenche as docs, configura o repositório e abre o primeiro PR.
-
-Um template não copia labels, proteção de branch nem configurações do repositório: o
-`npm run setup:repo` faz isso (o bootstrap já roda).
+Listas de compras da casa separadas por contexto (mercado, farmácia, pet shop), que aprendem com as
+notas fiscais o que se compra, onde e por quanto.
 
 ## Rodar
 
