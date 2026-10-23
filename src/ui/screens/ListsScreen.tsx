@@ -1,18 +1,22 @@
 import { useEffect, useRef, useState } from 'react';
 import { activeContexts, contextName, itemsById, listEntries, missingCount, type Snapshot } from '../../domain/list-view';
+import { AddChip } from '../components/AddChip';
+import { ContextSheet } from '../components/ContextSheet';
 import { ItemSheet } from '../components/ItemSheet';
 import { ListRows } from '../components/ListRows';
+import { ProfileMenu } from '../components/ProfileMenu';
 import { Say } from '../components/Say';
 import { Uncontexted } from '../components/Uncontexted';
 import { useFading, withFading } from '../components/useFading';
-import { PlusIcon } from '../icons';
+import { CartIcon, PencilIcon, PlusIcon } from '../icons';
 import { navigate } from '../router';
 import { useServices } from '../services';
 import { tata } from '../tata-lines';
 
 /**
  * The phone's lists: a tab per context plus "Sem contexto", near the thumb; no gestures and no
- * striking here, only the trash (spec/itens-e-contextos.md, "Tela das listas").
+ * striking here, only the trash (spec/itens-e-contextos.md, "Tela das listas"). The pencil by
+ * the name edits the context, and the big button enters shopping mode in it.
  */
 export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snapshot; contextId: string | null | undefined }) {
   const { lists, contexts: contextUseCases } = useServices();
@@ -21,6 +25,7 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
   const context = contexts.find((c) => c.id === contextId);
   const { fading, fade, undo } = useFading();
   const [open, setOpen] = useState<{ itemId: string; entryId: string } | null>(null);
+  const [editing, setEditing] = useState(false);
   const activeTab = useRef<HTMLButtonElement>(null);
 
   useEffect(() => activeTab.current?.scrollIntoView({ inline: 'center', block: 'nearest' }), [contextId]);
@@ -35,7 +40,15 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
 
   return (
     <main className="screen lists">
-      <h1 className="title">{name}</h1>
+      <header className="screen__head">
+        <h1 className="title">{name}</h1>
+        {context && (
+          <button type="button" className="icon-button" aria-label={`Editar ${name}`} title="Editar o contexto" onClick={() => setEditing(true)}>
+            <PencilIcon />
+          </button>
+        )}
+        <ProfileMenu />
+      </header>
 
       <div className="lists__body">
         {contextId === null ? (
@@ -90,20 +103,27 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
               </button>
             );
           })}
+          <AddChip
+            label="Novo contexto"
+            onAdd={async (newName) => {
+              const created = await contextUseCases.create(newName);
+              if (created) navigate({ name: 'lists', contextId: created.id }, { replace: true });
+            }}
+          />
         </nav>
         <div className="reach">
-          <button type="button" className="pill" onClick={() => navigate({ name: 'settings' })}>
-            Ajustes
-          </button>
           <button type="button" className="pill pill--icon" aria-label="Anotar" onClick={() => navigate({ name: 'home' })}>
             <PlusIcon />
           </button>
-          <button type="button" className="btn" disabled={!context} onClick={() => context && navigate({ name: 'shop', contextId: context.id })}>
-            Comprar
-          </button>
+          {context && (
+            <button type="button" className="btn btn--icon" onClick={() => navigate({ name: 'shop', contextId: context.id })}>
+              <CartIcon /> Comprar no {name}
+            </button>
+          )}
         </div>
       </div>
 
+      {editing && context && <ContextSheet context={context} snapshot={snapshot} onClose={() => setEditing(false)} />}
       {open && <ItemSheet snapshot={snapshot} itemId={open.itemId} entryId={open.entryId} onClose={() => setOpen(null)} onRemoveEntry={trash} />}
     </main>
   );

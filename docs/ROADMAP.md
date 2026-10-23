@@ -25,6 +25,7 @@ O que ainda não está pronto.
 
 ## Adiado
 
+- Adicionar falando, pelo microfone: saiu do app em 2026-10 porque não funcionava no meu celular.
 - Recompra prevista, comparação entre lojas, pedidos de lojas online pelo e-mail, listas
   compartilhadas e gastos por contexto — depois da fase 1b ([SPEC.md](SPEC.md)).
 
@@ -37,7 +38,6 @@ O que ainda não está pronto.
 - [ ] No computador, além de ver, eu adiciono, edito, risco e apago; o backup existe nos dois aparelhos. ([spec/sincronizacao.md](spec/sincronizacao.md), [spec/backup.md](spec/backup.md))
 - [ ] "Lista padrão" passou a se chamar "adicionar pelo catálogo". ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
 - [ ] Um item novo digitado entra no catálogo; um contexto "Outro" começa sem sugestões. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md), [spec/setup.md](spec/setup.md))
-- [ ] O microfone usa o reconhecimento de voz do Chrome, que manda o áudio para o Google. ([SEGURANCA.md](SEGURANCA.md))
 - [ ] Importar um backup mostra o conteúdo e pede confirmação antes. ([spec/backup.md](spec/backup.md))
 - [ ] O item que sai da lista pelo segundo deslize ou pela lixeira esmaece por 3 segundos. ([spec/modo-compra.md](spec/modo-compra.md))
 - [ ] Um item novo só fica com a categoria da sugestão se o contexto dele tiver essa categoria; sem contexto, ele guarda a categoria para quando ganhar um. ([spec/modo-compra.md](spec/modo-compra.md))
@@ -54,6 +54,8 @@ O que ainda não está pronto.
 - [ ] Na captura, o enter anota exatamente o que digitei; a sugestão do autocompletar entra com um toque nela. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
 - [ ] No catálogo, o campo filtra os itens, e o enter põe um nome novo no catálogo e já na lista. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
 - [ ] Um contexto desativado sai das abas, e os seus itens aparecem em "Sem contexto" até eu vinculá-los de novo. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
-- [ ] Os Ajustes (mão, backup, refazer o setup) abrem por um botão na tela das listas no celular e pelo menu no computador. ([spec/modo-compra.md](spec/modo-compra.md), [spec/backup.md](spec/backup.md))
+- [ ] No celular, os ajustes ficam no menu do perfil; o "Backup" dele abre a tela de Ajustes, e no computador eles continuam no menu lateral. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md), [spec/backup.md](spec/backup.md))
+- [ ] O carrinho da captura mostra só as listas com itens faltando; o "Sair" encerra o login do Cloudflare Access e deixa os dados no aparelho. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
+- [ ] Na tela das listas, as abas continuam no pé, perto do polegar; só o nome, o lápis e o avatar ficam no topo. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
 - [ ] O modo compra tem um "Desfazer" na barra, para o último gesto, além do "Desfazer" no próprio item. ([spec/modo-compra.md](spec/modo-compra.md))
 - [ ] Os atalhos do ícone são Adicionar, Listas, Catálogo e Em lote; o modo compra ficou de fora, porque um atalho não sabe em qual contexto entrar. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))

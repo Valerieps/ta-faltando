@@ -1,5 +1,6 @@
 import { isTableName, type Change } from '../src/domain/tables';
 import type { D1Database, Env } from './d1';
+import { isOwner, json } from './owner';
 
 /** Limits on what one request may carry; the app sends at most PUSH_BATCH changes. */
 export const MAX_BODY_BYTES = 2_000_000;
@@ -7,12 +8,6 @@ export const MAX_CHANGES = 500;
 export const MAX_RECORD_BYTES = 16_000;
 /** Records pulled per response; the app asks again while `more` is true. */
 export const PULL_PAGE = 500;
-
-const json = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), {
-    status,
-    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
-  });
 
 /**
  * POST /api/sync (ADR-007): stores the pushed changes where they win (last write wins, ties by
@@ -28,16 +23,6 @@ export async function handleSync(request: Request, env: Env): Promise<Response> 
 
   await push(env.DB, parsed.changes);
   return json(await pull(env.DB, parsed.cursor));
-}
-
-/**
- * Cloudflare Access lets only the owner reach /api and adds her e-mail to the request; checking
- * it here as well keeps the data closed if the Access application is ever misconfigured.
- */
-function isOwner(request: Request, env: Env): boolean {
-  const email = request.headers.get('Cf-Access-Authenticated-User-Email');
-  const owner = env.OWNER_EMAIL?.trim().toLowerCase();
-  return Boolean(owner) && email?.trim().toLowerCase() === owner;
 }
 
 interface ParsedRequest {

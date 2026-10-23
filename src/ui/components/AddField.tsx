@@ -3,7 +3,6 @@ import type { AddResult } from '../../application/lists';
 import { parseEntryText } from '../../domain/entry-text';
 import { contextName, destinationFor, type Snapshot } from '../../domain/list-view';
 import { searchItems } from '../../domain/search';
-import { MicIcon } from '../icons';
 import { useServices } from '../services';
 
 interface Props {
@@ -11,7 +10,6 @@ interface Props {
   onAdded: (result: AddResult) => void;
   /** The phone's field sits on the keyboard, so the suggestions open upward. */
   opens: 'up' | 'down';
-  onMic?: () => void;
   autoFocus?: boolean;
   inputRef?: Ref<HTMLInputElement>;
   placeholder?: string;
@@ -22,7 +20,7 @@ interface Props {
  * showing where each item goes before the enter (spec/itens-e-contextos.md). Enter adds exactly
  * what was typed and clears the field for the next item.
  */
-export function AddField({ snapshot, onAdded, opens, onMic, autoFocus, inputRef, placeholder = 'Digite e aperte enter' }: Props) {
+export function AddField({ snapshot, onAdded, opens, autoFocus, inputRef, placeholder = 'Digite e aperte enter' }: Props) {
   const { lists } = useServices();
   const [text, setText] = useState('');
   const [highlight, setHighlight] = useState(-1);
@@ -110,11 +108,6 @@ export function AddField({ snapshot, onAdded, opens, onMic, autoFocus, inputRef,
           }}
           onKeyDown={onKeyDown}
         />
-        {onMic && (
-          <button type="button" className="field__mic" onClick={onMic} aria-label="Falar os itens">
-            <MicIcon />
-          </button>
-        )}
       </div>
     </div>
   );

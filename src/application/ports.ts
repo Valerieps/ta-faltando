@@ -61,11 +61,10 @@ export interface IdGenerator {
   newId(): string;
 }
 
-/** Speech to text (Web Speech, ADR-006). Not every browser has it: then the mic button goes away. */
-export interface SpeechInput {
-  readonly supported: boolean;
-  /** Listens once; calls `onText` with what was understood and `onEnd` when it stops. Returns a stop function. */
-  listen(onText: (text: string) => void, onEnd: (error?: 'denied' | 'failed') => void): () => void;
+/** Who is signed in to /api (Cloudflare Access, ADR-008). */
+export interface AccountApi {
+  /** The owner's e-mail; null when signed out; undefined when the server could not be reached. */
+  email(): Promise<string | null | undefined>;
 }
 
 /** Saving and opening the backup file where the owner chooses (spec/backup.md). */

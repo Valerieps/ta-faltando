@@ -11,9 +11,11 @@ export interface DeviceSettings {
   readonly lastBackupAt: number | null;
   /** When the app first opened here; the backup reminder counts from it until the first backup. */
   readonly firstUseAt: number | null;
+  /** The signed-in e-mail, last seen from /api/me; kept so the initials show offline. */
+  readonly email: string | null;
 }
 
-const DEFAULTS: DeviceSettings = { hand: 'right', setupDone: false, lastBackupAt: null, firstUseAt: null };
+const DEFAULTS: DeviceSettings = { hand: 'right', setupDone: false, lastBackupAt: null, firstUseAt: null, email: null };
 const KEYS = Object.keys(DEFAULTS) as (keyof DeviceSettings)[];
 
 /** Reads the settings once, keeps them in memory and tells the screens when one changes. */

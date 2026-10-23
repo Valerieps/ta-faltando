@@ -20,10 +20,11 @@ export const TrashIcon = () => (
   </svg>
 );
 
-export const MicIcon = () => (
+export const CartIcon = () => (
   <svg {...base}>
-    <rect x="9" y="3" width="6" height="11" rx="3" />
-    <path d="M5 11a7 7 0 0 0 14 0M12 18v3" />
+    <path d="M3 4h2l2.4 11h10.2L20 8H6.2" />
+    <circle cx="9.5" cy="19.5" r="1.3" />
+    <circle cx="16.5" cy="19.5" r="1.3" />
   </svg>
 );
 
