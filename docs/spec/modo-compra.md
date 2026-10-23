@@ -20,12 +20,23 @@ A lista de um contexto em tela cheia, para eu usar com uma mão só dentro da lo
 - Um botão alterna entre lista corrida e lista agrupada por categoria (ex.: hortifrúti, laticínios,
   limpeza). A escolha fica gravada por contexto. *(1a)*
 - Cada grupo é uma seção recolhível, com o contador do que falta comprar. *(1a)*
-- A categoria vem da sugestão do setup. Itens criados à mão, pelo microfone ou em lote ficam em
-  "Outros" até eu escolher uma categoria no detalhe do item. *(1a)*
-- No detalhe do item, um "+" ao lado das categorias cria uma categoria minha, e um "+" ao lado dos
-  contextos cria um contexto novo. As categorias minhas entram depois das do app, antes de
-  "Outros", até eu arrastar a ordem. *(1a)*
-- Eu arrasto a ordem dos grupos para seguir o caminho da loja que eu frequento. *(1a)*
+- Cada contexto tem as suas categorias. Ele começa com as categorias das suas sugestões do setup e
+  as que os seus itens já usam (Mercado: laticínios, mercearia, limpeza, higiene; Farmácia:
+  higiene, saúde); um contexto novo começa sem nenhuma. *(1a)*
+  Por quê: o caminho da loja e o jeito de separar os itens mudam de uma loja para a outra.
+- No Catálogo, o lápis na cápsula do contexto mostra "Categorias", que abre a tela onde eu crio,
+  renomeio, subo, desço e apago as categorias daquele contexto. Renomear leva os itens junto; apagar manda os itens dela para
+  "Outros". Mexer nas categorias de um contexto não muda as dos outros. *(1a)*
+- A categoria vem da sugestão do setup, se o contexto do item tiver essa categoria; senão, e nos
+  itens criados à mão, pelo microfone ou em lote, o item fica em "Outros" até eu escolher uma
+  categoria no detalhe do item. *(1a)*
+- No detalhe do item, aparecem só as categorias do contexto padrão dele; um "+" ao lado delas cria
+  uma categoria nova nesse contexto, e um "+" ao lado dos contextos cria um contexto novo. Um item
+  sem contexto não tem categoria para escolher. *(1a)*
+- Quando eu mudo o contexto padrão de um item, a categoria dele vai junto: se o novo contexto não
+  tem essa categoria, ela é criada lá, no fim. *(1a)*
+- Eu arrasto a ordem dos grupos para seguir o caminho da loja que eu frequento; é a mesma ordem
+  das categorias do contexto. *(1a)*
 
 ## Marcar e finalizar
 

@@ -40,6 +40,7 @@ O que ainda não está pronto.
 - [ ] O microfone usa o reconhecimento de voz do Chrome, que manda o áudio para o Google. ([SEGURANCA.md](SEGURANCA.md))
 - [ ] Importar um backup mostra o conteúdo e pede confirmação antes. ([spec/backup.md](spec/backup.md))
 - [ ] O item que sai da lista pelo segundo deslize ou pela lixeira esmaece por 3 segundos. ([spec/modo-compra.md](spec/modo-compra.md))
+- [ ] Um item novo só fica com a categoria da sugestão se o contexto dele tiver essa categoria; sem contexto, ele guarda a categoria para quando ganhar um. ([spec/modo-compra.md](spec/modo-compra.md))
 - [ ] A lixeira também existe no modo compra, e o "Desfazer" aparece no próprio item enquanto ele esmaece. ([spec/modo-compra.md](spec/modo-compra.md))
 - [ ] "Sem gestos, só a lixeira" vale para a tela das listas do celular; no computador eu continuo riscando nas listas. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md), [spec/sincronizacao.md](spec/sincronizacao.md))
 - [ ] No computador, os riscados de uma lista saem por um "Finalizar compra" no pé da coluna, já que lá não há modo compra. ([spec/sincronizacao.md](spec/sincronizacao.md))

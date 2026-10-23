@@ -1,9 +1,11 @@
+import { categoryIn, contextCategories } from '../domain/context-categories';
 import { parseEntryText, type EntryText } from '../domain/entry-text';
 import { findItemByName, type Item, type ItemOrigin } from '../domain/item';
 import { pendingEntryFor, type ListEntry } from '../domain/list-entry';
 import { destinationFor, listEntries, type Snapshot } from '../domain/list-view';
 import { changed, created, deleted, type Author } from '../domain/synced-record';
 import type { TableName } from '../domain/tables';
+import { bringCategory } from './contexts';
 import type { ChangeOrigin, Clock, IdGenerator, LocalStore } from './ports';
 
 /** What happened when an item was added, so Tatá can say it (identity draft). */
@@ -56,7 +58,7 @@ export class Lists {
         ...created(this.ids.newId(), author),
         name: parsed.name,
         defaultContextId: contextId,
-        category: destination.category,
+        category: this.newCategory(snapshot, contextId, destination.category),
         createdVia: via,
       };
       await this.store.save('items', item);
@@ -92,13 +94,14 @@ export class Lists {
   async addToCatalog(name: string, contextId: string | null): Promise<Item | null> {
     const parsed = parseEntryText(name);
     if (!parsed.name) return null;
-    const existing = findItemByName(await this.store.list('items'), parsed.name);
+    const snapshot = await this.snapshot();
+    const existing = findItemByName(snapshot.items, parsed.name);
     if (existing) return existing;
     const item: Item = {
       ...created(this.ids.newId(), await this.author()),
       name: parsed.name,
       defaultContextId: contextId,
-      category: destinationFor(await this.snapshot(), parsed.name).category,
+      category: this.newCategory(snapshot, contextId, destinationFor(snapshot, parsed.name).category),
       createdVia: 'manual',
     };
     await this.store.save('items', item);
@@ -254,7 +257,20 @@ export class Lists {
 
   private async changeItem(itemId: string, changes: Partial<Pick<Item, 'name' | 'defaultContextId' | 'category'>>, author: Author): Promise<void> {
     const item = await this.store.get('items', itemId);
-    if (item && item.deletedAt === null) await this.store.save('items', changed(item, changes, author));
+    if (!item || item.deletedAt !== null) return;
+    await this.store.save('items', changed(item, changes, author));
+    if (changes.defaultContextId !== undefined && changes.defaultContextId !== item.defaultContextId) {
+      await bringCategory(this.store, changes.defaultContextId, changes.category ?? item.category, author);
+    }
+  }
+
+  /**
+   * A new item keeps its suggestion's category only if its context has it; without a context it
+   * keeps it for the context it gets later.
+   */
+  private newCategory(snapshot: Snapshot, contextId: string | null, category: string | null): string | null {
+    if (contextId === null) return category;
+    return categoryIn(contextCategories(snapshot.contexts.find((c) => c.id === contextId), snapshot.items), category);
   }
 
   private async author(): Promise<Author> {
