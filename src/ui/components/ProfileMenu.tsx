@@ -4,6 +4,7 @@ import type { Settings } from '../../application/settings';
 import { initials } from '../initials';
 import { navigate, type Route } from '../router';
 import { useServices, useSettings, useSyncState } from '../services';
+import { signOut } from '../sign-out';
 import { SyncIndicator } from '../SyncIndicator';
 import { HandChoice } from './HandChoice';
 
@@ -72,7 +73,14 @@ export function ProfileMenu() {
             </button>
             {email ? (
               // Same-origin navigation: Cloudflare Access ends the session that lets the app into /api.
-              <a className="profile__row" href={logoutPath} onClick={() => void settings.set('email', null)}>
+              <a
+                className="profile__row"
+                href={logoutPath}
+                onClick={(event) => {
+                  event.preventDefault();
+                  void signOut(settings, logoutPath);
+                }}
+              >
                 Sair
               </a>
             ) : (
