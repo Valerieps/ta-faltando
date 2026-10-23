@@ -1,11 +1,14 @@
-import { greetingFor } from '../domain/greeting';
+import { SyncIndicator } from './SyncIndicator';
 
-// Placeholder screen: replace it with the app's first screen (docs/ROADMAP.md).
+// The app shell. The screens of phase 1a (setup, lists, shopping mode) arrive here (docs/ROADMAP.md).
 export function App() {
   return (
     <main className="app">
-      <h1>Tá faltando</h1>
-      <p>{greetingFor(new Date())}</p>
+      <header className="app__header">
+        <h1>Tá faltando</h1>
+        <SyncIndicator />
+      </header>
+      <p className="app__empty">As listas aparecem aqui.</p>
     </main>
   );
 }

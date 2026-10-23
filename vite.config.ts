@@ -1,7 +1,7 @@
 import type { Plugin } from 'vite';
 import { configDefaults, defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
-import { ALLOWED_ORIGINS, LOCAL_ONLY } from './network-policy.ts';
+import { CONNECT_SOURCES } from './network-policy.ts';
 
 // Strict CSP (docs/SEGURANCA.md, ADR-002). Injected only in production builds: the dev server
 // needs a websocket for hot reload, which a closed `connect-src` would block. It is a meta tag
@@ -10,7 +10,7 @@ export const CONTENT_SECURITY_POLICY = [
   "default-src 'self'",
   "script-src 'self'",
   "style-src 'self' 'unsafe-inline'",
-  LOCAL_ONLY ? "connect-src 'none'" : `connect-src ${ALLOWED_ORIGINS.join(' ')}`,
+  `connect-src ${CONNECT_SOURCES.join(' ')}`,
   "img-src 'self' data:",
   "object-src 'none'",
   "base-uri 'none'",
@@ -49,6 +49,7 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
+    include: ['src/**/*.test.{ts,tsx}', 'server/**/*.test.ts'],
     // Claude Code sessions keep their own checkouts under .claude/worktrees; their tests are not ours.
     exclude: [...configDefaults.exclude, '.claude/**'],
   },

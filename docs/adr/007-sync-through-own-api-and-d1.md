@@ -1,6 +1,6 @@
 # ADR-007: Sync between devices through the app's own API and Cloudflare D1
 
-**Status:** Accepted
+**Status:** Accepted, updated by ADR-008
 **Date:** 2026-10-23
 **Decision:** From phase 1a the owner uses the app on her Android phone and in a desktop browser,
 with the same data (`docs/spec/sincronizacao.md`). IndexedDB (ADR-005) stays the working copy on
@@ -26,3 +26,7 @@ and often a new origin, for a single user. Server as the only copy (no IndexedDB
 shopping mode without signal. Field-level merge: more code for conflicts that are rare with one
 user. Putting the whole app behind Access: the installed app would not open offline after the
 session expires.
+
+**Update (2026-10-23):** ADR-008 gives the storage layout on both sides and the login route.
+`network-policy.ts` opens `connect-src 'self'` through `USES_OWN_API` rather than listing an
+origin, since production and each branch preview have different origins.
