@@ -1448,6 +1448,10 @@ button.check::before {
   gap: var(--space-2);
 }
 
+.sheet__trash {
+  margin-left: auto;
+}
+
 /* The profile menu opens from the avatar, so it hangs from the top. */
 .sheet--top {
   margin: 0 auto auto;

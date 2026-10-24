@@ -36,6 +36,7 @@ Eu adiciono o que está faltando sem pensar em qual lista: o app coloca cada ite
   os seus contextos. O enter põe um nome novo no catálogo do contexto aberto e já na lista. *(1a)*
 - No catálogo, um carrinho antes do item mostra se ele está na lista (cheio) ou não (vazio), e o
   lápis depois dele abre o detalhe do item. *(1a)*
+- No detalhe do item, uma lixeira tira o item do catálogo num toque só, sem pedir confirmação. *(1a)*
 - No celular, a tela das listas também edita os contextos: o menu que abre no nome da lista tem
   "Editar …", que edita o contexto aberto (nome, posição, categorias, desativar), e "Novo
   contexto", que cria um. *(1a)*
