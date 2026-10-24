@@ -75,8 +75,8 @@ describe('screens', () => {
     expect(html).not.toContain('class="tabs"');
     const nav = html.slice(html.indexOf('class="bottom-nav"'));
     expect(nav).not.toContain('Perfil');
-    expect(nav.indexOf('Catálogo')).toBeLessThan(nav.indexOf('aria-label="Anotar"'));
-    expect(nav.indexOf('aria-label="Anotar"')).toBeLessThan(nav.indexOf('Listas'));
+    expect(nav.indexOf('Listas')).toBeLessThan(nav.indexOf('aria-label="Anotar"'));
+    expect(nav.indexOf('aria-label="Anotar"')).toBeLessThan(nav.indexOf('Catálogo'));
     expect(nav).toMatch(/is-on" aria-current="page">.*Listas/);
   });
 
