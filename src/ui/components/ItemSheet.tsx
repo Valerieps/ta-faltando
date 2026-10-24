@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { contextCategories } from '../../domain/context-categories';
 import { itemContextIds } from '../../domain/item';
 import { activeContexts, contextName, type Snapshot } from '../../domain/list-view';
 import { OTHER_CATEGORY_NAME, categoryName } from '../../domain/suggestion';
+import { TrashIcon } from '../icons';
 import { AddChip } from './AddChip';
 import { useServices } from '../services';
 
@@ -28,7 +29,6 @@ export function ItemSheet({
   const dialog = useRef<HTMLDialogElement>(null);
   const item = snapshot.items.find((i) => i.id === itemId);
   const entry = entryId ? snapshot.entries.find((e) => e.id === entryId) : undefined;
-  const [confirmRemove, setConfirmRemove] = useState(false);
 
   useEffect(() => {
     const element = dialog.current;
@@ -188,19 +188,15 @@ export function ItemSheet({
               Tirar da lista
             </button>
           )}
-          {confirmRemove ? (
-            <button
-              type="button"
-              className="pill pill--danger"
-              onClick={() => void lists.removeItem(item.id).then(() => dialog.current?.close())}
-            >
-              Tirar {item.name} do catálogo?
-            </button>
-          ) : (
-            <button type="button" className="link-button" onClick={() => setConfirmRemove(true)}>
-              Tirar do catálogo
-            </button>
-          )}
+          <button
+            type="button"
+            className="icon-button sheet__trash"
+            aria-label={`Tirar ${item.name} do catálogo`}
+            title="Tirar do catálogo"
+            onClick={() => void lists.removeItem(item.id).then(() => dialog.current?.close())}
+          >
+            <TrashIcon />
+          </button>
         </div>
       </form>
     </dialog>
