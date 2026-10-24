@@ -12,7 +12,7 @@ import { useKeyboardClosed } from './useKeyboardClosed';
 export type Tab = 'catalog' | 'lists';
 
 /**
- * The phone's bottom bar: Catálogo, the round + and Listas (spec/itens-e-contextos.md). Moving
+ * The phone's bottom bar: Listas, the round + and Catálogo (spec/itens-e-contextos.md). Moving
  * between the tabs replaces the screen, so back leaves the app instead of walking the tabs.
  * The + opens the add field in place of the bar, on the keyboard, without leaving the screen;
  * leaving the field, or closing the keyboard, brings the bar back. `contextId` carries the open
@@ -65,13 +65,13 @@ export function BottomNav({ current, contextId, snapshot }: { current?: Tab; con
   );
   return (
     <nav className="bottom-nav" aria-label="Telas">
-      {tab('catalog', 'Catálogo', <BookIcon />, { name: 'catalog', contextId })}
+      {tab('lists', 'Listas', <ListIcon />, { name: 'lists', contextId })}
       <span className="bottom-nav__middle">
         <button type="button" className="fab" aria-label="Anotar" title="Anotar" onClick={open}>
           <PlusIcon />
         </button>
       </span>
-      {tab('lists', 'Listas', <ListIcon />, { name: 'lists', contextId })}
+      {tab('catalog', 'Catálogo', <BookIcon />, { name: 'catalog', contextId })}
     </nav>
   );
 }

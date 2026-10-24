@@ -15,7 +15,7 @@ Eu adiciono o que está faltando sem pensar em qual lista: o app coloca cada ite
   a barra volta. *(1a)*
   Por quê: no celular eu quase sempre adiciono um item por vez, no meio do dia; o + fica a um
   toque, sob o polegar, e eu continuo vendo a lista em que estava.
-- No celular, uma barra no pé das telas tem **Catálogo**, o **+** e **Listas**, nessa ordem. A
+- No celular, uma barra no pé das telas tem **Listas**, o **+** e **Catálogo**, nessa ordem. A
   captura e o lote não têm a barra. *(1a)*
 - No celular, as listas e o catálogo têm no topo uma barra com o nome do app e, no canto
   direito, o círculo com as minhas iniciais, que abre o Perfil. *(1a)*
