@@ -24,7 +24,7 @@ export function Catalog({ snapshot, contextId }: { snapshot: Snapshot; contextId
   async function toggle(itemId: string) {
     const entry = onList.get(itemId);
     if (entry) await lists.removeEntry(entry.id);
-    else await lists.addItem(itemId);
+    else await lists.addItem(itemId, contextId);
   }
 
   async function addNew() {
@@ -32,7 +32,7 @@ export function Catalog({ snapshot, contextId }: { snapshot: Snapshot; contextId
     const existing = findItemByName(snapshot.items, filter);
     const item = existing ?? (await lists.addToCatalog(filter, contextId));
     setFilter('');
-    if (item && !onList.has(item.id)) await lists.addItem(item.id);
+    if (item && !onList.has(item.id)) await lists.addItem(item.id, contextId);
   }
 
   return (

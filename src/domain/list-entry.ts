@@ -1,8 +1,12 @@
+import { itemContextIds, type Item } from './item';
 import type { SyncedRecord } from './synced-record';
 
 export type EntryStatus = 'pending' | 'bought';
 
-/** An item on a context's list. Its context may differ from the item's default, "só daquela vez". */
+/**
+ * An item on the lists. Added through one of the item's contexts, it shows on the lists of all of
+ * them; its context may also be another one, "só daquela vez", and then it shows only there.
+ */
 export interface ListEntry extends SyncedRecord {
   readonly itemId: string;
   /** null means the "Sem contexto" list. */
@@ -21,14 +25,20 @@ export interface ListEntry extends SyncedRecord {
 
 export const isChecked = (entry: ListEntry) => entry.checkedAt != null;
 
+/** The contexts whose lists show this entry, active or not; empty is "Sem contexto". */
+export function entryContextIds(entry: ListEntry, item: Pick<Item, 'defaultContextId' | 'contextIds'> | undefined): readonly string[] {
+  if (entry.contextId === null) return [];
+  const linked = item ? itemContextIds(item) : [];
+  return linked.includes(entry.contextId) ? linked : [entry.contextId];
+}
+
 /** An item is pending at most once on the list of a context (docs/ARQUITETURA.md). */
-export function pendingEntryFor(
-  entries: readonly ListEntry[],
-  itemId: string,
-  contextId: string | null,
-): ListEntry | undefined {
+export function pendingEntryFor(entries: readonly ListEntry[], item: Item, contextId: string | null): ListEntry | undefined {
   return entries.find(
     (entry) =>
-      entry.deletedAt === null && entry.status === 'pending' && entry.itemId === itemId && entry.contextId === contextId,
+      entry.deletedAt === null &&
+      entry.status === 'pending' &&
+      entry.itemId === item.id &&
+      (contextId === null ? entry.contextId === null : entryContextIds(entry, item).includes(contextId)),
   );
 }

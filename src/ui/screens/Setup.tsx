@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { SetupChoice } from '../../application/contexts';
 import { activeContexts, type Snapshot } from '../../domain/list-view';
+import { itemContextIds } from '../../domain/item';
 import { CAPSULE_COUNT, pick, refill, startCapsules, typeItem, unpick, type CapsulesState } from '../../domain/setup-capsules';
 import { SUGGESTED_CONTEXTS } from '../../domain/suggestion';
 import { cleanName, nameKey } from '../../domain/text';
@@ -52,7 +53,7 @@ export function Setup({ snapshot, redo, onFinish }: { snapshot: Snapshot; redo: 
 
   // Items already in the catalog, with a context, never show as suggestions.
   const inCatalog = useMemo(
-    () => new Set(snapshot.items.filter((i) => i.deletedAt === null && i.defaultContextId !== null).map((i) => nameKey(i.name))),
+    () => new Set(snapshot.items.filter((i) => i.deletedAt === null && itemContextIds(i).length > 0).map((i) => nameKey(i.name))),
     [snapshot.items],
   );
   const excludedFor = (key: string) =>
@@ -132,7 +133,7 @@ export function Setup({ snapshot, redo, onFinish }: { snapshot: Snapshot; redo: 
     const context = chosen[step.index];
     const original = SUGGESTED_CONTEXTS.find((s) => s.id === context.suggestedId)?.queue ?? [];
     const state = capsules[context.key];
-    const already = snapshot.items.filter((i) => i.deletedAt === null && existing.some((c) => c.id === i.defaultContextId && nameKey(c.name) === nameKey(context.name)));
+    const already = snapshot.items.filter((i) => i.deletedAt === null && existing.some((c) => itemContextIds(i).includes(c.id) && nameKey(c.name) === nameKey(context.name)));
     const update = (next: (s: CapsulesState, excluded: ReadonlySet<string>) => CapsulesState) =>
       setCapsules((all) => ({ ...all, [context.key]: next(all[context.key], excludedFor(context.key)) }));
     return (

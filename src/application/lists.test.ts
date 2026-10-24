@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { MemoryStore } from '../infrastructure/memory-store';
 import type { Context } from '../domain/context';
+import { itemContextIds } from '../domain/item';
+import { catalogOf, itemsWithoutContext, listEntries, totalMissing } from '../domain/list-view';
 import { Lists } from './lists';
 
 const context = (id: string, changes: Partial<Context> = {}): Context => ({
@@ -160,27 +162,25 @@ describe('Lists', () => {
     expect(await store.get('listEntries', arroz.id)).toMatchObject({ status: 'pending' });
   });
 
-  it('moves an entry just this once or as the new default', async () => {
+  it('moves an entry just this once; the item keeps its contexts', async () => {
     const { store, lists } = setup();
     await store.save('contexts', context('mercado'));
     await store.save('contexts', context('farmacia'));
     const { entry, item } = (await lists.add('shampoo'))!;
-    await lists.moveEntry(entry.id, 'mercado', false);
+    await lists.moveEntry(entry.id, 'mercado');
     expect(await store.get('listEntries', entry.id)).toMatchObject({ contextId: 'mercado' });
     expect((await store.get('items', item.id))?.defaultContextId).toBe('farmacia');
-    await lists.moveEntry(entry.id, 'mercado', true);
-    expect((await store.get('items', item.id))?.defaultContextId).toBe('mercado');
   });
 
   it('moving onto a list where the item is already pending leaves one entry', async () => {
     const { store, lists } = setup();
     await store.save('contexts', context('mercado'));
     const first = (await lists.add('leite'))!;
-    await lists.moveEntry(first.entry.id, null, false);
+    await lists.moveEntry(first.entry.id, null);
     await lists.add('leite');
     const pending = await store.list('listEntries');
     expect(pending).toHaveLength(2);
-    await lists.moveEntry(first.entry.id, 'mercado', false);
+    await lists.moveEntry(first.entry.id, 'mercado');
     expect(await store.list('listEntries')).toHaveLength(1);
   });
 
@@ -204,11 +204,76 @@ describe('Lists', () => {
     expect(await store.list('listEntries')).toEqual([]);
   });
 
-  it('changing the default context in the catalog moves the pending entry along', async () => {
+  it('linking a context to an item without one moves its pending entry along', async () => {
     const { store, lists } = setup();
     await store.save('contexts', context('mercado'));
     const { entry, item } = (await lists.add('pilha'))!;
-    await lists.setDefaultContext(item.id, 'mercado');
+    await lists.setContextLinked(item.id, 'mercado', true);
     expect((await store.get('listEntries', entry.id))?.contextId).toBe('mercado');
+  });
+
+  it('an item in several contexts is on all of their lists once, and counts once', async () => {
+    const { store, lists } = setup();
+    await store.save('contexts', context('farmacia'));
+    await store.save('contexts', context('mercado', { order: 1 }));
+    const { item } = (await lists.add('shampoo'))!;
+    await lists.setContextLinked(item.id, 'mercado', true);
+    expect(itemContextIds((await store.get('items', item.id))!)).toEqual(['farmacia', 'mercado']);
+
+    const snapshot = await lists.snapshot();
+    expect(listEntries(snapshot, 'farmacia')).toHaveLength(1);
+    expect(listEntries(snapshot, 'mercado')).toHaveLength(1);
+    expect(listEntries(snapshot, null)).toHaveLength(0);
+    expect(totalMissing(snapshot)).toBe(1);
+    expect(catalogOf(snapshot.items, 'mercado').map((i) => i.name)).toEqual(['Shampoo']);
+
+    // Added again through the other context, it was already there.
+    expect((await lists.addItem(item.id, 'mercado'))?.outcome).toBe('already');
+    expect((await lists.add('shampoo'))?.outcome).toBe('already');
+
+    // Bought in one store, it leaves every list.
+    const [entry] = listEntries(snapshot, 'mercado');
+    await lists.setChecked(entry.id, true);
+    expect(await lists.finishPurchase(['farmacia', 'mercado'])).toBe(1);
+    expect(listEntries(await lists.snapshot(), 'farmacia')).toHaveLength(0);
+  });
+
+  it('unlinking a context moves the entry added through it to the next one, or to "Sem contexto"', async () => {
+    const { store, lists } = setup();
+    await store.save('contexts', context('farmacia'));
+    await store.save('contexts', context('mercado'));
+    const { entry, item } = (await lists.add('shampoo'))!;
+    await lists.setContextLinked(item.id, 'mercado', true);
+    await lists.setContextLinked(item.id, 'farmacia', false);
+    expect((await store.get('listEntries', entry.id))?.contextId).toBe('mercado');
+    expect((await store.get('items', item.id))?.defaultContextId).toBe('mercado');
+    await lists.setContextLinked(item.id, 'mercado', false);
+    expect((await store.get('listEntries', entry.id))?.contextId).toBeNull();
+    expect(itemsWithoutContext(await lists.snapshot()).map((i) => i.name)).toEqual(['Shampoo']);
+  });
+
+  it('linking the context of an entry "só daquela vez" leaves one entry there', async () => {
+    const { store, lists } = setup();
+    await store.save('contexts', context('farmacia'));
+    await store.save('contexts', context('mercado'));
+    const first = (await lists.add('shampoo'))!;
+    await lists.moveEntry(first.entry.id, 'mercado');
+    await lists.add('shampoo');
+    expect((await store.list('listEntries')).filter((e) => e.deletedAt === null)).toHaveLength(2);
+    await lists.setContextLinked(first.item.id, 'mercado', true);
+    expect((await store.list('listEntries')).filter((e) => e.deletedAt === null).map((e) => e.id)).toEqual([first.entry.id]);
+  });
+
+  it('a context picked in the batch check that is not the item\'s becomes its only one', async () => {
+    const { store, lists } = setup();
+    await store.save('contexts', context('farmacia'));
+    await store.save('contexts', context('mercado'));
+    const { item } = (await lists.add('shampoo'))!;
+    await lists.setContextLinked(item.id, 'mercado', true);
+    await lists.add('shampoo', 'batch', 'mercado');
+    expect(itemContextIds((await store.get('items', item.id))!)).toEqual(['farmacia', 'mercado']);
+    await store.save('contexts', context('pet'));
+    await lists.add('shampoo', 'batch', 'pet');
+    expect(itemContextIds((await store.get('items', item.id))!)).toEqual(['pet']);
   });
 });

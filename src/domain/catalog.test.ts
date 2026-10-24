@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { findItemByName, type Item } from './item';
+import { findItemByName, itemContextIds, withContexts, type Item } from './item';
 import { pendingEntryFor, type ListEntry } from './list-entry';
 import { created } from './synced-record';
 import { cleanName, nameKey } from './text';
@@ -50,7 +50,22 @@ describe('catalog', () => {
       entry('other context', { contextId: 'farmacia' }),
       entry('pending', {}),
     ];
-    expect(pendingEntryFor(entries, 'i1', 'mercado')?.id).toBe('pending');
-    expect(pendingEntryFor(entries, 'i1', null)).toBeUndefined();
+    expect(pendingEntryFor(entries, item('i1', 'Leite'), 'mercado')?.id).toBe('pending');
+    expect(pendingEntryFor(entries, item('i1', 'Leite'), null)).toBeUndefined();
+  });
+
+  it('an entry added through one of the item contexts is pending on all of them', () => {
+    const shampoo = { ...item('i1', 'Shampoo'), ...withContexts(['farmacia', 'mercado']) };
+    expect(pendingEntryFor([entry('e', { contextId: 'farmacia' })], shampoo, 'mercado')?.id).toBe('e');
+    // "Só daquela vez" in a context that is not the item's: only there.
+    expect(pendingEntryFor([entry('e', { contextId: 'pet' })], shampoo, 'mercado')).toBeUndefined();
+  });
+
+  it('reads the contexts of items saved before an item could have several', () => {
+    expect(itemContextIds({ defaultContextId: 'mercado' })).toEqual(['mercado']);
+    expect(itemContextIds({ defaultContextId: null })).toEqual([]);
+    expect(itemContextIds(withContexts(['farmacia', 'mercado', 'farmacia']))).toEqual(['farmacia', 'mercado']);
+    // An older version changed only the default: it wins.
+    expect(itemContextIds({ defaultContextId: 'pet', contextIds: ['farmacia', 'mercado'] })).toEqual(['pet']);
   });
 });

@@ -26,7 +26,7 @@ Logo abaixo do campo, o app mostra a última compra do item:
 - Ao tocar num produto, abre o histórico dele, da compra mais recente para a mais antiga: data,
   loja, preço unitário. *(1b)*
 - Com 5 compras ou mais, um gráfico de linha mostra o preço do produto ao longo do tempo. *(1b)*
-- Eu edito aqui o nome do item, o contexto padrão e a categoria. *(1a)*
+- Eu edito aqui o nome do item, os contextos e a categoria. *(1a)*
 
 ## Na lista
 

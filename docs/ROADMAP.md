@@ -31,6 +31,12 @@ O que ainda não está pronto.
 
 ## Revisar as lacunas que o agente decidiu
 
+- [ ] Item em mais de um contexto: no detalhe do item, os contextos viraram botões de marcar e
+  desmarcar, e o "Sempre" saiu; o "só desta vez" continua, só para contextos que não são do item.
+  No lote, escolher um contexto que não é do item deixa só esse. Desmarcar um contexto leva o item
+  que está faltando para outro contexto dele, ou para "Sem contexto". Uma categoria criada no
+  detalhe do item entra em todos os contextos dele. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
+
 - [ ] A primeira versão foi dividida em duas fases: 1a (listas e sincronização) e 1b (nota e preços). ([SPEC.md](SPEC.md))
 - [ ] A foto virou o caminho principal da nota, porque a consulta da SEFAZ-MG pede reCAPTCHA; o QR code dá só a chave e o CNPJ. ([spec/nota-fiscal.md](spec/nota-fiscal.md))
 - [ ] Sem login, o app abre e funciona com os dados do aparelho, e sincroniza quando eu entro de novo. ([spec/sincronizacao.md](spec/sincronizacao.md))

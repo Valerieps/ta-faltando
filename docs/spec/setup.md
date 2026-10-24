@@ -37,7 +37,8 @@ No primeiro uso, o setup me leva da escolha dos contextos a um catálogo inicial
 - O que eu digito entra como selecionado e no catálogo daquele contexto. *(1a)*
 - Um item escolhido num contexto sai da fila dos outros (ex.: pão de forma escolhido em Padaria
   não aparece mais em Mercado). *(1a)*
-  Por quê: cada item tem um único contexto padrão.
+  Por quê: no setup, cada item fica num contexto só; os outros eu marco depois, no detalhe do
+  item (`itens-e-contextos.md`).
 
 ## Filas de sugestões
 

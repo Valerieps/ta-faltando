@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import type { Context } from '../../domain/context';
 import { contextCategories } from '../../domain/context-categories';
+import { itemContextIds } from '../../domain/item';
 import type { Snapshot } from '../../domain/list-view';
 import { categoryName } from '../../domain/suggestion';
 import { useServices } from '../services';
@@ -14,7 +15,7 @@ export function CategoryEditor({ context, snapshot, onClose }: { context: Contex
   const { contexts } = useServices();
   const dialog = useRef<HTMLDialogElement>(null);
   const categories = contextCategories(context, snapshot.items);
-  const count = (id: string) => snapshot.items.filter((i) => i.deletedAt === null && i.defaultContextId === context.id && i.category === id).length;
+  const count = (id: string) => snapshot.items.filter((i) => i.deletedAt === null && itemContextIds(i).includes(context.id) && i.category === id).length;
 
   useEffect(() => {
     if (dialog.current && !dialog.current.open) dialog.current.showModal();
