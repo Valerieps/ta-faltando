@@ -102,7 +102,8 @@ describe('screens', () => {
     expect(html).not.toContain('Comprar no');
     expect(html).toContain('aria-label="Agrupar por categoria"');
     expect(html).toContain('Laticínios');
-    expect(html).toContain('Finalizar compra');
+    expect(html).not.toContain('Finalizar compra');
+    expect(html).not.toContain('aria-label="Desfazer"');
   });
 
   it('the "Sem contexto" tab offers the contexts as buttons', async () => {

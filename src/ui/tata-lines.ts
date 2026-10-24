@@ -55,7 +55,6 @@ export const tata = {
 
   batchSplit: (n: number) => `Separei em ${items(n)}. Confere antes de eu guardar?`,
 
-  finished: (n: number) => (n === 0 ? 'Nada foi riscado, então a lista ficou como estava.' : `Compra feita. Tirei ${items(n)} da lista.`),
 
   linked: (name: string, contextName: string) => `Pronto. ${name} agora vai ${gender(contextName).to} ${contextName}.`,
 

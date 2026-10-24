@@ -74,7 +74,6 @@ describe('what Tatá says', () => {
 
   it('counts items in the singular and plural', () => {
     expect(tata.batchSplit(1)).toBe('Separei em 1 item. Confere antes de eu guardar?');
-    expect(tata.finished(9)).toBe('Compra feita. Tirei 9 itens da lista.');
     expect(tata.emptyList('Mercado')).toBe('Nada faltando no Mercado. Por hoje, tá tudo em ordem.');
   });
 });
