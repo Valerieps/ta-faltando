@@ -10,7 +10,6 @@ import { DesktopApp } from './desktop/DesktopApp';
 import { Capture } from './screens/Capture';
 import { ListsScreen } from './screens/ListsScreen';
 import { Setup } from './screens/Setup';
-import { ShoppingMode } from './screens/ShoppingMode';
 import { ProfileScreen } from './screens/ProfileScreen';
 import { BatchScreen, CatalogScreen } from './screens/SimpleScreens';
 import { ServicesProvider, type Services } from './services';
@@ -74,7 +73,6 @@ describe('screens', () => {
     expect(head).toContain('aria-haspopup="menu"');
     expect(head).toContain('Agrupar por categoria');
     expect(html).not.toContain('class="tabs"');
-    expect(html).toContain('Comprar no Mercado');
     const nav = html.slice(html.indexOf('class="bottom-nav"'));
     expect(nav).not.toContain('Perfil');
     expect(nav.indexOf('Catálogo')).toBeLessThan(nav.indexOf('aria-label="Anotar"'));
@@ -93,12 +91,18 @@ describe('screens', () => {
     expect(html).not.toContain('aria-current="page"');
   });
 
-  it('the lists show the trash and no strike', async () => {
+  it('the lists are the shopping mode: the circle strikes, no trash, groups by category and finishes', async () => {
     const { snapshot, render } = await setup();
     const html = render(<ListsScreen snapshot={snapshot} contextId="mercado" />);
-    expect(html).toContain('Tirar Detergente da lista');
-    expect(html).not.toContain('Riscar');
+    expect(html).toContain('Riscar Detergente');
+    expect(html).toContain('Tirar o risco de Leite');
+    expect(html).not.toContain('Tirar Detergente da lista');
+    expect(html).not.toContain('Buscar');
+    expect(html).not.toContain('mão');
+    expect(html).not.toContain('Comprar no');
+    expect(html).toContain('aria-label="Agrupar por categoria"');
     expect(html).toContain('Laticínios');
+    expect(html).toContain('Finalizar compra');
   });
 
   it('the "Sem contexto" tab offers the contexts as buttons', async () => {
@@ -106,15 +110,6 @@ describe('screens', () => {
     const html = render(<ListsScreen snapshot={snapshot} contextId={null} />);
     expect(html).toContain('Pilha');
     expect(html).toContain('>Mercado</button>');
-  });
-
-  it('shopping mode groups by category, counts progress and lists items without context at the end', async () => {
-    const { snapshot, render } = await setup();
-    const html = render(<ShoppingMode snapshot={snapshot} contextId="mercado" />);
-    expect(html).toContain('Finalizar compra');
-    expect(html).toContain('1 de 3');
-    expect(html).toContain('Tirar o risco de Leite');
-    expect(html.indexOf('Sem contexto')).toBeGreaterThan(html.indexOf('Detergente'));
   });
 
   it('the desktop shows the side menu, the columns and the batch box', async () => {

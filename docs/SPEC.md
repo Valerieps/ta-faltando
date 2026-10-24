@@ -37,7 +37,7 @@ Cada fase precisa ser usável sozinha. Cada regra em `spec/` diz de que fase val
 | --- | --- |
 | [spec/setup.md](spec/setup.md) | O setup do primeiro uso: contextos, cápsulas e as filas de sugestões |
 | [spec/itens-e-contextos.md](spec/itens-e-contextos.md) | Adicionar itens, como o app escolhe o contexto, itens sem contexto, a tela das listas |
-| [spec/modo-compra.md](spec/modo-compra.md) | A lista em tela cheia dentro da loja: uma mão, categorias, marcar e finalizar |
+| [spec/modo-compra.md](spec/modo-compra.md) | A lista dentro da loja (no celular, a própria tela das listas): uma mão, categorias, marcar e finalizar |
 | [spec/sincronizacao.md](spec/sincronizacao.md) | Celular e computador com os mesmos dados: login, sem internet, conflitos |
 | [spec/backup.md](spec/backup.md) | Exportar e importar os dados, e os cuidados com o armazenamento |
 | [spec/nota-fiscal.md](spec/nota-fiscal.md) | Ler a nota, ligar cada produto a um item, revisar e gravar |

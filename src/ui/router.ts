@@ -9,7 +9,6 @@ export type Route =
   | { readonly name: 'capture' }
   | { readonly name: 'lists'; readonly contextId?: string | null }
   | { readonly name: 'catalog'; readonly contextId?: string | null }
-  | { readonly name: 'shop'; readonly contextId: string }
   | { readonly name: 'batch' }
   | { readonly name: 'uncontexted' }
   | { readonly name: 'settings' }
@@ -22,7 +21,6 @@ const PATHS = {
   capture: 'anotar',
   lists: 'listas',
   catalog: 'catalogo',
-  shop: 'compra',
   batch: 'lote',
   uncontexted: NO_CONTEXT,
   settings: 'ajustes',
@@ -39,7 +37,6 @@ export function routeHash(route: Route): string {
       return '#/';
     case 'lists':
     case 'catalog':
-    case 'shop':
       return `#/${PATHS[route.name]}${contextPart(route.contextId)}`;
     default:
       return `#/${PATHS[route.name]}`;
@@ -54,8 +51,6 @@ export function parseRoute(hash: string): Route {
       return { name: 'lists', contextId };
     case PATHS.catalog:
       return { name: 'catalog', contextId };
-    case PATHS.shop:
-      return contextId ? { name: 'shop', contextId } : { name: 'lists' };
     case PATHS.capture:
       return { name: 'capture' };
     case PATHS.batch:

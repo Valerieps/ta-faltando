@@ -4,7 +4,7 @@ Eu adiciono o que está faltando sem pensar em qual lista: o app coloca cada ite
 
 - **Entra aqui:** as formas de adicionar, como o app escolhe o contexto, os itens sem contexto, a
   tela das listas, as telas do celular e do computador.
-- **Não entra aqui:** a lista em tela cheia dentro da loja (`modo-compra.md`) e o último preço
+- **Não entra aqui:** riscar, agrupar e finalizar a compra (`modo-compra.md`) e o último preço
   mostrado em cada item (`precos.md`).
 
 ## Telas do celular e do computador
@@ -14,7 +14,7 @@ Eu adiciono o que está faltando sem pensar em qual lista: o app coloca cada ite
   Por quê: no celular eu quase sempre adiciono um item por vez, no meio do dia; o + fica a um
   toque, sob o polegar.
 - No celular, uma barra no pé das telas tem **Catálogo**, o **+** e **Listas**, nessa ordem. A
-  captura, o lote e o modo compra não têm a barra. *(1a)*
+  captura e o lote não têm a barra. *(1a)*
 - No celular, as listas e o catálogo têm no topo uma barra com o nome do app e, no canto
   direito, o círculo com as minhas iniciais, que abre o Perfil. *(1a)*
 - No celular, tudo que eu toco fica na parte de baixo da tela, do lado da mão escolhida
@@ -38,9 +38,8 @@ Eu adiciono o que está faltando sem pensar em qual lista: o app coloca cada ite
   círculo com as minhas iniciais, tiradas do e-mail da conta Google, o meu e-mail, o estado da sincronização, a mão, o
   backup, refazer o setup e sair (ou entrar, se eu estiver sem login). *(1a)*
   Por quê: é onde eu procuro os ajustes de um app.
-- No celular, eu entro no modo compra pelo botão grande "Comprar no …" no pé da lista, ou pelo
-  carrinho ao lado do campo da captura, que pergunta em qual lista com itens faltando eu vou
-  comprar. *(1a)*
+- No celular, a tela das listas já é o modo compra (`modo-compra.md`). O carrinho ao lado do
+  campo da captura pergunta em qual lista com itens faltando eu vou comprar e abre essa lista. *(1a)*
 
 ## Formas de adicionar
 
@@ -79,8 +78,6 @@ contexto", sem nenhuma pergunta na hora.
 - Ficam numa aba própria, "Sem contexto", com um contador visível na tela inicial. *(1a)*
 - Na aba, cada item mostra os contextos como botões: um toque vincula o item a esse contexto. *(1a)*
 - Eu posso selecionar vários itens e vincular todos de uma vez. *(1a)*
-- Enquanto não são vinculados, aparecem numa seção no fim do modo compra de qualquer contexto, para
-  eu não esquecer deles. *(1a)*
 - Quando o item aparece numa nota fiscal, o contexto da loja vincula o item sozinho. *(1b)*
 
 ## Item em mais de um contexto
@@ -104,10 +101,8 @@ contexto", sem nenhuma pergunta na hora.
 - Uma lista por contexto, mais a lista "Sem contexto", cada uma com o contador de itens que estão
   faltando. No computador, uma coluna por lista; no celular, o nome da lista no topo abre um menu
   com todas elas: em cima as que têm itens faltando, embaixo as vazias. *(1a)*
-- No celular, a caixa "Agrupar por categoria" fica na mesma linha do nome da lista, à direita. *(1a)*
-- No celular, a tela das listas não tem gestos nem riscado: cada item tem só a lixeira, que tira o
-  item da lista sem contar como comprado, com o mesmo esmaecer e o mesmo "Desfazer" do modo compra
+- No celular, a tela das listas é o modo compra: a bolinha à esquerda e os gestos riscam e contam
+  como comprado, e o ícone de agrupar fica na mesma linha do nome da lista, à direita
   (`modo-compra.md`). *(1a)*
-  Por quê: deslizar tem um só sentido no app, e riscar é coisa de dentro da loja.
 - Eu ligo ou desligo o agrupamento por categoria em cada lista (`modo-compra.md`). *(1a)*
 - Cada item mostra, em texto discreto, o último preço pago (`precos.md`). *(1b)*

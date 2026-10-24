@@ -1,23 +1,27 @@
 # Modo compra
 
-A lista de um contexto em tela cheia, para eu usar com uma mão só dentro da loja.
+O jeito de usar a lista de um contexto com uma mão só dentro da loja. No celular, a própria tela
+das listas já é o modo compra: não há uma tela separada.
 
 - **Entra aqui:** o uso com uma mão, o agrupamento por categoria, marcar e finalizar a compra.
 - **Não entra aqui:** a leitura da nota depois da compra (`nota-fiscal.md`).
 
 ## Uso com uma mão
 
-- No Perfil do celular e nos Ajustes do computador, eu escolho **mão direita** ou **mão esquerda**; um atalho na própria tela troca
-  o lado na hora. A escolha vale para todas as telas do celular, não só para o modo compra. *(1a)*
-- Todos os controles (finalizar, desfazer, agrupar, buscar) ficam numa barra no terço inferior da
-  tela, do lado da mão escolhida, ao alcance do polegar. *(1a)*
-- A área de toque de cada item fica do lado da mão escolhida; o nome do item, do outro. *(1a)*
+- No Perfil do celular e nos Ajustes do computador, eu escolho **mão direita** ou **mão esquerda**.
+  A escolha vale para todas as telas do celular. A tela das listas não tem atalho para trocar a
+  mão. *(1a)*
+- "Finalizar compra" e "Desfazer" ficam numa barra no pé da tela, do lado da mão escolhida, ao
+  alcance do polegar. O botão de agrupar fica no topo, na linha do nome da lista. Não há busca na
+  lista. *(1a)*
+- A bolinha de cada item fica à esquerda, e o nome logo depois dela; um toque no nome abre o
+  detalhe do item. *(1a)*
 - Cada item tem pelo menos 56 px de altura. *(1a)*
   Por quê: para o polegar não errar o toque.
 
 ## Agrupamento por categoria
 
-- Um botão alterna entre lista corrida e lista agrupada por categoria (ex.: hortifrúti, laticínios,
+- Um botão com o ícone de agrupar, na linha do nome da lista, à direita, alterna entre lista corrida e lista agrupada por categoria (ex.: hortifrúti, laticínios,
   limpeza). A escolha fica gravada por contexto. *(1a)*
 - Cada grupo é uma seção recolhível, com o contador do que falta comprar. *(1a)*
 - Cada contexto tem as suas categorias. Ele começa com as categorias das suas sugestões do setup e
@@ -49,10 +53,11 @@ A lista de um contexto em tela cheia, para eu usar com uma mão só dentro da lo
 - Deslizar no sentido contrário (para a esquerda, com a mão direita) desfaz o gesto anterior: tira
   o riscado ou devolve o item que estava esmaecendo. Enquanto o item esmaece, ele mostra
   "Desfazer", que faz o mesmo. *(1a)*
-- Cada item tem uma lixeira, que tira o item da lista sem contar como comprado. O item esmaece do
-  mesmo jeito e eu posso desfazer. *(1a)*
-- Itens sem contexto aparecem numa seção no fim da lista. *(1a)*
-- "Finalizar compra" fecha a compra. *(1a)*
+- Os itens não têm lixeira. Para tirar um item da lista sem contar como comprado, eu abro o
+  detalhe dele e uso "Tirar da lista"; o item esmaece do mesmo jeito e eu posso desfazer. *(1a)*
+- Os itens sem contexto ficam só na lista "Sem contexto", não no fim das outras listas. *(1a)*
+- "Finalizar compra" fecha a compra da lista aberta: os riscados saem dela, e a Tatá diz quantos
+  itens saíram. *(1a)*
 - Na fase 1b, "Finalizar compra" oferece dois caminhos: ler a nota fiscal agora ou só fechar. *(1b)*
 - Itens marcados à mão, sem nota, ficam registrados como comprados, sem preço. *(1a)*
 - Itens não comprados continuam na lista para a próxima vez. *(1a)*

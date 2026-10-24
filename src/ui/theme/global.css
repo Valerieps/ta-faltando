@@ -113,8 +113,7 @@ a {
 }
 
 .screen__body,
-.lists__body,
-.shop__body {
+.lists__body {
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -1187,42 +1186,7 @@ button.check::before {
   cursor: pointer;
 }
 
-/* ---- Shopping mode ---- */
-
-.shop__bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.progress {
-  height: 4px;
-  overflow: hidden;
-  border-radius: 4px;
-  background: var(--color-border);
-}
-
-.progress i {
-  display: block;
-  height: 100%;
-  background: var(--color-brand);
-  transition: width var(--motion-fast);
-}
-
-.shop__controls {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.shop--done {
-  justify-content: flex-end;
-}
-
-.shop--done .say-with-tata {
-  margin-bottom: auto;
-  margin-top: 30dvh;
-}
+/* ---- The phone's lists, used for shopping too ---- */
 
 .group__head {
   display: flex;
@@ -1257,19 +1221,18 @@ button.check::before {
   transition: none;
 }
 
-[data-hand='left'] .shop-row__fg {
-  flex-direction: row-reverse;
-}
-
 .shop-row__name {
   flex: 1;
+  align-self: stretch;
   min-width: 0;
-  overflow-wrap: anywhere;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
   font-size: var(--font-size-shopping);
-}
-
-[data-hand='left'] .shop-row__name {
-  text-align: end;
+  overflow-wrap: anywhere;
+  text-align: start;
 }
 
 .shop-row.is-checked .shop-row__name {
@@ -1306,10 +1269,6 @@ button.check::before {
 .shop-row__bg--uncheck {
   background: var(--color-brand-soft);
   color: var(--color-brand);
-}
-
-.group--loose {
-  margin-top: var(--space-4);
 }
 
 .order {

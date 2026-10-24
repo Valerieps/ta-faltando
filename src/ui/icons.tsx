@@ -52,19 +52,6 @@ export const GroupIcon = () => (
   </svg>
 );
 
-export const SearchIcon = () => (
-  <svg {...base}>
-    <circle cx="11" cy="11" r="6" />
-    <path d="M20 20l-4.5-4.5" />
-  </svg>
-);
-
-export const HandIcon = () => (
-  <svg {...base}>
-    <path d="M7 16l-3-3M7 16l3-3M7 16V8a3 3 0 0 1 3-3h10M17 2l3 3-3 3" />
-  </svg>
-);
-
 export const UndoIcon = () => (
   <svg {...base}>
     <path d="M9 14l-5-5 5-5M4 9h11a5 5 0 0 1 0 10h-3" />
