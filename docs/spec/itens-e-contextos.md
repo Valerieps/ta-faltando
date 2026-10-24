@@ -9,17 +9,18 @@ Eu adiciono o que está faltando sem pensar em qual lista: o app coloca cada ite
 
 ## Telas do celular e do computador
 
-- No celular, o app abre nas listas. Um **+** redondo no meio da barra do pé abre a captura: o campo de adicionar já vem focado, com o teclado aberto. O enter adiciona o
-  item e limpa o campo para o próximo. *(1a)*
+- No celular, o app abre nas listas. Um **+** redondo no meio da barra do pé não muda de tela:
+  no lugar da barra aparece o campo de adicionar, já focado, com o teclado aberto. O enter
+  adiciona o item e limpa o campo para o próximo; quando eu saio do campo, a barra volta. *(1a)*
   Por quê: no celular eu quase sempre adiciono um item por vez, no meio do dia; o + fica a um
-  toque, sob o polegar.
+  toque, sob o polegar, e eu continuo vendo a lista em que estava.
 - No celular, uma barra no pé das telas tem **Catálogo**, o **+** e **Listas**, nessa ordem. A
   captura e o lote não têm a barra. *(1a)*
 - No celular, as listas e o catálogo têm no topo uma barra com o nome do app e, no canto
   direito, o círculo com as minhas iniciais, que abre o Perfil. *(1a)*
 - No celular, tudo que eu toco fica na parte de baixo da tela, do lado da mão escolhida
-  (`modo-compra.md`). Na captura, o campo fica colado no teclado e o autocompletar abre para
-  cima. *(1a)*
+  (`modo-compra.md`). O campo do + e o da captura ficam colados no teclado, e o autocompletar
+  abre para cima. A captura é a tela aberta pelo atalho do ícone do app. *(1a)*
 - No computador, o app abre nas listas, uma coluna por contexto, com a caixa do lote ao lado. *(1a)*
   Por quê: no computador eu vejo tudo de uma vez e adiciono em lote.
 - Quando eu seguro o dedo no ícone do app, aparecem atalhos para a captura, as listas, o

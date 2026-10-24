@@ -53,7 +53,7 @@ export function App() {
         break;
       case 'settings':
       case 'profile':
-        screen = <ProfileScreen />;
+        screen = <ProfileScreen snapshot={snapshot} />;
         break;
       default:
         screen = <ListsScreen snapshot={snapshot} contextId={undefined} />;

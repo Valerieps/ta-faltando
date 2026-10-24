@@ -22,7 +22,7 @@ export function CatalogScreen({ snapshot, contextId }: { snapshot: Snapshot; con
       <div className="screen__body">
         <Catalog key={id ?? 'none'} snapshot={snapshot} contextId={id} />
       </div>
-      <BottomNav current="catalog" contextId={id} />
+      <BottomNav current="catalog" contextId={id} snapshot={snapshot} />
     </main>
   );
 }

@@ -81,8 +81,8 @@ describe('screens', () => {
   });
 
   it('the profile holds the account, the sync and every setting', async () => {
-    const { render } = await setup();
-    const html = render(<ProfileScreen />);
+    const { snapshot, render } = await setup();
+    const html = render(<ProfileScreen snapshot={snapshot} />);
     expect(html).toContain('Mão direita');
     expect(html).toContain('Exportar backup');
     expect(html).toContain('Refazer o setup');

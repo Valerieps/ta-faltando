@@ -188,7 +188,7 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
           </button>
         </div>
       )}
-      <BottomNav current="lists" contextId={contextId} />
+      <BottomNav current="lists" contextId={contextId} snapshot={snapshot} />
 
       {editing && context && <ContextSheet context={context} snapshot={snapshot} onClose={() => setEditing(false)} />}
       {ordering && context && <GroupOrder context={context} categories={contextCategories(context, snapshot.items)} onClose={() => setOrdering(false)} />}
