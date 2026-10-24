@@ -1,26 +1,30 @@
 import { useState } from 'react';
-import { activeContexts, contextName, itemsById, listEntries, listsByMissing, type Snapshot } from '../../domain/list-view';
+import { contextCategories } from '../../domain/context-categories';
+import { isChecked, type ListEntry } from '../../domain/list-entry';
+import { activeContexts, contextName, groupByCategory, itemsById, listEntries, listsByMissing, type Snapshot } from '../../domain/list-view';
 import { BottomNav } from '../components/BottomNav';
 import { ContextSheet } from '../components/ContextSheet';
 import { ItemSheet } from '../components/ItemSheet';
-import { ListRows } from '../components/ListRows';
 import { Say } from '../components/Say';
+import { GroupOrder, ShoppingRow } from '../components/ShoppingRows';
 import { TopBar } from '../components/TopBar';
 import { Uncontexted } from '../components/Uncontexted';
 import { useFading, withFading } from '../components/useFading';
-import { CartIcon, CaretDownIcon, PlusIcon } from '../icons';
+import { CaretDownIcon, ChevronIcon, GroupIcon, PlusIcon, UndoIcon } from '../icons';
 import { navigate } from '../router';
-import { useServices } from '../services';
+import { useServices, useSettings } from '../services';
+import type { SwipeAction } from '../shopping-gestures';
 import { tata } from '../tata-lines';
 
 /**
- * The phone's lists: the list's name opens a menu of the contexts plus "Sem contexto", those with
- * missing items first; no gestures and no striking here, only the trash
- * (spec/itens-e-contextos.md, "Tela das listas"). The menu also edits the open context and creates
- * a new one, and the big button enters shopping mode in it.
+ * The phone's lists, used inside the store too (spec/modo-compra.md): the circle and the swipes
+ * strike items and count them as bought, and "Finalizar compra" closes the purchase. The list's
+ * name opens a menu of the contexts plus "Sem contexto", those with missing items first; the menu
+ * also edits the open context and creates a new one (spec/itens-e-contextos.md, "Tela das listas").
  */
 export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snapshot; contextId: string | null | undefined }) {
-  const { lists, contexts: contextUseCases } = useServices();
+  const { lists, contexts: contextUseCases, haptic } = useServices();
+  const { hand } = useSettings();
   const contexts = activeContexts(snapshot.contexts);
   const contextId = requested === undefined || (requested !== null && !contexts.some((c) => c.id === requested)) ? (contexts[0]?.id ?? null) : requested;
   const context = contexts.find((c) => c.id === contextId);
@@ -28,6 +32,12 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
   const [open, setOpen] = useState<{ itemId: string; entryId: string } | null>(null);
   const [editing, setEditing] = useState(false);
   const [choosing, setChoosing] = useState(false);
+  const [ordering, setOrdering] = useState(false);
+  const [collapsed, setCollapsed] = useState<ReadonlySet<string>>(new Set());
+  const [last, setLast] = useState<ListEntry | null>(null);
+  // Bought by the second swipe since the last "Finalizar compra", for the final count.
+  const [bought, setBought] = useState(0);
+  const [finished, setFinished] = useState<{ contextId: string; count: number } | null>(null);
 
   const entries = withFading(listEntries(snapshot, contextId), fading, [contextId]);
   const items = itemsById(snapshot.items);
@@ -36,6 +46,63 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
     const entry = snapshot.entries.find((e) => e.id === entryId);
     if (entry) void fade(entry, () => lists.removeEntry(entry.id));
   };
+
+  async function act(entry: ListEntry, action: SwipeAction) {
+    setFinished(null);
+    switch (action) {
+      case 'check':
+        haptic();
+        setLast(entry);
+        return lists.setChecked(entry.id, true);
+      case 'uncheck':
+        setLast(entry);
+        return lists.setChecked(entry.id, false);
+      case 'buy':
+        setLast(entry);
+        setBought((n) => n + 1);
+        return fade(entry, () => lists.markBought(entry.id));
+      case 'undo':
+        setBought((n) => Math.max(0, n - 1));
+        return undo(entry.id);
+    }
+  }
+
+  function undoLast() {
+    if (!last) return;
+    if (fading.has(last.id)) void act(last, 'undo');
+    else void lists.restoreEntry(last);
+    setLast(null);
+  }
+
+  function finish(id: string) {
+    void lists.finishPurchase([id]).then((n) => {
+      setFinished({ contextId: id, count: n + bought });
+      setBought(0);
+      setLast(null);
+    });
+  }
+
+  const toggleGroup = (id: string) => {
+    const next = new Set(collapsed);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    setCollapsed(next);
+  };
+  const rowProps = {
+    items,
+    hand,
+    fading,
+    onAction: act,
+    onOpen: (entry: ListEntry) => setOpen({ itemId: entry.itemId, entryId: entry.id }),
+    onUndo: (id: string) => void act(fading.get(id)!, 'undo'),
+  };
+  const rows = (list: readonly ListEntry[]) => (
+    <ul className="rows">
+      {list.map((entry) => (
+        <ShoppingRow key={entry.id} entry={entry} {...rowProps} />
+      ))}
+    </ul>
+  );
 
   return (
     <main className="screen lists">
@@ -52,10 +119,15 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
           <CaretDownIcon />
         </button>
         {context && (
-          <label className="switch list-head__switch">
-            <input type="checkbox" checked={context.groupByCategory} onChange={(event) => void contextUseCases.setGroupByCategory(context.id, event.target.checked)} />
-            <span>Agrupar por categoria</span>
-          </label>
+          <button
+            type="button"
+            className={context.groupByCategory ? 'pill pill--icon list-head__switch is-on' : 'pill pill--icon list-head__switch'}
+            aria-label="Agrupar por categoria"
+            aria-pressed={context.groupByCategory}
+            onClick={() => void contextUseCases.setGroupByCategory(context.id, !context.groupByCategory)}
+          >
+            <GroupIcon />
+          </button>
         )}
         {choosing && (
           <ListMenu
@@ -68,39 +140,55 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
       </header>
 
       <div className="lists__body">
+        {finished?.contextId === contextId && <Say mood="happy">{tata.finished(finished.count)}</Say>}
         {contextId === null ? (
           <Uncontexted snapshot={snapshot} />
         ) : entries.length === 0 ? (
           <div className="empty">
-            <Say mood="happy">{tata.emptyList(name)}</Say>
+            {!finished && <Say mood="happy">{tata.emptyList(name)}</Say>}
             <button type="button" className="link-button" onClick={() => navigate({ name: 'catalog', contextId })}>
               Abrir o catálogo de {name}
             </button>
           </div>
+        ) : context?.groupByCategory ? (
+          <>
+            {groupByCategory(entries, items, contextCategories(context, snapshot.items)).map((group) => {
+              const id = group.categoryId ?? 'outros';
+              const groupOpen = !collapsed.has(id);
+              return (
+                <section key={id} className="group">
+                  <button type="button" className="group__head" aria-expanded={groupOpen} onClick={() => toggleGroup(id)}>
+                    <ChevronIcon open={groupOpen} />
+                    <span className="label">{group.name}</span>
+                    <span className="count count--quiet">{group.missing}</span>
+                  </button>
+                  {groupOpen && rows(group.entries)}
+                </section>
+              );
+            })}
+            <button type="button" className="link-button" onClick={() => setOrdering(true)}>
+              Arrumar a ordem dos grupos
+            </button>
+          </>
         ) : (
-          <ListRows
-            entries={entries}
-            items={items}
-            context={context}
-            grouped={context?.groupByCategory ?? false}
-            fading={fading}
-            onTrash={(entry) => trash(entry.id)}
-            onUndo={(id) => void undo(id)}
-            onOpen={(entry) => setOpen({ itemId: entry.itemId, entryId: entry.id })}
-          />
+          rows(entries)
         )}
       </div>
 
-      {context && (
+      {context && entries.length > 0 && (
         <div className="reach">
-          <button type="button" className="btn btn--icon" onClick={() => navigate({ name: 'shop', contextId: context.id })}>
-            <CartIcon /> Comprar no {name}
+          <button type="button" className="pill pill--icon" aria-label="Desfazer" disabled={!last} onClick={undoLast}>
+            <UndoIcon />
+          </button>
+          <button type="button" className="btn" disabled={!entries.some(isChecked) && bought === 0} onClick={() => finish(context.id)}>
+            Finalizar compra
           </button>
         </div>
       )}
       <BottomNav current="lists" contextId={contextId} />
 
       {editing && context && <ContextSheet context={context} snapshot={snapshot} onClose={() => setEditing(false)} />}
+      {ordering && context && <GroupOrder context={context} categories={contextCategories(context, snapshot.items)} onClose={() => setOrdering(false)} />}
       {open && <ItemSheet snapshot={snapshot} itemId={open.itemId} entryId={open.entryId} onClose={() => setOpen(null)} onRemoveEntry={trash} />}
     </main>
   );

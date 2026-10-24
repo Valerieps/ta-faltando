@@ -5,7 +5,6 @@ import { navigate, useRoute } from './router';
 import { Capture } from './screens/Capture';
 import { ListsScreen } from './screens/ListsScreen';
 import { Setup } from './screens/Setup';
-import { ShoppingMode } from './screens/ShoppingMode';
 import { ProfileScreen } from './screens/ProfileScreen';
 import { BatchScreen, CatalogScreen } from './screens/SimpleScreens';
 import { useIsDesktop, useServices, useSettings, useSnapshot } from './services';
@@ -45,9 +44,6 @@ export function App() {
         break;
       case 'catalog':
         screen = <CatalogScreen snapshot={snapshot} contextId={route.contextId} />;
-        break;
-      case 'shop':
-        screen = <ShoppingMode snapshot={snapshot} contextId={route.contextId} />;
         break;
       case 'batch':
         screen = <BatchScreen snapshot={snapshot} />;

@@ -12,7 +12,6 @@ describe('routes', () => {
     { name: 'lists', contextId: 'mercado' },
     { name: 'lists', contextId: null },
     { name: 'catalog', contextId: 'pet-shop' },
-    { name: 'shop', contextId: 'mercado' },
     { name: 'batch' },
     { name: 'uncontexted' },
     { name: 'settings' },
@@ -24,10 +23,9 @@ describe('routes', () => {
     expect(parseRoute(routeHash(route))).toEqual(route.name === 'lists' && !('contextId' in route) ? { name: 'lists', contextId: undefined } : route);
   });
 
-  it('an unknown or empty hash opens home, and shopping mode needs a context', () => {
+  it('an unknown or empty hash opens home', () => {
     expect(parseRoute('')).toEqual({ name: 'home' });
     expect(parseRoute('#/qualquer')).toEqual({ name: 'home' });
-    expect(parseRoute('#/compra')).toEqual({ name: 'lists' });
   });
 });
 
