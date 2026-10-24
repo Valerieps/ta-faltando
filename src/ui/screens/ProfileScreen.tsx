@@ -1,4 +1,5 @@
 import { BottomNav } from '../components/BottomNav';
+import type { Snapshot } from '../../domain/list-view';
 import { SettingsPanel } from '../components/SettingsPanel';
 import { useAccountEmail } from '../components/TopBar';
 import { initials } from '../initials';
@@ -11,7 +12,7 @@ import { SyncIndicator } from '../SyncIndicator';
  * then every setting (the hand, the backup, redoing the setup), and leaving the account at the
  * end (spec/itens-e-contextos.md).
  */
-export function ProfileScreen() {
+export function ProfileScreen({ snapshot }: { snapshot: Snapshot }) {
   const { settings, loginPath, logoutPath } = useServices();
   const sync = useSyncState();
   const email = useAccountEmail();
@@ -52,7 +53,7 @@ export function ProfileScreen() {
           )
         )}
       </div>
-      <BottomNav />
+      <BottomNav snapshot={snapshot} />
     </main>
   );
 }
