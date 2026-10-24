@@ -16,7 +16,7 @@ export type Tab = 'catalog' | 'lists';
  * between the tabs replaces the screen, so back leaves the app instead of walking the tabs.
  * The + opens the add field in place of the bar, on the keyboard, without leaving the screen;
  * leaving the field, or closing the keyboard, brings the bar back. `contextId` carries the open
- * context between the tabs.
+ * context between the tabs; on the catalog, a new name typed in the + goes to that context.
  */
 export function BottomNav({ current, contextId, snapshot }: { current?: Tab; contextId?: string | null; snapshot: Snapshot }) {
   const [adding, setAdding] = useState(false);
@@ -47,7 +47,13 @@ export function BottomNav({ current, contextId, snapshot }: { current?: Tab; con
         }}
       >
         {said && <Say>{said}</Say>}
-        <AddField snapshot={snapshot} onAdded={onAdded} opens="up" inputRef={input} />
+        <AddField
+          snapshot={snapshot}
+          onAdded={onAdded}
+          opens="up"
+          inputRef={input}
+          openContextId={current === 'catalog' ? (contextId ?? null) : undefined}
+        />
       </div>
     );
   }

@@ -125,7 +125,11 @@ export interface Destination {
   readonly category: string | null;
 }
 
-export function destinationFor(snapshot: Snapshot, name: string): Destination {
+/**
+ * `openContextId`, given on the phone's catalog, is the context open there: a name not yet in the
+ * catalog goes to it, ahead of its setup suggestion.
+ */
+export function destinationFor(snapshot: Snapshot, name: string, openContextId?: string | null): Destination {
   const active = new Set(activeContexts(snapshot.contexts).map((c) => c.id));
   const item = findItemByName(snapshot.items, name);
   if (item) {
@@ -133,6 +137,7 @@ export function destinationFor(snapshot: Snapshot, name: string): Destination {
     return { item, contextId, category: item.category };
   }
   const suggestion = findSuggestion(name);
+  if (openContextId !== undefined) return { item: undefined, contextId: openContextId, category: suggestion?.category ?? null };
   if (suggestion) {
     return { item: undefined, contextId: active.has(suggestion.contextId) ? suggestion.contextId : null, category: suggestion.category };
   }

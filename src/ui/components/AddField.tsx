@@ -13,6 +13,8 @@ interface Props {
   autoFocus?: boolean;
   inputRef?: Ref<HTMLInputElement>;
   placeholder?: string;
+  /** The context open in the phone's catalog: a name not yet in the catalog goes to it. */
+  openContextId?: string | null;
 }
 
 /**
@@ -20,7 +22,7 @@ interface Props {
  * showing where each item goes before the enter (spec/itens-e-contextos.md). Enter adds exactly
  * what was typed and clears the field for the next item.
  */
-export function AddField({ snapshot, onAdded, opens, autoFocus, inputRef, placeholder = 'Digite e aperte enter' }: Props) {
+export function AddField({ snapshot, onAdded, opens, autoFocus, inputRef, placeholder = 'Digite e aperte enter', openContextId }: Props) {
   const { lists } = useServices();
   const [text, setText] = useState('');
   const [highlight, setHighlight] = useState(-1);
@@ -28,12 +30,13 @@ export function AddField({ snapshot, onAdded, opens, autoFocus, inputRef, placeh
 
   const parsed = parseEntryText(text);
   const matches = useMemo(() => searchItems(snapshot.items, parsed.name), [snapshot.items, parsed.name]);
-  const typedDestination = parsed.name ? destinationFor(snapshot, parsed.name) : undefined;
+  const typedDestination = parsed.name ? destinationFor(snapshot, parsed.name, openContextId) : undefined;
 
   async function add(value: string) {
     setText('');
     setHighlight(-1);
-    const result = await lists.add(value);
+    const destination = destinationFor(snapshot, parseEntryText(value).name, openContextId);
+    const result = await lists.add(value, 'manual', destination.item ? undefined : destination.contextId);
     if (result) onAdded(result);
   }
 
