@@ -45,8 +45,9 @@ das listas já é o modo compra: não há uma tela separada.
 ## Marcar e finalizar
 
 - Um toque na bolinha ou deslizar o item na direção do polegar (para a direita, com a mão direita)
-  risca o item na hora. Ele fica riscado no fim do grupo até eu finalizar a compra, e só então sai
-  da lista. *(1a)*
+  risca o item na hora. Ele esmaece devagar no lugar onde estava e só depois vai para o fim do
+  grupo, onde fica riscado até eu finalizar a compra; só então sai da lista. *(1a)*
+  Por quê: se o item pula na hora, eu perco de vista o que acabei de riscar.
 - Deslizar de novo um item riscado conta como comprado e tira o item da lista sem esperar o
   "Finalizar compra": o item esmaece por 3 segundos e some. *(1a)*
   Por quê: é rápido, mas dá tempo de desfazer.

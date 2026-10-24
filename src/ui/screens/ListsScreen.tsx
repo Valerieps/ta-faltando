@@ -9,7 +9,7 @@ import { Say } from '../components/Say';
 import { GroupOrder, ShoppingRow } from '../components/ShoppingRows';
 import { TopBar } from '../components/TopBar';
 import { Uncontexted } from '../components/Uncontexted';
-import { useFading, withFading } from '../components/useFading';
+import { holdPlace, useFading, useSettling, withFading } from '../components/useFading';
 import { CaretDownIcon, ChevronIcon, GroupIcon, PlusIcon, UndoIcon } from '../icons';
 import { navigate } from '../router';
 import { useServices, useSettings } from '../services';
@@ -29,6 +29,7 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
   const contextId = requested === undefined || (requested !== null && !contexts.some((c) => c.id === requested)) ? (contexts[0]?.id ?? null) : requested;
   const context = contexts.find((c) => c.id === contextId);
   const { fading, fade, undo } = useFading();
+  const { settling, settle, release } = useSettling();
   const [open, setOpen] = useState<{ itemId: string; entryId: string } | null>(null);
   const [editing, setEditing] = useState(false);
   const [choosing, setChoosing] = useState(false);
@@ -53,9 +54,11 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
       case 'check':
         haptic();
         setLast(entry);
+        settle(entry.id);
         return lists.setChecked(entry.id, true);
       case 'uncheck':
         setLast(entry);
+        release(entry.id);
         return lists.setChecked(entry.id, false);
       case 'buy':
         setLast(entry);
@@ -98,7 +101,7 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
   };
   const rows = (list: readonly ListEntry[]) => (
     <ul className="rows">
-      {list.map((entry) => (
+      {holdPlace(list, settling).map((entry) => (
         <ShoppingRow key={entry.id} entry={entry} {...rowProps} />
       ))}
     </ul>

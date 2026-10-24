@@ -31,8 +31,6 @@
   --font-size-small: 13px;
   --font-size-label: 11px;
   --font-size-item: 17px;
-  /* Shopping mode: everything bigger (identity draft) */
-  --font-size-shopping: 19px;
   --font-size-title: 24px;
   --font-size-question: 28px;
 
@@ -54,6 +52,8 @@
   --row-shopping: 56px;
   /* Swiping twice or deleting fades the item out before it leaves the list (spec/modo-compra.md) */
   --fade-out: 3s;
+  /* A struck item dims slowly in place, then moves to the end of its list (spec/modo-compra.md) */
+  --strike-settle: 1.5s;
   /* A tapped setup capsule fades before the next suggestion takes its place (spec/setup.md) */
   --fade-capsule: 300ms;
   /* Every other movement answers a tap and ends in under half a second */
