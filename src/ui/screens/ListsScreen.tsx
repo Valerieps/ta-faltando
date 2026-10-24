@@ -29,7 +29,10 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
   const [editing, setEditing] = useState(false);
   const activeTab = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => activeTab.current?.scrollIntoView({ inline: 'center', block: 'nearest' }), [contextId]);
+  // Braces: Chrome's scrollIntoView returns a Promise, and an effect may only return a cleanup.
+  useEffect(() => {
+    activeTab.current?.scrollIntoView({ inline: 'center', block: 'nearest' });
+  }, [contextId]);
 
   const entries = withFading(listEntries(snapshot, contextId), fading, [contextId]);
   const items = itemsById(snapshot.items);

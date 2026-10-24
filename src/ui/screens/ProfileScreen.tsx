@@ -28,7 +28,9 @@ export function ProfileScreen() {
   const { email: savedEmail } = useSettings();
   const sync = useSyncState();
 
-  useEffect(() => refreshEmail(account, settings), [account, settings]);
+  useEffect(() => {
+    refreshEmail(account, settings);
+  }, [account, settings]);
 
   const email = sync.status === 'signed-out' ? null : savedEmail;
   const letters = email ? initials(email) : '';
