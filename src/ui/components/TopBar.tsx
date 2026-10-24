@@ -4,6 +4,7 @@ import type { Settings } from '../../application/settings';
 import { initials } from '../initials';
 import { navigate } from '../router';
 import { useServices, useSettings, useSyncState } from '../services';
+import { Tata } from '../Tata';
 
 /** Asked once per page load; the answer stays in the device settings for when there is no internet. */
 const asked = new WeakSet<AccountApi>();
@@ -30,7 +31,7 @@ export function useAccountEmail(): string | null {
 }
 
 /**
- * The phone's bar on top of the lists and the catalog: the app's name, and the circle with my
+ * The phone's bar on top of the lists and the catalog: Tatá in place of the app's name, and the circle with my
  * initials in the right corner, which opens Perfil (spec/itens-e-contextos.md).
  */
 export function TopBar() {
@@ -38,7 +39,9 @@ export function TopBar() {
   const letters = email ? initials(email) : '';
   return (
     <header className="topbar">
-      <span className="topbar__brand">Tá faltando</span>
+      <span className="topbar__brand" role="img" aria-label="Tá faltando">
+        <Tata size={32} />
+      </span>
       <button type="button" className="avatar" aria-label="Perfil" title={email ?? 'Perfil'} onClick={() => navigate({ name: 'profile' })}>
         {letters || <span className="avatar__empty" />}
       </button>

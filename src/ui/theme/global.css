@@ -139,10 +139,7 @@ a {
 }
 
 .topbar__brand {
-  color: var(--color-brand);
-  font-family: var(--font-display);
-  font-size: 20px;
-  font-weight: 800;
+  display: flex;
 }
 
 /* A screen's title with its controls on the same line. */
