@@ -1256,14 +1256,18 @@ button.check::before {
   background: none;
   color: inherit;
   font: inherit;
-  font-size: var(--font-size-shopping);
+  font-size: var(--font-size-item);
   overflow-wrap: anywhere;
   text-align: start;
+  text-decoration: line-through transparent;
+  transition:
+    color var(--strike-settle) ease-in-out,
+    text-decoration-color var(--strike-settle) ease-in-out;
 }
 
 .shop-row.is-checked .shop-row__name {
   color: var(--color-text-muted);
-  text-decoration: line-through;
+  text-decoration-color: currentColor;
 }
 
 .shop-row .check--big {
