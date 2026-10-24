@@ -128,8 +128,27 @@ a {
   font-size: var(--font-size-title);
 }
 
-/* A screen's title with the avatar in the top corner. */
+/* The phone's top bar: the app's name, and the avatar in the right corner. */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin: 0 calc(-1 * var(--space-4));
+  padding: 0 var(--space-4) var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.topbar__brand {
+  color: var(--color-brand);
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+/* A screen's title with its controls on the same line. */
 .screen__head {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -191,11 +210,6 @@ a {
   justify-content: flex-start;
 }
 
-.reach--quiet {
-  align-items: center;
-  gap: var(--space-4);
-}
-
 /* ---- Buttons ---- */
 
 .btn {
@@ -254,7 +268,7 @@ a.btn {
   padding: 0;
 }
 
-/* The round + by the thumb: it follows .reach, so it sits on the chosen hand's side. */
+/* The round + in the middle of the bottom bar. */
 .fab {
   display: grid;
   flex: none;
@@ -273,10 +287,11 @@ a.btn {
   height: 26px;
 }
 
-/* ---- Bottom bar (phone): Perfil, Catálogo, Listas ---- */
+/* ---- Bottom bar (phone): Catálogo, the round +, Listas ---- */
 
 .bottom-nav {
   display: flex;
+  align-items: flex-end;
   margin: 0 calc(-1 * var(--space-4));
   border-top: 1px solid var(--color-border);
 }
@@ -294,6 +309,18 @@ a.btn {
   color: var(--color-text-muted);
   font-size: var(--font-size-small);
   font-weight: 600;
+}
+
+/* The + rises above the bar's line, like a raised button. */
+.bottom-nav__middle {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+}
+
+.bottom-nav__middle .fab {
+  margin-top: calc(-1 * var(--fab-size) / 2);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 18%);
 }
 
 .bottom-nav__tab.is-on {
@@ -778,46 +805,103 @@ button.check::before {
 
 /* ---- Lists (phone) ---- */
 
-.lists__controls {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-[data-hand='left'] .reach--quiet {
-  flex-direction: row;
-}
-
-.tabs {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.tab {
+/* The list's name is the button that opens the menu of lists. */
+.list-picker {
   display: inline-flex;
-  flex: none;
+  min-width: 0;
   align-items: center;
-  gap: 6px;
-  min-height: 40px;
-  padding: 0 var(--space-3);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-pill);
-  background: var(--color-surface);
-  font-size: var(--font-size-small);
+  gap: var(--space-1);
+  min-height: var(--touch-min);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text);
+}
+
+.list-picker .title {
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.tab.is-on {
-  border-color: var(--color-brand);
-  background: var(--color-brand);
-  color: var(--color-on-brand);
+.list-picker svg {
+  flex: none;
+  width: 22px;
+  height: 22px;
 }
 
-.tab.is-on .count {
-  background: var(--color-on-brand);
+.list-head__switch {
+  flex: none;
+  margin-left: auto;
+}
+
+.list-menu__backdrop {
+  position: fixed;
+  z-index: 9;
+  inset: 0;
+}
+
+.list-menu {
+  position: absolute;
+  z-index: 10;
+  top: 100%;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 220px;
+  max-width: 100%;
+  max-height: 60dvh;
+  padding: var(--space-1) 0;
+  overflow-y: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-m);
+  background: var(--color-surface);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 16%);
+}
+
+.list-menu__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  min-height: var(--touch-min);
+  padding: 0 var(--space-4);
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  text-align: left;
+}
+
+.list-menu__item.is-on {
   color: var(--color-brand);
+  font-weight: 800;
+}
+
+/* Between the lists with missing items and the empty ones. */
+.list-menu__item--split,
+.list-menu__actions {
+  border-top: 1px solid var(--color-border);
+}
+
+.list-menu__actions {
+  display: flex;
+  flex-direction: column;
+}
+
+.list-menu__item--add {
+  justify-content: flex-start;
+  gap: var(--space-2);
+  color: var(--color-brand);
+}
+
+.list-menu__input {
+  min-height: var(--touch-min);
+  margin: var(--space-1) var(--space-3);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  font: inherit;
 }
 
 /* ---- Items without context ---- */

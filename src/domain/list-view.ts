@@ -40,6 +40,15 @@ export const missingCount = (snapshot: Snapshot, contextId: string | null) =>
 export const totalMissing = (snapshot: Snapshot) =>
   [null, ...activeContexts(snapshot.contexts).map((c) => c.id)].reduce((n, id) => n + missingCount(snapshot, id), 0);
 
+/**
+ * Every list (the active contexts, then "Sem contexto") with its missing count: those with
+ * missing items first, then the empty ones, each part in the tabs' order.
+ */
+export function listsByMissing(snapshot: Snapshot): { contextId: string | null; missing: number }[] {
+  const lists = [...activeContexts(snapshot.contexts).map((c) => c.id), null].map((contextId) => ({ contextId, missing: missingCount(snapshot, contextId) }));
+  return [...lists.filter((l) => l.missing > 0), ...lists.filter((l) => l.missing === 0)];
+}
+
 export function itemsById(items: readonly Item[]): Map<string, Item> {
   return new Map(items.map((item) => [item.id, item]));
 }

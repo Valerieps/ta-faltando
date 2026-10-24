@@ -1,38 +1,20 @@
-import { useEffect } from 'react';
-import type { AccountApi } from '../../application/ports';
-import type { Settings } from '../../application/settings';
 import { BottomNav } from '../components/BottomNav';
 import { SettingsPanel } from '../components/SettingsPanel';
+import { useAccountEmail } from '../components/TopBar';
 import { initials } from '../initials';
-import { useServices, useSettings, useSyncState } from '../services';
+import { useServices, useSyncState } from '../services';
 import { signOut } from '../sign-out';
 import { SyncIndicator } from '../SyncIndicator';
 
-/** Asked once per page load; the answer stays in the device settings for when there is no internet. */
-const asked = new WeakSet<AccountApi>();
-
-function refreshEmail(account: AccountApi, settings: Settings) {
-  if (asked.has(account)) return;
-  asked.add(account);
-  void account.email().then((email) => {
-    if (email !== undefined && email !== settings.getState().email) void settings.set('email', email);
-  });
-}
-
 /**
- * The phone's Perfil tab: my account and the sync on top, then every setting (the hand, the
- * backup, redoing the setup), and leaving the account at the end (spec/itens-e-contextos.md).
+ * The phone's Perfil, opened from the circle in the top bar: my account and the sync on top,
+ * then every setting (the hand, the backup, redoing the setup), and leaving the account at the
+ * end (spec/itens-e-contextos.md).
  */
 export function ProfileScreen() {
-  const { account, settings, loginPath, logoutPath } = useServices();
-  const { email: savedEmail } = useSettings();
+  const { settings, loginPath, logoutPath } = useServices();
   const sync = useSyncState();
-
-  useEffect(() => {
-    refreshEmail(account, settings);
-  }, [account, settings]);
-
-  const email = sync.status === 'signed-out' ? null : savedEmail;
+  const email = useAccountEmail();
   const letters = email ? initials(email) : '';
 
   return (
@@ -70,7 +52,7 @@ export function ProfileScreen() {
           )
         )}
       </div>
-      <BottomNav current="profile" />
+      <BottomNav />
     </main>
   );
 }

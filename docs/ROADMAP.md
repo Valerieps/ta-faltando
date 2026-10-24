@@ -56,6 +56,6 @@ O que ainda não está pronto.
 - [ ] Um contexto desativado sai das abas, e os seus itens aparecem em "Sem contexto" até eu vinculá-los de novo. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
 - [ ] No celular, o app agora abre nas listas, e a captura fica atrás do + redondo; a barra do pé não aparece na captura, no lote nem no modo compra. No computador, os ajustes continuam no menu lateral. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md), [spec/backup.md](spec/backup.md))
 - [ ] O carrinho da captura mostra só as listas com itens faltando; o "Sair" do Perfil encerra o login do Cloudflare Access e deixa os dados no aparelho. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
-- [ ] Na tela das listas, as abas continuam no pé, perto do polegar; só o nome e o lápis ficam no topo. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
+- [ ] Na tela das listas do celular, o nome da lista virou um menu com as listas (as com itens em cima) e as cápsulas saíram; o + foi para o meio da barra do pé, e o Perfil para o círculo no topo. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
 - [ ] O modo compra tem um "Desfazer" na barra, para o último gesto, além do "Desfazer" no próprio item. ([spec/modo-compra.md](spec/modo-compra.md))
 - [ ] Os atalhos do ícone são Adicionar, Listas, Catálogo e Em lote; o modo compra ficou de fora, porque um atalho não sabe em qual contexto entrar. ([spec/itens-e-contextos.md](spec/itens-e-contextos.md))
