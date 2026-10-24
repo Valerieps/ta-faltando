@@ -986,49 +986,75 @@ button.check::before {
   border-top: 1px solid var(--color-border);
 }
 
-.ctx-chip {
-  display: inline-flex;
+/* The context dropdown, with the + on its left and the pencil on its right. */
+.ctx-picker {
+  display: flex;
   align-items: center;
-  position: relative;
+  gap: var(--space-2);
 }
 
-.ctx-chip.is-editing {
-  gap: var(--space-1);
-}
-
-/* The pencil sits on the chip's corner and shows on hover or keyboard focus. */
-.ctx-chip__edit {
+.ctx-picker__add {
   display: grid;
+  flex: none;
   place-items: center;
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  width: 24px;
-  height: 24px;
+  width: var(--touch-min);
+  height: var(--touch-min);
   padding: 0;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-pill);
   background: var(--color-surface);
   color: var(--color-brand);
-  opacity: 0;
-  transition: opacity 120ms;
 }
 
-.ctx-chip__edit svg {
-  width: 13px;
-  height: 13px;
+.ctx-picker__select {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--touch-min);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-m);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--font-size-item);
+  font-weight: 700;
 }
 
-.ctx-chip:hover .ctx-chip__edit,
-.ctx-chip:focus-within .ctx-chip__edit {
-  opacity: 1;
+.ctx-picker__edit {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  min-width: 0;
 }
 
-/* No hover on a touch screen: the open chip always shows its pencil. */
-@media (hover: none) {
-  .ctx-chip:has(.is-on) .ctx-chip__edit {
-    opacity: 1;
-  }
+/* The catalog stays aligned to the left, whichever hand is chosen. */
+[data-hand='left'][data-layout='phone'] .catalog .row,
+[data-hand='left'][data-layout='phone'] .catalog .row__main {
+  flex-direction: row;
+  text-align: start;
+}
+
+/* The cart before a catalog item: outlined when it is not on the list, filled when it is. */
+.cart {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  color: var(--color-text-muted);
+  transition: background var(--motion-fast), color var(--motion-fast);
+}
+
+.cart svg {
+  width: 20px;
+  height: 20px;
+}
+
+.cart.is-on {
+  background: var(--color-brand);
+  color: var(--color-on-brand);
 }
 
 .ctx-categories {

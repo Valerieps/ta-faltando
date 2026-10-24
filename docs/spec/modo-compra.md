@@ -28,7 +28,7 @@ das listas já é o modo compra: não há uma tela separada.
   as que os seus itens já usam (Mercado: laticínios, mercearia, limpeza, higiene; Farmácia:
   higiene, saúde); um contexto novo começa sem nenhuma. *(1a)*
   Por quê: o caminho da loja e o jeito de separar os itens mudam de uma loja para a outra.
-- No Catálogo, o lápis na cápsula do contexto mostra "Categorias", que abre a tela onde eu crio,
+- No Catálogo, o lápis ao lado do menu de contextos mostra "Categorias", que abre a tela onde eu crio,
   renomeio, subo, desço e apago as categorias daquele contexto. Renomear leva os itens junto;
   apagar manda os itens dela para "Outros". Mexer nas categorias de um contexto não muda as dos outros. *(1a)*
 - A categoria vem da sugestão do setup, se o contexto do item tiver essa categoria; senão, e nos

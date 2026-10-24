@@ -12,7 +12,6 @@ import { Say } from '../components/Say';
 import { SettingsPanel } from '../components/SettingsPanel';
 import { Uncontexted } from '../components/Uncontexted';
 import { useFading, withFading } from '../components/useFading';
-import { ContextChips } from '../components/ContextChips';
 import { navigate, routeHash, type Route } from '../router';
 import { useServices } from '../services';
 import { SyncIndicator } from '../SyncIndicator';
@@ -211,7 +210,6 @@ function CatalogPage({ snapshot, contextId }: { snapshot: Snapshot; contextId: s
   return (
     <>
       <h1 className="title">Catálogo</h1>
-      <ContextChips snapshot={snapshot} current={id} />
       <Catalog key={id ?? 'none'} snapshot={snapshot} contextId={id} />
     </>
   );

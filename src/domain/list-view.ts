@@ -3,6 +3,7 @@ import type { Item } from './item';
 import { entryContextIds, isChecked, type ListEntry } from './list-entry';
 import { categoryName, findSuggestion } from './suggestion';
 import { findItemByName, itemContextIds } from './item';
+import { nameKey } from './text';
 
 /** Everything the screens show: the live records of each table. */
 export interface Snapshot {
@@ -64,6 +65,19 @@ export function catalogOf(items: readonly Item[], contextId: string | null): Ite
     .filter((i) => i.deletedAt === null && (contextId === null ? itemContextIds(i).length === 0 : itemContextIds(i).includes(contextId)))
     .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
 }
+
+/** The catalog search: items of every context whose name contains the query, accents ignored. */
+export function searchCatalog(items: readonly Item[], query: string): Item[] {
+  const key = nameKey(query);
+  if (!key) return [];
+  return items
+    .filter((i) => i.deletedAt === null && nameKey(i.name).includes(key))
+    .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+}
+
+/** The item's pending entry, on whichever list it shows. */
+export const pendingEntryOf = (snapshot: Snapshot, itemId: string) =>
+  snapshot.entries.find((e) => e.deletedAt === null && e.status === 'pending' && e.itemId === itemId);
 
 /** Items with no active context, the "Sem contexto" tab (spec/itens-e-contextos.md). */
 export const itemsWithoutContext = (snapshot: Snapshot) => {
