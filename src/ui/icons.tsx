@@ -107,3 +107,9 @@ export const PersonIcon = () => (
     <path d="M4 21a8 8 0 0 1 16 0" />
   </svg>
 );
+
+export const CaretDownIcon = () => (
+  <svg {...base}>
+    <path d="M6 9l6 6 6-6" />
+  </svg>
+);

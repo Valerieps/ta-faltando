@@ -9,13 +9,14 @@ Eu adiciono o que está faltando sem pensar em qual lista: o app coloca cada ite
 
 ## Telas do celular e do computador
 
-- No celular, o app abre nas listas. Um **+** redondo no pé da tela, do lado da mão escolhida,
-  abre a captura: o campo de adicionar já vem focado, com o teclado aberto. O enter adiciona o
+- No celular, o app abre nas listas. Um **+** redondo no meio da barra do pé abre a captura: o campo de adicionar já vem focado, com o teclado aberto. O enter adiciona o
   item e limpa o campo para o próximo. *(1a)*
   Por quê: no celular eu quase sempre adiciono um item por vez, no meio do dia; o + fica a um
   toque, sob o polegar.
-- No celular, uma barra no pé das telas leva a **Perfil**, **Catálogo** e **Listas**, nessa
-  ordem. A captura, o lote e o modo compra não têm a barra. *(1a)*
+- No celular, uma barra no pé das telas tem **Catálogo**, o **+** e **Listas**, nessa ordem. A
+  captura, o lote e o modo compra não têm a barra. *(1a)*
+- No celular, as listas e o catálogo têm no topo uma barra com o nome do app e, no canto
+  direito, o círculo com as minhas iniciais, que abre o Perfil. *(1a)*
 - No celular, tudo que eu toco fica na parte de baixo da tela, do lado da mão escolhida
   (`modo-compra.md`). Na captura, o campo fica colado no teclado e o autocompletar abre para
   cima. *(1a)*
@@ -29,12 +30,12 @@ Eu adiciono o que está faltando sem pensar em qual lista: o app coloca cada ite
 - Eu crio e edito os contextos no Catálogo: um + antes das cápsulas cria um contexto novo, e o
   lápis numa cápsula muda o nome dela. No computador, o lápis aparece quando passo o mouse; no
   celular, ele fica na cápsula aberta. Não há uma tela de Contextos. *(1a)*
-- No celular, a tela das listas também edita os contextos: um lápis ao lado do nome da lista
-  edita aquele contexto (nome, posição nas abas, categorias, desativar), e um + no fim das abas
-  cria um novo. *(1a)*
+- No celular, a tela das listas também edita os contextos: o menu que abre no nome da lista tem
+  "Editar …", que edita o contexto aberto (nome, posição, categorias, desativar), e "Novo
+  contexto", que cria um. *(1a)*
   Por quê: era difícil achar onde se editava um contexto.
-- No celular, a tela Perfil reúne a conta e todos os ajustes: um círculo com as minhas
-  iniciais, tiradas do e-mail da conta Google, o meu e-mail, o estado da sincronização, a mão, o
+- No celular, a tela Perfil, aberta pelo círculo do topo, reúne a conta e todos os ajustes: um
+  círculo com as minhas iniciais, tiradas do e-mail da conta Google, o meu e-mail, o estado da sincronização, a mão, o
   backup, refazer o setup e sair (ou entrar, se eu estiver sem login). *(1a)*
   Por quê: é onde eu procuro os ajustes de um app.
 - No celular, eu entro no modo compra pelo botão grande "Comprar no …" no pé da lista, ou pelo
@@ -92,8 +93,10 @@ contexto", sem nenhuma pergunta na hora.
 
 ## Tela das listas
 
-- Uma aba por contexto, mais a aba "Sem contexto", cada uma com o contador de itens que estão
-  faltando. *(1a)*
+- Uma lista por contexto, mais a lista "Sem contexto", cada uma com o contador de itens que estão
+  faltando. No computador, uma coluna por lista; no celular, o nome da lista no topo abre um menu
+  com todas elas: em cima as que têm itens faltando, embaixo as vazias. *(1a)*
+- No celular, a caixa "Agrupar por categoria" fica na mesma linha do nome da lista, à direita. *(1a)*
 - No celular, a tela das listas não tem gestos nem riscado: cada item tem só a lixeira, que tira o
   item da lista sem contar como comprado, com o mesmo esmaecer e o mesmo "Desfazer" do modo compra
   (`modo-compra.md`). *(1a)*

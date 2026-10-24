@@ -6,6 +6,7 @@ import { BottomNav } from '../components/BottomNav';
 import { Catalog } from '../components/Catalog';
 import { ContextChips } from '../components/ContextChips';
 import { Say } from '../components/Say';
+import { TopBar } from '../components/TopBar';
 import { goBack } from '../router';
 import { tata } from '../tata-lines';
 
@@ -17,6 +18,7 @@ export function CatalogScreen({ snapshot, contextId }: { snapshot: Snapshot; con
   const id = contextId === undefined ? (contexts[0]?.id ?? null) : contextId;
   return (
     <main className="screen">
+      <TopBar />
       <h1 className="title">Catálogo</h1>
       <div className="screen__body">
         <ContextChips snapshot={snapshot} current={id} />

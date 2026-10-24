@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { Context } from './context';
 import type { Item } from './item';
 import type { ListEntry } from './list-entry';
-import { activeContexts, destinationFor, groupByCategory, itemsById, itemsWithoutContext, listEntries, missingCount, type Snapshot } from './list-view';
+import { activeContexts, destinationFor, groupByCategory, itemsById, itemsWithoutContext, listEntries, listsByMissing, missingCount, type Snapshot } from './list-view';
 
 const base = { updatedAt: 1, updatedBy: 'd', deletedAt: null };
 const context = (id: string, changes: Partial<Context> = {}): Context => ({
@@ -57,6 +57,14 @@ describe('list views', () => {
   it('lists the pending entries, struck last, and counts only what is missing', () => {
     expect(listEntries(snapshot, 'mercado').map((e) => e.id)).toEqual(['e2', 'e1']);
     expect(missingCount(snapshot, 'mercado')).toBe(1);
+  });
+
+  it('puts the lists with missing items first, then the empty ones', () => {
+    expect(listsByMissing(snapshot)).toEqual([
+      { contextId: 'mercado', missing: 1 },
+      { contextId: null, missing: 2 },
+      { contextId: 'farmacia', missing: 0 },
+    ]);
   });
 
   it('a deactivated context falls into "Sem contexto", so nothing disappears', () => {

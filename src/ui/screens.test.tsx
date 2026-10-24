@@ -65,16 +65,20 @@ describe('screens', () => {
     expect(html).not.toContain('bottom-nav');
   });
 
-  it('the lists put the pencil by the name, then shopping, the round + and the bottom bar', async () => {
+  it('the lists put the picker and the grouping on the name line, the avatar on top and the + mid-bar', async () => {
     const { snapshot, render } = await setup();
     const html = render(<ListsScreen snapshot={snapshot} contextId="mercado" />);
-    expect(html).toContain('aria-label="Editar Mercado"');
+    expect(html).not.toContain('aria-label="Editar Mercado"');
+    expect(html).toMatch(/class="topbar">.*class="avatar" aria-label="Perfil"/);
+    const head = html.slice(html.indexOf('class="screen__head"'), html.indexOf('</header>', html.indexOf('class="screen__head"')));
+    expect(head).toContain('aria-haspopup="menu"');
+    expect(head).toContain('Agrupar por categoria');
+    expect(html).not.toContain('class="tabs"');
     expect(html).toContain('Comprar no Mercado');
-    expect(html).toContain('class="fab" aria-label="Anotar"');
-    expect(html).toContain('aria-label="Novo contexto"');
     const nav = html.slice(html.indexOf('class="bottom-nav"'));
-    expect(nav.indexOf('Perfil')).toBeLessThan(nav.indexOf('Catálogo'));
-    expect(nav.indexOf('Catálogo')).toBeLessThan(nav.indexOf('Listas'));
+    expect(nav).not.toContain('Perfil');
+    expect(nav.indexOf('Catálogo')).toBeLessThan(nav.indexOf('aria-label="Anotar"'));
+    expect(nav.indexOf('aria-label="Anotar"')).toBeLessThan(nav.indexOf('Listas'));
     expect(nav).toMatch(/is-on" aria-current="page">.*Listas/);
   });
 
@@ -86,14 +90,12 @@ describe('screens', () => {
     expect(html).toContain('Refazer o setup');
     expect(html).toContain('sync-indicator');
     expect(html).not.toContain('<h3>Sincronização</h3>');
-    expect(html).toMatch(/is-on" aria-current="page">.*Perfil/);
+    expect(html).not.toContain('aria-current="page"');
   });
 
-  it('the lists show a tab per context plus "Sem contexto", with the trash and no strike', async () => {
+  it('the lists show the trash and no strike', async () => {
     const { snapshot, render } = await setup();
     const html = render(<ListsScreen snapshot={snapshot} contextId="mercado" />);
-    expect(html).toContain('Farmácia');
-    expect(html).toContain('Sem contexto');
     expect(html).toContain('Tirar Detergente da lista');
     expect(html).not.toContain('Riscar');
     expect(html).toContain('Laticínios');
