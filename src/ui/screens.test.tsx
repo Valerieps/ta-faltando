@@ -6,6 +6,7 @@ import { Lists } from '../application/lists';
 import { Settings } from '../application/settings';
 import { Synchronizer } from '../application/synchronizer';
 import { MemoryStore } from '../infrastructure/memory-store';
+import { ItemSheet } from './components/ItemSheet';
 import { DesktopApp } from './desktop/DesktopApp';
 import { Capture } from './screens/Capture';
 import { ListsScreen } from './screens/ListsScreen';
@@ -137,6 +138,14 @@ describe('screens', () => {
     expect(html).toContain('Mudar o nome de Mercado');
     expect(html).toContain('Buscar em todos os contextos');
     expect(html.indexOf('Buscar em todos os contextos')).toBeLessThan(html.indexOf('aria-label="Contexto"'));
+  });
+
+  it('the item sheet takes the item out of the catalog with a trash icon, no confirmation step', async () => {
+    const { snapshot, render } = await setup();
+    const leite = snapshot.items.find((i) => i.name === 'Leite')!;
+    const html = render(<ItemSheet snapshot={snapshot} itemId={leite.id} onClose={() => {}} />);
+    expect(html).toContain('aria-label="Tirar Leite do catálogo"');
+    expect(html).not.toContain('do catálogo?');
   });
 
   it('the other screens render', async () => {
