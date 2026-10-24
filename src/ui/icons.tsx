@@ -52,12 +52,6 @@ export const GroupIcon = () => (
   </svg>
 );
 
-export const UndoIcon = () => (
-  <svg {...base}>
-    <path d="M9 14l-5-5 5-5M4 9h11a5 5 0 0 1 0 10h-3" />
-  </svg>
-);
-
 export const GripIcon = () => (
   <svg {...base}>
     <path d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01" strokeWidth={3.4} />

@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { contextCategories } from '../../domain/context-categories';
-import { isChecked, type ListEntry } from '../../domain/list-entry';
+import { type ListEntry } from '../../domain/list-entry';
 import { activeContexts, contextName, groupByCategory, itemsById, listEntries, listsByMissing, type Snapshot } from '../../domain/list-view';
 import { BottomNav } from '../components/BottomNav';
 import { ContextSheet } from '../components/ContextSheet';
@@ -10,15 +10,29 @@ import { GroupOrder, ShoppingRow } from '../components/ShoppingRows';
 import { TopBar } from '../components/TopBar';
 import { Uncontexted } from '../components/Uncontexted';
 import { holdPlace, useFading, useSettling, withFading } from '../components/useFading';
-import { CaretDownIcon, ChevronIcon, GroupIcon, PlusIcon, UndoIcon } from '../icons';
+import { CaretDownIcon, ChevronIcon, GroupIcon, PlusIcon } from '../icons';
 import { navigate } from '../router';
 import { useServices, useSettings } from '../services';
 import type { SwipeAction } from '../shopping-gestures';
 import { tata } from '../tata-lines';
 
+// The list whose struck items leave once the screen lets go of it.
+let leaving: { contextId: string; timer: ReturnType<typeof setTimeout> } | null = null;
+
+/**
+ * Holds a list while it is open; the returned release calls `finish` for it on the next tick,
+ * unless the same list is held again first (React's StrictMode remounts at once).
+ */
+export function holdList(contextId: string, finish: (contextId: string) => void): () => void {
+  if (leaving?.contextId === contextId) clearTimeout(leaving.timer);
+  return () => {
+    leaving = { contextId, timer: setTimeout(() => finish(contextId)) };
+  };
+}
+
 /**
  * The phone's lists, used inside the store too (spec/modo-compra.md): the circle and the swipes
- * strike items and count them as bought, and "Finalizar compra" closes the purchase. The list's
+ * strike items and count them as bought; leaving a list takes its struck items out. The list's
  * name opens a menu of the contexts plus "Sem contexto", those with missing items first; the menu
  * also edits the open context and creates a new one (spec/itens-e-contextos.md, "Tela das listas").
  */
@@ -35,10 +49,11 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
   const [choosing, setChoosing] = useState(false);
   const [ordering, setOrdering] = useState(false);
   const [collapsed, setCollapsed] = useState<ReadonlySet<string>>(new Set());
-  const [last, setLast] = useState<ListEntry | null>(null);
-  // Bought by the second swipe since the last "Finalizar compra", for the final count.
-  const [bought, setBought] = useState(0);
-  const [finished, setFinished] = useState<{ contextId: string; count: number } | null>(null);
+
+  useEffect(() => {
+    if (contextId === null) return;
+    return holdList(contextId, (id) => void lists.finishPurchase([id]));
+  }, [contextId, lists]);
 
   const entries = withFading(listEntries(snapshot, contextId), fading, [contextId]);
   const items = itemsById(snapshot.items);
@@ -49,40 +64,19 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
   };
 
   async function act(entry: ListEntry, action: SwipeAction) {
-    setFinished(null);
     switch (action) {
       case 'check':
         haptic();
-        setLast(entry);
         settle(entry.id);
         return lists.setChecked(entry.id, true);
       case 'uncheck':
-        setLast(entry);
         release(entry.id);
         return lists.setChecked(entry.id, false);
       case 'buy':
-        setLast(entry);
-        setBought((n) => n + 1);
         return fade(entry, () => lists.markBought(entry.id));
       case 'undo':
-        setBought((n) => Math.max(0, n - 1));
         return undo(entry.id);
     }
-  }
-
-  function undoLast() {
-    if (!last) return;
-    if (fading.has(last.id)) void act(last, 'undo');
-    else void lists.restoreEntry(last);
-    setLast(null);
-  }
-
-  function finish(id: string) {
-    void lists.finishPurchase([id]).then((n) => {
-      setFinished({ contextId: id, count: n + bought });
-      setBought(0);
-      setLast(null);
-    });
   }
 
   const toggleGroup = (id: string) => {
@@ -143,12 +137,11 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
       </header>
 
       <div className="lists__body">
-        {finished?.contextId === contextId && <Say mood="happy">{tata.finished(finished.count)}</Say>}
         {contextId === null ? (
           <Uncontexted snapshot={snapshot} />
         ) : entries.length === 0 ? (
           <div className="empty">
-            {!finished && <Say mood="happy">{tata.emptyList(name)}</Say>}
+            <Say mood="happy">{tata.emptyList(name)}</Say>
             <button type="button" className="link-button" onClick={() => navigate({ name: 'catalog', contextId })}>
               Abrir o catálogo de {name}
             </button>
@@ -178,16 +171,6 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
         )}
       </div>
 
-      {context && entries.length > 0 && (
-        <div className="reach">
-          <button type="button" className="pill pill--icon" aria-label="Desfazer" disabled={!last} onClick={undoLast}>
-            <UndoIcon />
-          </button>
-          <button type="button" className="btn" disabled={!entries.some(isChecked) && bought === 0} onClick={() => finish(context.id)}>
-            Finalizar compra
-          </button>
-        </div>
-      )}
       <BottomNav current="lists" contextId={contextId} snapshot={snapshot} />
 
       {editing && context && <ContextSheet context={context} snapshot={snapshot} onClose={() => setEditing(false)} />}

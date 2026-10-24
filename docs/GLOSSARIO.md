@@ -24,7 +24,7 @@ Um termo, um sentido. Estes nomes valem para os textos da interface e para as do
 - **Setup:** as telas do primeiro uso, que montam o catálogo inicial. (`spec/setup.md`)
 - **Sugestão:** um item das filas do setup, com contexto e categoria. (`spec/setup.md`)
 - **Cápsula:** o botão de uma sugestão no setup, em forma de cápsula. (`spec/setup.md`)
-- **Modo compra:** o jeito de usar a lista de um contexto com uma mão dentro da loja: riscar, contar como comprado e finalizar. No celular, é a própria tela das listas. (`spec/modo-compra.md`)
+- **Modo compra:** o jeito de usar a lista de um contexto com uma mão dentro da loja: riscar e contar como comprado. No celular, é a própria tela das listas. (`spec/modo-compra.md`)
 - **Nota (nota fiscal):** a NFC-e de uma compra, lida pela foto e pelo QR code. (`spec/nota-fiscal.md`)
 - **Compra:** uma nota lida e gravada, com loja, data e total. (`spec/nota-fiscal.md`)
 - **Loja:** onde a compra foi feita, com nome, CNPJ e contexto. (`spec/nota-fiscal.md`)

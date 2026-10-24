@@ -6,14 +6,17 @@ das listas já é o modo compra: não há uma tela separada.
 - **Entra aqui:** o uso com uma mão, o agrupamento por categoria, marcar e finalizar a compra.
 - **Não entra aqui:** a leitura da nota depois da compra (`nota-fiscal.md`).
 
+## Em aberto
+
+- [ ] Sem o "Finalizar compra" no celular, de onde eu chego à leitura da nota fiscal na fase 1b?
+
 ## Uso com uma mão
 
 - No Perfil do celular e nos Ajustes do computador, eu escolho **mão direita** ou **mão esquerda**.
   A escolha vale para todas as telas do celular. A tela das listas não tem atalho para trocar a
   mão. *(1a)*
-- "Finalizar compra" e "Desfazer" ficam numa barra no pé da tela, do lado da mão escolhida, ao
-  alcance do polegar. O botão de agrupar fica no topo, na linha do nome da lista. Não há busca na
-  lista. *(1a)*
+- A tela das listas do celular não tem barra no pé com "Finalizar compra" nem "Desfazer". O botão
+  de agrupar fica no topo, na linha do nome da lista. Não há busca na lista. *(1a)*
 - A bolinha de cada item fica à esquerda, e o nome logo depois dela; um toque no nome abre o
   detalhe do item. *(1a)*
 - Cada item tem pelo menos 56 px de altura. *(1a)*
@@ -46,10 +49,9 @@ das listas já é o modo compra: não há uma tela separada.
 
 - Um toque na bolinha ou deslizar o item na direção do polegar (para a direita, com a mão direita)
   risca o item na hora. Ele esmaece devagar no lugar onde estava e só depois vai para o fim do
-  grupo, onde fica riscado até eu finalizar a compra; só então sai da lista. *(1a)*
+  grupo, onde fica riscado até eu sair da lista; só então sai da lista. *(1a)*
   Por quê: se o item pula na hora, eu perco de vista o que acabei de riscar.
-- Deslizar de novo um item riscado conta como comprado e tira o item da lista sem esperar o
-  "Finalizar compra": o item esmaece por 3 segundos e some. *(1a)*
+- Deslizar de novo um item riscado conta como comprado e tira o item da lista na hora: o item esmaece por 3 segundos e some. *(1a)*
   Por quê: é rápido, mas dá tempo de desfazer.
 - Deslizar no sentido contrário (para a esquerda, com a mão direita) desfaz o gesto anterior: tira
   o riscado ou devolve o item que estava esmaecendo. Enquanto o item esmaece, ele mostra
@@ -57,8 +59,10 @@ das listas já é o modo compra: não há uma tela separada.
 - Os itens não têm lixeira. Para tirar um item da lista sem contar como comprado, eu abro o
   detalhe dele e uso "Tirar da lista"; o item esmaece do mesmo jeito e eu posso desfazer. *(1a)*
 - Os itens sem contexto ficam só na lista "Sem contexto", não no fim das outras listas. *(1a)*
-- "Finalizar compra" fecha a compra da lista aberta: os riscados saem dela, e a Tatá diz quantos
-  itens saíram. *(1a)*
+- No celular, quando eu saio de uma lista (troco de lista ou vou para outra tela), os riscados dela
+  contam como comprados e saem. *(1a)*
+- No computador, "Finalizar compra", no pé da coluna, fecha a compra daquela lista: os riscados
+  saem dela. *(1a)*
 - Na fase 1b, "Finalizar compra" oferece dois caminhos: ler a nota fiscal agora ou só fechar. *(1b)*
 - Itens marcados à mão, sem nota, ficam registrados como comprados, sem preço. *(1a)*
 - Itens não comprados continuam na lista para a próxima vez. *(1a)*
