@@ -105,6 +105,7 @@ describe('screens', () => {
     expect(html).toContain('Laticínios');
     expect(html).not.toContain('Finalizar compra');
     expect(html).not.toContain('aria-label="Desfazer"');
+    expect(html).toMatch(/Arrumar a ordem dos grupos.*Abrir o catálogo de Mercado/);
   });
 
   it('the "Sem contexto" tab offers the contexts as buttons', async () => {

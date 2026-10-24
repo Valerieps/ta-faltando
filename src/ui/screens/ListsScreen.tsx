@@ -101,6 +101,12 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
     </ul>
   );
 
+  const catalogLink = (
+    <button type="button" className="link-button" onClick={() => navigate({ name: 'catalog', contextId })}>
+      Abrir o catálogo de {name}
+    </button>
+  );
+
   return (
     <main className="screen lists">
       <TopBar />
@@ -142,9 +148,7 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
         ) : entries.length === 0 ? (
           <div className="empty">
             <Say mood="happy">{tata.emptyList(name)}</Say>
-            <button type="button" className="link-button" onClick={() => navigate({ name: 'catalog', contextId })}>
-              Abrir o catálogo de {name}
-            </button>
+            {catalogLink}
           </div>
         ) : context?.groupByCategory ? (
           <>
@@ -165,9 +169,13 @@ export function ListsScreen({ snapshot, contextId: requested }: { snapshot: Snap
             <button type="button" className="link-button" onClick={() => setOrdering(true)}>
               Arrumar a ordem dos grupos
             </button>
+            {catalogLink}
           </>
         ) : (
-          rows(entries)
+          <>
+            {rows(entries)}
+            {catalogLink}
+          </>
         )}
       </div>
 
