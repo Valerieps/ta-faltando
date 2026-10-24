@@ -80,6 +80,10 @@ contexto", sem nenhuma pergunta na hora.
 2. **Item novo que está nas filas de sugestões do setup:** usa o contexto da sugestão. *(1a)*
 3. **Item totalmente novo:** entra em "Sem contexto", sem pergunta na hora. *(1a)*
 
+No celular, quando eu anoto pelo + com o Catálogo aberto, um item que ainda não está no catálogo
+entra no contexto aberto ali, no lugar das regras 2 e 3; um item que já está no catálogo continua
+nos contextos dele. *(1a)*
+
 ## Itens sem contexto
 
 - Ficam numa aba própria, "Sem contexto", com um contador visível na tela inicial. *(1a)*

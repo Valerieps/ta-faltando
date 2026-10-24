@@ -93,6 +93,13 @@ describe('list views', () => {
     expect(destinationFor(snapshot, 'fita dupla-face')).toMatchObject({ item: undefined, contextId: null, category: null });
   });
 
+  it('puts a new name in the context open in the catalog, but leaves catalog items where they are', () => {
+    expect(destinationFor(snapshot, 'fita dupla-face', 'farmacia')).toMatchObject({ item: undefined, contextId: 'farmacia' });
+    expect(destinationFor(snapshot, 'dipirona', 'mercado')).toMatchObject({ contextId: 'mercado', category: 'saude' });
+    expect(destinationFor(snapshot, 'fita dupla-face', null).contextId).toBeNull();
+    expect(destinationFor(snapshot, 'Leite', 'farmacia').contextId).toBe('mercado');
+  });
+
   it('searches the catalog of every context, and finds the pending entry of an item', () => {
     expect(searchCatalog(snapshot.items, 'L').map((i) => i.id)).toEqual(['bala', 'leite', 'pilha']);
     expect(searchCatalog(snapshot.items, '  ')).toEqual([]);
