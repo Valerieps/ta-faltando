@@ -30,11 +30,11 @@ A lista de um contexto em tela cheia, para eu usar com uma mão só dentro da lo
 - A categoria vem da sugestão do setup, se o contexto do item tiver essa categoria; senão, e nos
   itens criados à mão, pelo microfone ou em lote, o item fica em "Outros" até eu escolher uma
   categoria no detalhe do item. *(1a)*
-- No detalhe do item, aparecem só as categorias do contexto padrão dele; um "+" ao lado delas cria
-  uma categoria nova nesse contexto, e um "+" ao lado dos contextos cria um contexto novo. Um item
-  sem contexto não tem categoria para escolher. *(1a)*
-- Quando eu mudo o contexto padrão de um item, a categoria dele vai junto: se o novo contexto não
-  tem essa categoria, ela é criada lá, no fim. *(1a)*
+- No detalhe do item, aparecem só as categorias dos contextos dele; um "+" ao lado delas cria
+  uma categoria nova nesses contextos, e um "+" ao lado dos contextos cria um contexto novo. Um
+  item sem contexto não tem categoria para escolher. *(1a)*
+- Quando um item ganha um contexto, ou muda de categoria, a categoria dele vai junto para cada
+  contexto dele: se o contexto não tem essa categoria, ela é criada lá, no fim. *(1a)*
 - Eu arrasto a ordem dos grupos para seguir o caminho da loja que eu frequento; é a mesma ordem
   das categorias do contexto. *(1a)*
 

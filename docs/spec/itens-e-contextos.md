@@ -44,7 +44,7 @@ Eu adiciono o que está faltando sem pensar em qual lista: o app coloca cada ite
 
 ## Formas de adicionar
 
-Em todas, o item vai para a lista do seu contexto padrão, e um item sem contexto vai para "Sem
+Em todas, o item vai para as listas dos seus contextos, e um item sem contexto vai para "Sem
 contexto", sem nenhuma pergunta na hora.
 
 | Forma | Como funciona | Melhor para |
@@ -62,23 +62,22 @@ contexto", sem nenhuma pergunta na hora.
 - No lote, os itens se separam por vírgula, quebra de linha e a palavra "e". Antes de
   salvar, uma tela mostra os itens separados para eu conferir. *(1a)*
 - No computador, nessa conferência do lote, o contexto de cada item é uma lista de escolha, mesmo
-  quando o app não achou nenhum ("Sem contexto"). O contexto que eu escolho ali vira o padrão do
-  item. *(1a)*
+  quando o app não achou nenhum ("Sem contexto"). Se eu escolho ali um contexto que não é do item,
+  ele vira o único contexto do item. *(1a)*
 - Um item que não está no catálogo entra no catálogo quando eu o adiciono. *(1a)*
-- Depois de adicionado, um toque no item me deixa mudar o contexto, só daquela vez ou como novo
-  padrão. *(1a)*
+- Depois de adicionado, um toque no item me deixa mudar os contextos dele, ou pôr o item só
+  daquela vez na lista de outro contexto. *(1a)*
 
 ## Como o app escolhe o contexto
 
-1. **Item já no catálogo:** vai para o contexto padrão dele. *(1a)*
+1. **Item já no catálogo:** vai para os contextos dele. *(1a)*
 2. **Item novo que está nas filas de sugestões do setup:** usa o contexto da sugestão. *(1a)*
 3. **Item totalmente novo:** entra em "Sem contexto", sem pergunta na hora. *(1a)*
 
 ## Itens sem contexto
 
 - Ficam numa aba própria, "Sem contexto", com um contador visível na tela inicial. *(1a)*
-- Na aba, cada item mostra os contextos como botões: um toque vincula o item e define o contexto
-  padrão dele. *(1a)*
+- Na aba, cada item mostra os contextos como botões: um toque vincula o item a esse contexto. *(1a)*
 - Eu posso selecionar vários itens e vincular todos de uma vez. *(1a)*
 - Enquanto não são vinculados, aparecem numa seção no fim do modo compra de qualquer contexto, para
   eu não esquecer deles. *(1a)*
@@ -86,8 +85,17 @@ contexto", sem nenhuma pergunta na hora.
 
 ## Item em mais de um contexto
 
-- Cada item tem **um** contexto padrão. *(1a)*
-  Por quê: assim a classificação é previsível.
+- Um item pode ter mais de um contexto (ex.: shampoo em Farmácia e Mercado). Eu marco e desmarco
+  os contextos no detalhe do item, aberto pelo item na lista ou no catálogo; o setup e o lote dão
+  um contexto só. *(1a)*
+- A categoria é do item, a mesma em todos os contextos dele. *(1a)*
+- Quando eu adiciono um item, por qualquer contexto dele, ele aparece nas listas de todos os seus
+  contextos e no catálogo de cada um. Comprado num deles, sai de todas. *(1a)*
+- O contador de itens faltando de cada lista conta os itens daquela lista; o total do botão
+  Listas conta cada item uma vez só, mesmo que ele esteja em várias listas. *(1a)*
+- Um item posto numa lista "só daquela vez" fica só nela. *(1a)*
+- Quando eu desmarco um contexto do item, o item que estava faltando continua nas listas dos
+  outros contextos dele; sem nenhum contexto, vai para "Sem contexto". *(1a)*
 - Se as 3 últimas compras de um item foram num contexto diferente do padrão, o app sugere trocar
   (ex.: "Você tem comprado shampoo no mercado. Mover para Mercado?"). *(1b)*
 

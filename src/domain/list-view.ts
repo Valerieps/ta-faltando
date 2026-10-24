@@ -1,8 +1,8 @@
 import type { Context } from './context';
 import type { Item } from './item';
-import { isChecked, type ListEntry } from './list-entry';
+import { entryContextIds, isChecked, type ListEntry } from './list-entry';
 import { categoryName, findSuggestion } from './suggestion';
-import { findItemByName } from './item';
+import { findItemByName, itemContextIds } from './item';
 
 /** Everything the screens show: the live records of each table. */
 export interface Snapshot {
@@ -21,14 +21,19 @@ export function activeContexts(contexts: readonly Context[]): Context[] {
 }
 
 /**
- * The pending entries of a list (null = "Sem contexto"). An entry whose context was deactivated
- * or deleted falls into "Sem contexto", so it never disappears.
+ * The pending entries of a list (null = "Sem contexto"). An entry shows on the list of each of
+ * its contexts; one whose contexts were all deactivated or deleted falls into "Sem contexto", so
+ * it never disappears.
  */
 export function listEntries(snapshot: Snapshot, contextId: string | null): ListEntry[] {
   const active = new Set(activeContexts(snapshot.contexts).map((c) => c.id));
+  const items = itemsById(snapshot.items);
   return snapshot.entries
     .filter((e) => e.deletedAt === null && e.status === 'pending')
-    .filter((e) => (contextId === null ? e.contextId === null || !active.has(e.contextId) : e.contextId === contextId))
+    .filter((e) => {
+      const shown = entryContextIds(e, items.get(e.itemId)).filter((id) => active.has(id));
+      return contextId === null ? shown.length === 0 : shown.includes(contextId);
+    })
     .sort((a, b) => Number(isChecked(a)) - Number(isChecked(b)) || a.addedAt - b.addedAt);
 }
 
@@ -36,9 +41,9 @@ export function listEntries(snapshot: Snapshot, contextId: string | null): ListE
 export const missingCount = (snapshot: Snapshot, contextId: string | null) =>
   listEntries(snapshot, contextId).filter((e) => !isChecked(e)).length;
 
-/** Missing items on every list, for the "Listas" button. */
+/** Missing items on every list, for the "Listas" button: an item on several lists counts once. */
 export const totalMissing = (snapshot: Snapshot) =>
-  [null, ...activeContexts(snapshot.contexts).map((c) => c.id)].reduce((n, id) => n + missingCount(snapshot, id), 0);
+  new Set(snapshot.entries.filter((e) => e.deletedAt === null && e.status === 'pending' && !isChecked(e)).map((e) => e.itemId)).size;
 
 /**
  * Every list (the active contexts, then "Sem contexto") with its missing count: those with
@@ -53,18 +58,18 @@ export function itemsById(items: readonly Item[]): Map<string, Item> {
   return new Map(items.map((item) => [item.id, item]));
 }
 
-/** The catalog of a context: the live items whose default context it is, by name. */
+/** The catalog of a context (null = the items with no context): its live items, by name. */
 export function catalogOf(items: readonly Item[], contextId: string | null): Item[] {
   return items
-    .filter((i) => i.deletedAt === null && i.defaultContextId === contextId)
+    .filter((i) => i.deletedAt === null && (contextId === null ? itemContextIds(i).length === 0 : itemContextIds(i).includes(contextId)))
     .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
 }
 
-/** Items with no default context, the "Sem contexto" tab (spec/itens-e-contextos.md). */
+/** Items with no active context, the "Sem contexto" tab (spec/itens-e-contextos.md). */
 export const itemsWithoutContext = (snapshot: Snapshot) => {
   const active = new Set(activeContexts(snapshot.contexts).map((c) => c.id));
   return snapshot.items
-    .filter((i) => i.deletedAt === null && (i.defaultContextId === null || !active.has(i.defaultContextId)))
+    .filter((i) => i.deletedAt === null && !itemContextIds(i).some((id) => active.has(id)))
     .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
 };
 
@@ -101,7 +106,7 @@ export function groupByCategory(entries: readonly ListEntry[], items: ReadonlyMa
 export interface Destination {
   /** The catalog item, when the name is already in it. */
   readonly item: Item | undefined;
-  /** null is "Sem contexto". */
+  /** The item's first active context; null is "Sem contexto". */
   readonly contextId: string | null;
   readonly category: string | null;
 }
@@ -110,7 +115,7 @@ export function destinationFor(snapshot: Snapshot, name: string): Destination {
   const active = new Set(activeContexts(snapshot.contexts).map((c) => c.id));
   const item = findItemByName(snapshot.items, name);
   if (item) {
-    const contextId = item.defaultContextId !== null && active.has(item.defaultContextId) ? item.defaultContextId : null;
+    const contextId = itemContextIds(item).find((id) => active.has(id)) ?? null;
     return { item, contextId, category: item.category };
   }
   const suggestion = findSuggestion(name);

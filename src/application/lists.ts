@@ -1,7 +1,7 @@
 import { categoryIn, contextCategories } from '../domain/context-categories';
 import { parseEntryText, type EntryText } from '../domain/entry-text';
-import { findItemByName, type Item, type ItemOrigin } from '../domain/item';
-import { pendingEntryFor, type ListEntry } from '../domain/list-entry';
+import { findItemByName, itemContextIds, withContexts, type Item, type ItemOrigin } from '../domain/item';
+import { entryContextIds, pendingEntryFor, type ListEntry } from '../domain/list-entry';
 import { destinationFor, listEntries, type Snapshot } from '../domain/list-view';
 import { changed, created, deleted, type Author } from '../domain/synced-record';
 import type { TableName } from '../domain/tables';
@@ -39,10 +39,11 @@ export class Lists {
   }
 
   /**
-   * Puts an item on the list of its default context, or on "Sem contexto" when it has none
-   * ("2 leite: sem lactose" brings quantity and note). A name not in the catalog enters it, with
-   * the context of its setup suggestion if there is one. An item already pending there stays as
-   * it is; a new quantity or note given in the text replaces the old one.
+   * Puts an item on the lists of its contexts, or on "Sem contexto" when it has none ("2 leite:
+   * sem lactose" brings quantity and note). A name not in the catalog enters it, with the context
+   * of its setup suggestion if there is one. An item already pending there stays as it is; a new
+   * quantity or note given in the text replaces the old one. A context chosen in the batch check
+   * that is not one of the item's becomes its only context.
    */
   async add(text: string | EntryText, via: ItemOrigin = 'manual', chosenContextId?: string | null): Promise<AddResult | null> {
     const parsed = typeof text === 'string' ? parseEntryText(text) : text;
@@ -57,14 +58,14 @@ export class Lists {
       item = {
         ...created(this.ids.newId(), author),
         name: parsed.name,
-        defaultContextId: contextId,
+        ...withContexts([contextId]),
         category: this.newCategory(snapshot, contextId, destination.category),
         createdVia: via,
       };
       await this.store.save('items', item);
-    } else if (contextId !== destination.contextId) {
-      await this.changeItem(item.id, { defaultContextId: contextId }, author);
-      item = { ...item, defaultContextId: contextId };
+    } else if (contextId !== destination.contextId && (contextId === null || !itemContextIds(item).includes(contextId))) {
+      await this.changeItem(item.id, withContexts([contextId]), author);
+      item = { ...item, ...withContexts([contextId]) };
     }
     return this.putOnList(snapshot, item, contextId, parsed, author);
   }
@@ -82,12 +83,17 @@ export class Lists {
     return results;
   }
 
-  /** Adds a catalog item to its list ("pelo catálogo"). */
-  async addItem(itemId: string): Promise<AddResult | null> {
+  /**
+   * Adds a catalog item to the lists ("pelo catálogo"), through the catalog of one of its contexts
+   * (`contextId`), or through its first one.
+   */
+  async addItem(itemId: string, contextId?: string | null): Promise<AddResult | null> {
     const item = await this.store.get('items', itemId);
     if (!item || item.deletedAt !== null) return null;
     const snapshot = await this.snapshot();
-    return this.putOnList(snapshot, item, destinationFor(snapshot, item.name).contextId, { name: item.name, quantity: null, note: null }, await this.author());
+    const through =
+      contextId !== undefined && contextId !== null && itemContextIds(item).includes(contextId) ? contextId : destinationFor(snapshot, item.name).contextId;
+    return this.putOnList(snapshot, item, through, { name: item.name, quantity: null, note: null }, await this.author());
   }
 
   /** Puts a name in the catalog of a context without adding it to the list. */
@@ -100,7 +106,7 @@ export class Lists {
     const item: Item = {
       ...created(this.ids.newId(), await this.author()),
       name: parsed.name,
-      defaultContextId: contextId,
+      ...withContexts([contextId]),
       category: this.newCategory(snapshot, contextId, destinationFor(snapshot, parsed.name).category),
       createdVia: 'manual',
     };
@@ -139,7 +145,9 @@ export class Lists {
   async finishPurchase(contextIds: readonly (string | null)[]): Promise<number> {
     const snapshot = await this.snapshot();
     const author = await this.author();
-    const struck = contextIds.flatMap((id) => listEntries(snapshot, id)).filter((e) => e.checkedAt != null);
+    // An entry on several of these lists counts once.
+    const shown = new Map(contextIds.flatMap((id) => listEntries(snapshot, id)).map((e) => [e.id, e]));
+    const struck = [...shown.values()].filter((e) => e.checkedAt != null);
     for (const entry of struck) {
       await this.store.save('listEntries', changed(entry, { status: 'bought', boughtAt: author.now }, author));
     }
@@ -151,16 +159,16 @@ export class Lists {
   }
 
   /**
-   * Moves an entry to another list, "só daquela vez" or as the item's new default context. If the
+   * Moves an entry to another list "só daquela vez": the item's contexts stay as they are. If the
    * item is already pending there, this entry leaves instead (one pending entry per list).
    */
-  async moveEntry(entryId: string, contextId: string | null, asDefault: boolean): Promise<void> {
+  async moveEntry(entryId: string, contextId: string | null): Promise<void> {
     const entry = await this.store.get('listEntries', entryId);
-    if (!entry || entry.deletedAt !== null) return;
+    if (!entry || entry.deletedAt !== null || entry.contextId === contextId) return;
+    const item = await this.store.get('items', entry.itemId);
     const author = await this.author();
-    if (asDefault) await this.changeItem(entry.itemId, { defaultContextId: contextId }, author);
-    if (entry.contextId === contextId) return;
-    if (pendingEntryFor(await this.store.list('listEntries'), entry.itemId, contextId)) {
+    const other = item && pendingEntryFor(await this.store.list('listEntries'), item, contextId);
+    if (other && other.id !== entry.id) {
       await this.store.save('listEntries', deleted(entry, author));
     } else {
       await this.store.save('listEntries', changed(entry, { contextId }, author));
@@ -177,31 +185,44 @@ export class Lists {
   }
 
   /**
-   * Gives these items a default context and moves them, from "Sem contexto", to its list
+   * Links these items to a context; those on "Sem contexto" move to its list
    * (spec/itens-e-contextos.md, "Itens sem contexto").
    */
   async linkItems(itemIds: readonly string[], contextId: string): Promise<void> {
-    const author = await this.author();
-    const snapshot = await this.snapshot();
-    const orphans = listEntries(snapshot, null);
-    for (const itemId of itemIds) {
-      await this.changeItem(itemId, { defaultContextId: contextId }, author);
-      for (const entry of orphans.filter((e) => e.itemId === itemId)) {
-        await this.store.save('listEntries', changed(entry, { contextId }, author));
-      }
-    }
+    for (const itemId of itemIds) await this.setContextLinked(itemId, contextId, true);
   }
 
   /**
-   * Changes an item's default context in the catalog; if it is pending on the list of its old
-   * context, it moves along.
+   * Adds a context to an item or takes one away (spec/itens-e-contextos.md, "Item em mais de um
+   * contexto"). Linked, its pending entry on "Sem contexto" moves to that list; unlinked, an
+   * entry added through that context moves to the item's next context, or to "Sem contexto".
    */
-  async setDefaultContext(itemId: string, contextId: string | null): Promise<void> {
+  async setContextLinked(itemId: string, contextId: string, linked: boolean): Promise<void> {
     const item = await this.store.get('items', itemId);
-    if (!item || item.deletedAt !== null || item.defaultContextId === contextId) return;
-    const entry = listEntries(await this.snapshot(), item.defaultContextId).find((e) => e.itemId === itemId);
-    if (entry) await this.moveEntry(entry.id, contextId, true);
-    else await this.changeItem(itemId, { defaultContextId: contextId }, await this.author());
+    if (!item || item.deletedAt !== null) return;
+    const current = itemContextIds(item);
+    if (current.includes(contextId) === linked) return;
+    const author = await this.author();
+    const next = linked ? [...current, contextId] : current.filter((id) => id !== contextId);
+    const before = await this.snapshot();
+    await this.changeItem(itemId, withContexts(next), author);
+    const pending = before.entries.filter((e) => e.deletedAt === null && e.status === 'pending' && e.itemId === itemId);
+    if (linked) {
+      const loose = new Set(listEntries(before, null).map((e) => e.id));
+      for (const entry of pending.filter((e) => loose.has(e.id))) {
+        await this.store.save('listEntries', changed(entry, { contextId }, author));
+      }
+      // An entry "só daquela vez" in that context now meets the item's own: the oldest stays.
+      const updated = { ...item, ...withContexts(next) };
+      const there = (await this.store.list('listEntries'))
+        .filter((e) => e.deletedAt === null && e.status === 'pending' && e.itemId === itemId && entryContextIds(e, updated).includes(contextId))
+        .sort((a, b) => a.addedAt - b.addedAt);
+      for (const extra of there.slice(1)) await this.store.save('listEntries', deleted(extra, author));
+    } else {
+      for (const entry of pending.filter((e) => e.contextId === contextId && current.includes(contextId))) {
+        await this.store.save('listEntries', changed(entry, { contextId: next[0] ?? null }, author));
+      }
+    }
   }
 
   /** Takes an item out of the catalog, and off every list. */
@@ -221,7 +242,7 @@ export class Lists {
   }
 
   private async putOnList(snapshot: Snapshot, item: Item, contextId: string | null, text: EntryText, author: Author): Promise<AddResult> {
-    const existing = pendingEntryFor(snapshot.entries, item.id, contextId);
+    const existing = pendingEntryFor(snapshot.entries, item, contextId);
     if (existing) {
       const quantity = text.quantity ?? existing.quantity;
       const note = text.note ?? existing.note;
@@ -255,12 +276,18 @@ export class Lists {
     await this.store.save('listEntries', changed(entry, await changes(entry, author), author));
   }
 
-  private async changeItem(itemId: string, changes: Partial<Pick<Item, 'name' | 'defaultContextId' | 'category'>>, author: Author): Promise<void> {
+  /** Changes an item; each of its contexts gets its category (`bringCategory`). */
+  private async changeItem(
+    itemId: string,
+    changes: Partial<Pick<Item, 'name' | 'defaultContextId' | 'contextIds' | 'category'>>,
+    author: Author,
+  ): Promise<void> {
     const item = await this.store.get('items', itemId);
     if (!item || item.deletedAt !== null) return;
-    await this.store.save('items', changed(item, changes, author));
-    if (changes.defaultContextId !== undefined && changes.defaultContextId !== item.defaultContextId) {
-      await bringCategory(this.store, changes.defaultContextId, changes.category ?? item.category, author);
+    const next = changed(item, changes, author);
+    await this.store.save('items', next);
+    if (changes.contextIds !== undefined || changes.category !== undefined) {
+      for (const contextId of itemContextIds(next)) await bringCategory(this.store, contextId, next.category, author);
     }
   }
 

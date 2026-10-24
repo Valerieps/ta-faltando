@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { contextCategories } from '../../domain/context-categories';
+import { itemContextIds } from '../../domain/item';
 import { activeContexts, contextName, type Snapshot } from '../../domain/list-view';
 import { OTHER_CATEGORY_NAME, categoryName } from '../../domain/suggestion';
 import { AddChip } from './AddChip';
 import { useServices } from '../services';
 
 /**
- * The item's detail, opened by a tap on it: quantity, note, the list it is on ("só daquela vez" or
- * as the new default) and the category used to group shopping mode (spec/itens-e-contextos.md).
+ * The item's detail, opened by a tap on it: quantity, note, the item's contexts (one or more), the
+ * list it is on "só desta vez" and the category used to group shopping mode
+ * (spec/itens-e-contextos.md).
  */
 export function ItemSheet({
   snapshot,
@@ -26,7 +28,6 @@ export function ItemSheet({
   const dialog = useRef<HTMLDialogElement>(null);
   const item = snapshot.items.find((i) => i.id === itemId);
   const entry = entryId ? snapshot.entries.find((e) => e.id === entryId) : undefined;
-  const [moveTo, setMoveTo] = useState<string | null | undefined>(undefined);
   const [confirmRemove, setConfirmRemove] = useState(false);
 
   useEffect(() => {
@@ -40,29 +41,27 @@ export function ItemSheet({
   }, [item, onClose]);
   if (!item) return null;
 
-  const current = entry ? entry.contextId : item.defaultContextId;
   const contexts = activeContexts(snapshot.contexts);
-
-  async function chooseContext(contextId: string | null) {
-    if (contextId === current) return setMoveTo(undefined);
-    if (!entry) return lists.setDefaultContext(item!.id, contextId);
-    setMoveTo(contextId);
-  }
+  const linked = itemContextIds(item);
+  const isLinked = (id: string) => linked.includes(id);
+  // An entry added through one of the item's contexts is on all of their lists.
+  const onceIn = entry && entry.contextId !== null && !isLinked(entry.contextId) ? entry.contextId : undefined;
 
   async function addContext(name: string) {
     const context = await contextService.create(name);
-    if (context) await chooseContext(context.id);
+    if (context) await lists.setContextLinked(item!.id, context.id, true);
   }
 
-  // The category belongs to the item's default context, which has its own categories.
-  const home = contexts.find((c) => c.id === item.defaultContextId);
-  const own = contextCategories(home, snapshot.items);
+  // The category is the item's, the same in every context; the choices are those of its contexts.
+  const homes = contexts.filter((c) => isLinked(c.id));
+  const others = contexts.filter((c) => !isLinked(c.id));
+  const own = [...new Set(homes.flatMap((c) => contextCategories(c, snapshot.items)))];
   const category = item.category !== null && own.includes(item.category) ? item.category : null;
   const categories = [...own.map((id) => ({ id: id as string | null, name: categoryName(id) })), { id: null, name: OTHER_CATEGORY_NAME }];
 
   async function addCategory(name: string) {
-    if (!home) return;
-    const id = await contextService.addCategory(home.id, name);
+    let id: string | null = null;
+    for (const home of homes) id = (await contextService.addCategory(home.id, name)) ?? id;
     if (id) await lists.setCategory(item!.id, id);
   }
 
@@ -115,38 +114,50 @@ export function ItemSheet({
         )}
 
         <fieldset className="sheet__group">
-          <legend className="label">{entry ? 'Lista' : 'Contexto padrão'}</legend>
+          <legend className="label">Contextos</legend>
           <div className="chips">
-            {[...contexts.map((c) => c.id), null].map((id) => (
+            {contexts.map((c) => (
               <button
-                key={id ?? 'none'}
+                key={c.id}
                 type="button"
-                className={id === (moveTo === undefined ? current : moveTo) ? 'chip is-on' : 'chip'}
-                aria-pressed={id === current}
-                onClick={() => void chooseContext(id)}
+                className={isLinked(c.id) ? 'chip is-on' : 'chip'}
+                aria-pressed={isLinked(c.id)}
+                onClick={() => void lists.setContextLinked(item.id, c.id, !isLinked(c.id))}
               >
-                {contextName(snapshot, id)}
+                {c.name}
               </button>
             ))}
             <AddChip label="Novo contexto" onAdd={addContext} />
           </div>
-          {entry && moveTo !== undefined && (
-            <div className="sheet__confirm">
-              <span>Mover para {contextName(snapshot, moveTo)}:</span>
-              <button type="button" className="pill" onClick={() => void lists.moveEntry(entry.id, moveTo, false).then(() => setMoveTo(undefined))}>
-                Só desta vez
-              </button>
-              <button type="button" className="pill pill--solid" onClick={() => void lists.moveEntry(entry.id, moveTo, true).then(() => setMoveTo(undefined))}>
-                Sempre
-              </button>
-            </div>
-          )}
+          {homes.length === 0 && <p className="muted">Sem contexto: toque num contexto para vincular o item.</p>}
         </fieldset>
 
+        {entry && others.length > 0 && (
+          <fieldset className="sheet__group">
+            <legend className="label">Só desta vez em</legend>
+            <div className="chips">
+              {others.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  className={c.id === onceIn ? 'chip is-on' : 'chip'}
+                  aria-pressed={c.id === onceIn}
+                  onClick={() => void lists.moveEntry(entry.id, c.id === onceIn ? (homes[0]?.id ?? null) : c.id)}
+                >
+                  {c.name}
+                </button>
+              ))}
+            </div>
+            <p className="muted">
+              {onceIn ? `Nesta vez, só na lista de ${contextName(snapshot, onceIn)}.` : 'Está nas listas dos contextos do item.'}
+            </p>
+          </fieldset>
+        )}
+
         <fieldset className="sheet__group">
-          <legend className="label">Categoria{home ? ` em ${home.name}` : ''}</legend>
-          {!home && <p className="muted">Escolha um contexto padrão para escolher a categoria.</p>}
-          {home && (
+          <legend className="label">Categoria</legend>
+          {homes.length === 0 && <p className="muted">Escolha um contexto para escolher a categoria.</p>}
+          {homes.length > 0 && (
             <div className="chips">
               {categories.map((c) => (
                 <button

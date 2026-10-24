@@ -84,7 +84,7 @@ describe('Contexts', () => {
     await contexts.create('Farmácia', 'farmacia');
     await lists.add('leite');
     await lists.add('sabonete');
-    await lists.setDefaultContext((await lists.add('dipirona'))!.item.id, 'farmacia');
+    await lists.add('dipirona');
     const categoriesOf = async (id: string) => (await store.get('contexts', id))?.categories;
     const categoryOf = async (name: string) => (await store.list('items')).find((i) => i.name === name)?.category;
 
@@ -120,7 +120,7 @@ describe('Contexts', () => {
     // Leite is a Mercado suggestion, but Mercado has no laticínios any more.
     expect((await lists.add('leite'))!.item.category).toBeNull();
     const dipirona = (await lists.add('dipirona'))!.item;
-    await lists.setDefaultContext(dipirona.id, 'mercado');
+    await lists.setContextLinked(dipirona.id, 'mercado', true);
     expect((await store.get('contexts', 'mercado'))?.categories).toEqual(['mercearia', 'limpeza', 'higiene', 'saude']);
     // Without a context the suggestion's category waits for the context it gets later.
     expect((await lists.add('sabonete', 'manual', null))!.item.category).toBe('higiene');

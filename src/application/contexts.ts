@@ -1,7 +1,7 @@
 import type { Context } from '../domain/context';
 import { contextCategories } from '../domain/context-categories';
 import { capitalize } from '../domain/entry-text';
-import { findItemByName, type Item } from '../domain/item';
+import { findItemByName, itemContextIds, withContexts, type Item } from '../domain/item';
 import { activeContexts } from '../domain/list-view';
 import type { Selected } from '../domain/setup-capsules';
 import { categoryIdFor } from '../domain/suggestion';
@@ -133,7 +133,7 @@ export class Contexts {
 
   /**
    * Saves the setup: creates the chosen contexts and puts the selected items in their catalogs.
-   * An item already in the catalog keeps its context, unless it had none.
+   * An item already in the catalog keeps its contexts, unless it had none.
    */
   async applySetup(choices: readonly SetupChoice[]): Promise<{ name: string; count: number }[]> {
     const summary: { name: string; count: number }[] = [];
@@ -153,16 +153,17 @@ export class Contexts {
     const author = await this.author();
     const existing = findItemByName(await this.store.list('items'), selected.name);
     if (existing) {
-      if (existing.defaultContextId !== null) return existing.defaultContextId === contextId;
+      const linked = itemContextIds(existing);
+      if (linked.length > 0) return linked.includes(contextId);
       const category = existing.category ?? selected.category;
-      await this.store.save('items', changed(existing, { defaultContextId: contextId, category }, author));
+      await this.store.save('items', changed(existing, { ...withContexts([contextId]), category }, author));
       await bringCategory(this.store, contextId, category, author);
       return true;
     }
     const item: Item = {
       ...created(this.ids.newId(), author),
       name: selected.name,
-      defaultContextId: contextId,
+      ...withContexts([contextId]),
       category: selected.category,
       createdVia: selected.fromQueue ? 'setup' : 'manual',
     };
@@ -190,12 +191,16 @@ export class Contexts {
     await this.store.save('contexts', changed(context, { categories: next }, await this.author()));
   }
 
-  /** The items of this context with that category get another (null is "Outros"). */
+  /**
+   * The items of this context with that category get another (null is "Outros"); the category
+   * is the item's, so their other contexts get it too.
+   */
   private async recategorize(contextId: string, from: string, to: string | null): Promise<void> {
     const author = await this.author();
     for (const item of await this.store.list('items')) {
-      if (item.deletedAt === null && item.defaultContextId === contextId && item.category === from) {
+      if (item.deletedAt === null && itemContextIds(item).includes(contextId) && item.category === from) {
         await this.store.save('items', changed(item, { category: to }, author));
+        for (const other of itemContextIds(item).filter((id) => id !== contextId)) await bringCategory(this.store, other, to, author);
       }
     }
   }

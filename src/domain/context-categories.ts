@@ -1,5 +1,5 @@
 import type { Context } from './context';
-import type { Item } from './item';
+import { itemContextIds, type Item } from './item';
 import { CATEGORIES, SUGGESTED_CONTEXTS, categoryName, isCategory } from './suggestion';
 
 type CategorySource = Pick<Context, 'id' | 'categoryOrder' | 'categories'>;
@@ -9,7 +9,7 @@ type CategorySource = Pick<Context, 'id' | 'categoryOrder' | 'categories'>;
  * edits them, they are those of the context's setup suggestions and of its items: first in the
  * order she dragged, then the app's order, then hers by name.
  */
-export function contextCategories(context: CategorySource | undefined, items: Iterable<Pick<Item, 'defaultContextId' | 'category' | 'deletedAt'>>): string[] {
+export function contextCategories(context: CategorySource | undefined, items: Iterable<Pick<Item, 'defaultContextId' | 'contextIds' | 'category' | 'deletedAt'>>): string[] {
   if (!context) return [];
   if (context.categories) return context.categories.filter(isCategory);
   const used = new Set<string>();
@@ -17,7 +17,7 @@ export function contextCategories(context: CategorySource | undefined, items: It
     if (isCategory(suggestion.category)) used.add(suggestion.category);
   }
   for (const item of items) {
-    if (item.deletedAt === null && item.defaultContextId === context.id && isCategory(item.category)) used.add(item.category);
+    if (item.deletedAt === null && itemContextIds(item).includes(context.id) && isCategory(item.category)) used.add(item.category);
   }
   const own = context.categoryOrder.filter((id) => used.has(id));
   const app = CATEGORIES.map((c) => c.id).filter((id) => used.has(id) && !own.includes(id));

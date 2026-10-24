@@ -21,7 +21,9 @@ com a API do Claude e não guarda a foto (ADR-004).
 
 ## Invariantes
 
-- Cada item tem no máximo um contexto padrão; vazio quer dizer "Sem contexto".
+- Um item tem zero ou mais contextos, o primeiro é o padrão; nenhum quer dizer "Sem contexto".
+- Uma entrada de lista mostra-se na lista de cada contexto do item quando o contexto dela é um
+  deles; senão ("só daquela vez"), só na do seu contexto.
 - Um item aparece no máximo uma vez como pendente na lista de um contexto.
 - O preço pertence ao produto, nunca ao item.
 - A chave de acesso de uma compra é única: uma nota lida duas vezes não é gravada de novo.
@@ -41,7 +43,7 @@ aparece na nota, ex.: "LEITE INTEG ITALAC 1L"). Um item tem vários produtos.
 | Entidade | Campos principais | Observação |
 | --- | --- | --- |
 | Contexto | nome, ícone, ordem, ativo, agrupar por categoria, categorias (em ordem) | Uma lista de compras. Sem o campo categorias (contexto que nunca teve as categorias editadas), elas vêm das sugestões e dos itens dele, na ordem antiga (`ordem das categorias`), lida só nesse caso |
-| Item | nome, contexto padrão (vazio = sem contexto), categoria, criado via (setup, manual, voz, lote, nota) | O catálogo é o conjunto dos itens |
+| Item | nome, contextos (o primeiro é o contexto padrão; vazio = sem contexto), categoria, criado via (setup, manual, voz, lote, nota) | O catálogo é o conjunto dos itens. A categoria é a mesma em todos os contextos do item |
 | Entrada de lista | item, contexto, quantidade, observação, status (pendente, comprado), riscado em, data de adição, data da compra | O contexto pode diferir do padrão do item ("só daquela vez") |
 | Produto | descrição original, item ligado, ignorado | *(1b)* |
 | Loja | nome, CNPJ, contexto padrão | *(1b)* |
@@ -76,6 +78,10 @@ meio-tempo, aplica a mesma regra aos que chegaram e avança o cursor, até não 
 - Banco no servidor: o D1 guarda todos os registros numa tabela genérica, `records`, com o
   registro inteiro em JSON e a conta dona dele (ADR-008, ADR-011); um campo novo no app não pede migração no D1. As migrações
   do D1 ficam em `migrations/`.
+- Item com vários contextos: o campo opcional `contextIds` entrou depois de `defaultContextId`,
+  que continua gravado como o primeiro deles, para versões antigas do app lerem o item. Um item sem
+  `contextIds`, ou cujo `defaultContextId` não é o primeiro (mudado por uma versão antiga), tem só
+  o `defaultContextId` (`itemContextIds`).
 - Backup: um arquivo JSON com `formato: "ta-faltando"` e `versao: 1`, com todas as tabelas do banco.
 - Regra para mudar: uma versão só acrescenta campos opcionais; remover um campo leva duas versões.
   A importação aceita backups de qualquer versão anterior e os migra.
