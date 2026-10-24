@@ -27,9 +27,13 @@ Eu adiciono o que está faltando sem pensar em qual lista: o app coloca cada ite
   atalhos aparecem no clique direito no ícone do app instalado. *(1a)*
   Por quê: o Chrome não deixa um PWA ter widget na tela inicial; o atalho é o mais perto disso.
 
-- Eu crio e edito os contextos no Catálogo: um + antes das cápsulas cria um contexto novo, e o
-  lápis numa cápsula muda o nome dela. No computador, o lápis aparece quando passo o mouse; no
-  celular, ele fica na cápsula aberta. Não há uma tela de Contextos. *(1a)*
+- No Catálogo, eu escolho o contexto num menu. Um + à esquerda do menu cria um contexto novo, e o
+  lápis à direita edita o contexto aberto (nome, posição, categorias, desativar). Não há uma tela
+  de Contextos. *(1a)*
+- Acima do menu, uma busca procura nos catálogos de todos os contextos; cada item achado mostra
+  os seus contextos. O enter põe um nome novo no catálogo do contexto aberto e já na lista. *(1a)*
+- No catálogo, um carrinho antes do item mostra se ele está na lista (cheio) ou não (vazio), e o
+  lápis depois dele abre o detalhe do item. *(1a)*
 - No celular, a tela das listas também edita os contextos: o menu que abre no nome da lista tem
   "Editar …", que edita o contexto aberto (nome, posição, categorias, desativar), e "Novo
   contexto", que cria um. *(1a)*

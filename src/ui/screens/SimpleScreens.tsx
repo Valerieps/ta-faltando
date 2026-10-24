@@ -4,7 +4,6 @@ import { activeContexts, type Snapshot } from '../../domain/list-view';
 import { BatchReview } from '../components/BatchReview';
 import { BottomNav } from '../components/BottomNav';
 import { Catalog } from '../components/Catalog';
-import { ContextChips } from '../components/ContextChips';
 import { Say } from '../components/Say';
 import { TopBar } from '../components/TopBar';
 import { goBack } from '../router';
@@ -21,7 +20,6 @@ export function CatalogScreen({ snapshot, contextId }: { snapshot: Snapshot; con
       <TopBar />
       <h1 className="title">Catálogo</h1>
       <div className="screen__body">
-        <ContextChips snapshot={snapshot} current={id} />
         <Catalog key={id ?? 'none'} snapshot={snapshot} contextId={id} />
       </div>
       <BottomNav current="catalog" contextId={id} />

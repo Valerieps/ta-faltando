@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { Context } from './context';
 import type { Item } from './item';
 import type { ListEntry } from './list-entry';
-import { activeContexts, destinationFor, groupByCategory, itemsById, itemsWithoutContext, listEntries, listsByMissing, missingCount, type Snapshot } from './list-view';
+import { activeContexts, destinationFor, groupByCategory, itemsById, itemsWithoutContext, listEntries, listsByMissing, missingCount, pendingEntryOf, searchCatalog, type Snapshot } from './list-view';
 
 const base = { updatedAt: 1, updatedBy: 'd', deletedAt: null };
 const context = (id: string, changes: Partial<Context> = {}): Context => ({
@@ -91,5 +91,12 @@ describe('list views', () => {
     // Pet shop was not chosen: the suggestion keeps its category, but there is no list for it.
     expect(destinationFor(snapshot, 'ração')).toMatchObject({ contextId: null, category: 'pet' });
     expect(destinationFor(snapshot, 'fita dupla-face')).toMatchObject({ item: undefined, contextId: null, category: null });
+  });
+
+  it('searches the catalog of every context, and finds the pending entry of an item', () => {
+    expect(searchCatalog(snapshot.items, 'L').map((i) => i.id)).toEqual(['bala', 'leite', 'pilha']);
+    expect(searchCatalog(snapshot.items, '  ')).toEqual([]);
+    expect(pendingEntryOf(snapshot, 'leite')?.id).toBe('e1');
+    expect(pendingEntryOf(snapshot, 'nada')).toBeUndefined();
   });
 });

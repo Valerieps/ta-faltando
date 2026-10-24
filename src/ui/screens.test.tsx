@@ -120,19 +120,22 @@ describe('screens', () => {
     expect(html).toContain('Finalizar compra (1 riscado)');
   });
 
-  it('the desktop catalog creates and renames contexts from its chips, with no Contextos page', async () => {
+  it('the desktop catalog creates and renames contexts from its dropdown, with no Contextos page', async () => {
     const { snapshot, render } = await setup();
     const html = render(<DesktopApp snapshot={snapshot} route={{ name: 'catalog', contextId: 'mercado' }} />);
     expect(html).toContain('aria-label="Novo contexto"');
-    expect(html).toContain('Mudar o nome de Farmácia');
+    expect(html).toContain('Mudar o nome de Mercado');
+    expect(html).toContain('aria-label="Contexto"');
     expect(html).not.toMatch(/side__link[^>]*>Contextos/);
   });
 
-  it('the phone catalog has the same chips, with the pencil on the open one', async () => {
+  it('the phone catalog has the same dropdown, under a search of every context', async () => {
     const { snapshot, render } = await setup();
     const html = render(<CatalogScreen snapshot={snapshot} contextId="mercado" />);
     expect(html).toContain('aria-label="Novo contexto"');
     expect(html).toContain('Mudar o nome de Mercado');
+    expect(html).toContain('Buscar em todos os contextos');
+    expect(html.indexOf('Buscar em todos os contextos')).toBeLessThan(html.indexOf('aria-label="Contexto"'));
   });
 
   it('the other screens render', async () => {
