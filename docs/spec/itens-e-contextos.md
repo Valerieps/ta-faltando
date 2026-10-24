@@ -11,7 +11,8 @@ Eu adiciono o que está faltando sem pensar em qual lista: o app coloca cada ite
 
 - No celular, o app abre nas listas. Um **+** redondo no meio da barra do pé não muda de tela:
   no lugar da barra aparece o campo de adicionar, já focado, com o teclado aberto. O enter
-  adiciona o item e limpa o campo para o próximo; quando eu saio do campo, a barra volta. *(1a)*
+  adiciona o item e limpa o campo para o próximo; quando eu saio do campo ou recolho o teclado,
+  a barra volta. *(1a)*
   Por quê: no celular eu quase sempre adiciono um item por vez, no meio do dia; o + fica a um
   toque, sob o polegar, e eu continuo vendo a lista em que estava.
 - No celular, uma barra no pé das telas tem **Catálogo**, o **+** e **Listas**, nessa ordem. A

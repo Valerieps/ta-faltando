@@ -7,6 +7,7 @@ import { navigate, type Route } from '../router';
 import { tata } from '../tata-lines';
 import { AddField } from './AddField';
 import { Say } from './Say';
+import { useKeyboardClosed } from './useKeyboardClosed';
 
 export type Tab = 'catalog' | 'lists';
 
@@ -14,12 +15,14 @@ export type Tab = 'catalog' | 'lists';
  * The phone's bottom bar: Catálogo, the round + and Listas (spec/itens-e-contextos.md). Moving
  * between the tabs replaces the screen, so back leaves the app instead of walking the tabs.
  * The + opens the add field in place of the bar, on the keyboard, without leaving the screen;
- * leaving the field brings the bar back. `contextId` carries the open context between the tabs.
+ * leaving the field, or closing the keyboard, brings the bar back. `contextId` carries the open
+ * context between the tabs.
  */
 export function BottomNav({ current, contextId, snapshot }: { current?: Tab; contextId?: string | null; snapshot: Snapshot }) {
   const [adding, setAdding] = useState(false);
   const [said, setSaid] = useState<string | null>(null);
   const input = useRef<HTMLInputElement>(null);
+  useKeyboardClosed(adding, () => setAdding(false));
 
   function open() {
     setSaid(null);
