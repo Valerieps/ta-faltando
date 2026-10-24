@@ -116,4 +116,6 @@ nos contextos dele. *(1a)*
   como comprado, e o ícone de agrupar fica na mesma linha do nome da lista, à direita
   (`modo-compra.md`). *(1a)*
 - Eu ligo ou desligo o agrupamento por categoria em cada lista (`modo-compra.md`). *(1a)*
+- No celular, no fim de cada lista, vazia ou não, há um link para abrir o catálogo daquele
+  contexto. *(1a)*
 - Cada item mostra, em texto discreto, o último preço pago (`precos.md`). *(1b)*
