@@ -89,6 +89,18 @@ export const PersonIcon = () => (
   </svg>
 );
 
+export const PreviousIcon = () => (
+  <svg {...base}>
+    <path d="M15 6l-6 6 6 6" />
+  </svg>
+);
+
+export const NextIcon = () => (
+  <svg {...base}>
+    <path d="M9 6l6 6-6 6" />
+  </svg>
+);
+
 export const CaretDownIcon = () => (
   <svg {...base}>
     <path d="M6 9l6 6 6-6" />

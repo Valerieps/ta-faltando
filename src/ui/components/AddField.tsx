@@ -15,7 +15,7 @@ interface Props {
   placeholder?: string;
   /** The context open in the phone's catalog: a name not yet in the catalog goes to it. */
   openContextId?: string | null;
-  /** The context of a + in "Todas as listas": whatever is typed goes to its catalog and list. */
+  /** The context of a + in "Todos os itens": whatever is typed goes to its catalog and list. */
   into?: string;
 }
 
