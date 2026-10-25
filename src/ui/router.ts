@@ -17,6 +17,9 @@ export type Route =
 
 const NO_CONTEXT = 'sem-contexto';
 
+/** The lists route's `contextId` for "Todas as listas", every context on one screen. */
+export const ALL_LISTS = 'todas';
+
 const PATHS = {
   capture: 'anotar',
   lists: 'listas',

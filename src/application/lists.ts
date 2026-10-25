@@ -96,6 +96,22 @@ export class Lists {
     return this.putOnList(snapshot, item, through, { name: item.name, quantity: null, note: null }, await this.author());
   }
 
+  /**
+   * The + beside a context in "Todas as listas": puts the item in that context's catalog and on
+   * its list. A name not in the catalog enters it there; an item of other contexts gains this
+   * one too.
+   */
+  async addTo(text: string, contextId: string): Promise<AddResult | null> {
+    const parsed = parseEntryText(text);
+    if (!parsed.name) return null;
+    const existing = findItemByName((await this.snapshot()).items, parsed.name);
+    if (!existing) return this.add(parsed, 'manual', contextId);
+    await this.setContextLinked(existing.id, contextId, true);
+    const snapshot = await this.snapshot();
+    const item = snapshot.items.find((i) => i.id === existing.id)!;
+    return this.putOnList(snapshot, item, contextId, parsed, await this.author());
+  }
+
   /** Puts a name in the catalog of a context without adding it to the list. */
   async addToCatalog(name: string, contextId: string | null): Promise<Item | null> {
     const parsed = parseEntryText(name);

@@ -15,6 +15,8 @@ interface Props {
   placeholder?: string;
   /** The context open in the phone's catalog: a name not yet in the catalog goes to it. */
   openContextId?: string | null;
+  /** The context of a + in "Todas as listas": whatever is typed goes to its catalog and list. */
+  into?: string;
 }
 
 /**
@@ -22,7 +24,7 @@ interface Props {
  * showing where each item goes before the enter (spec/itens-e-contextos.md). Enter adds exactly
  * what was typed and clears the field for the next item.
  */
-export function AddField({ snapshot, onAdded, opens, autoFocus, inputRef, placeholder = 'Digite e aperte enter', openContextId }: Props) {
+export function AddField({ snapshot, onAdded, opens, autoFocus, inputRef, placeholder = 'Digite e aperte enter', openContextId, into }: Props) {
   const { lists } = useServices();
   const [text, setText] = useState('');
   const [highlight, setHighlight] = useState(-1);
@@ -36,7 +38,7 @@ export function AddField({ snapshot, onAdded, opens, autoFocus, inputRef, placeh
     setText('');
     setHighlight(-1);
     const destination = destinationFor(snapshot, parseEntryText(value).name, openContextId);
-    const result = await lists.add(value, 'manual', destination.item ? undefined : destination.contextId);
+    const result = into === undefined ? await lists.add(value, 'manual', destination.item ? undefined : destination.contextId) : await lists.addTo(value, into);
     if (result) onAdded(result);
   }
 
@@ -71,7 +73,7 @@ export function AddField({ snapshot, onAdded, opens, autoFocus, inputRef, placeh
       onClick={() => void add(chooseWithDetails(item.name, text))}
     >
       <span>{item.name}</span>
-      <span className="autocomplete__where">{contextName(snapshot, destinationFor(snapshot, item.name).contextId)}</span>
+      <span className="autocomplete__where">{contextName(snapshot, into ?? destinationFor(snapshot, item.name).contextId)}</span>
     </li>
   ));
   const showNew = parsed.name !== '' && !matches.some((m) => m.id === typedDestination?.item?.id);
@@ -84,7 +86,7 @@ export function AddField({ snapshot, onAdded, opens, autoFocus, inputRef, placeh
           {showNew && (
             <li className="autocomplete__new" aria-hidden="true">
               <span>Enter anota “{parsed.name}”</span>
-              <span className="autocomplete__where">{contextName(snapshot, typedDestination!.contextId)}</span>
+              <span className="autocomplete__where">{contextName(snapshot, into ?? typedDestination!.contextId)}</span>
             </li>
           )}
         </ul>

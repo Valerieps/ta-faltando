@@ -1230,6 +1230,22 @@ button.check::before {
   color: var(--color-text-muted);
 }
 
+/* "Todas as listas": a context's name, with its + at the end of the line. */
+.group__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.group__bar .group__head {
+  flex: 1;
+  min-width: 0;
+}
+
+.group__add {
+  display: flex;
+}
+
 .shop-row {
   position: relative;
   overflow: hidden;
