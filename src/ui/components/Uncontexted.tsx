@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { itemContextIds } from '../../domain/item';
 import { activeContexts, itemsWithoutContext, listEntries, type Snapshot } from '../../domain/list-view';
 import { TrashIcon } from '../icons';
 import { useServices } from '../services';
@@ -6,19 +7,22 @@ import { tata } from '../tata-lines';
 import { Say } from './Say';
 
 /**
- * The items with no default context: a tap on a context links the item for good; several can be
- * selected and linked at once (spec/itens-e-contextos.md, "Itens sem contexto").
+ * The items with no active context: a tap on a context links the item, another tap unlinks it;
+ * several can be selected and linked at once (spec/itens-e-contextos.md, "Itens sem contexto").
+ * A linked item stays until the tab is left, so more than one context can be marked.
  */
 export function Uncontexted({ snapshot, limit }: { snapshot: Snapshot; limit?: number }) {
   const { lists } = useServices();
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
   const [said, setSaid] = useState<string | null>(null);
-  const items = itemsWithoutContext(snapshot);
+  const [kept, setKept] = useState<ReadonlySet<string>>(new Set());
+  const items = itemsWithoutContext(snapshot, kept);
   const contexts = activeContexts(snapshot.contexts);
   const onList = new Map(listEntries(snapshot, null).map((e) => [e.itemId, e.id]));
   const shown = limit === undefined ? items : items.slice(0, limit);
 
   async function link(itemIds: readonly string[], contextId: string) {
+    setKept((now) => new Set([...now, ...itemIds]));
     await lists.linkItems(itemIds, contextId);
     const context = contexts.find((c) => c.id === contextId)!;
     const names = items.filter((i) => itemIds.includes(i.id)).map((i) => i.name);
@@ -55,11 +59,20 @@ export function Uncontexted({ snapshot, limit }: { snapshot: Snapshot; limit?: n
               </button>
             )}
             <div className="chips chips--small">
-              {contexts.map((c) => (
-                <button key={c.id} type="button" className="chip" onClick={() => void link([item.id], c.id)}>
-                  {c.name}
-                </button>
-              ))}
+              {contexts.map((c) => {
+                const linked = itemContextIds(item).includes(c.id);
+                return (
+                  <button
+                    key={c.id}
+                    type="button"
+                    className={linked ? 'chip is-on' : 'chip'}
+                    aria-pressed={linked}
+                    onClick={() => void (linked ? lists.setContextLinked(item.id, c.id, false) : link([item.id], c.id))}
+                  >
+                    {c.name}
+                  </button>
+                );
+              })}
             </div>
           </li>
         ))}

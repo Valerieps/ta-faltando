@@ -16,7 +16,7 @@ export function Catalog({ snapshot, contextId }: { snapshot: Snapshot; contextId
   const [filter, setFilter] = useState('');
   const [detail, setDetail] = useState<string | null>(null);
   const searching = filter.trim() !== '';
-  const items = searching ? searchCatalog(snapshot.items, filter) : catalogOf(snapshot.items, contextId);
+  const items = searching ? searchCatalog(snapshot.items, filter) : catalogOf(snapshot, contextId);
   const name = contextName(snapshot, contextId);
 
   async function toggle(item: Item) {
