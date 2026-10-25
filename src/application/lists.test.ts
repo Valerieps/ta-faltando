@@ -276,4 +276,25 @@ describe('Lists', () => {
     await lists.add('shampoo', 'batch', 'pet');
     expect(itemContextIds((await store.get('items', item.id))!)).toEqual(['pet']);
   });
+
+  it('the + of a context puts a new name in its catalog and on its list', async () => {
+    const { store, lists } = setup();
+    await store.save('contexts', context('pet'));
+    const result = (await lists.addTo('2 ração: filhote', 'pet'))!;
+    expect(itemContextIds(result.item)).toEqual(['pet']);
+    expect(result.entry).toMatchObject({ contextId: 'pet', quantity: 2, note: 'filhote' });
+    expect(await lists.addTo('  ', 'pet')).toBeNull();
+  });
+
+  it('the + of a context adds that context to an item of other contexts', async () => {
+    const { store, lists } = setup();
+    await store.save('contexts', context('farmacia'));
+    await store.save('contexts', context('mercado'));
+    const { item } = (await lists.add('shampoo'))!;
+    const result = (await lists.addTo('shampoo', 'mercado'))!;
+    expect(itemContextIds((await store.get('items', item.id))!)).toEqual(['farmacia', 'mercado']);
+    const snapshot = await lists.snapshot();
+    expect(listEntries(snapshot, 'mercado').map((e) => e.id)).toEqual([result.entry.id]);
+    expect(snapshot.entries.filter((e) => e.deletedAt === null)).toHaveLength(1);
+  });
 });

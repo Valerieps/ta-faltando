@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { Context } from './context';
 import type { Item } from './item';
 import type { ListEntry } from './list-entry';
-import { activeContexts, destinationFor, groupByCategory, itemsById, itemsWithoutContext, listEntries, listsByMissing, missingCount, pendingEntryOf, searchCatalog, type Snapshot } from './list-view';
+import { activeContexts, allLists, destinationFor, groupByCategory, itemsById, itemsWithoutContext, listEntries, listsByMissing, missingCount, pendingEntryOf, searchCatalog, type Snapshot } from './list-view';
 
 const base = { updatedAt: 1, updatedBy: 'd', deletedAt: null };
 const context = (id: string, changes: Partial<Context> = {}): Context => ({
@@ -65,6 +65,12 @@ describe('list views', () => {
       { contextId: null, missing: 2 },
       { contextId: 'farmacia', missing: 0 },
     ]);
+  });
+
+  it('"Todas as listas" shows every context, and "Sem contexto" only when it has items', () => {
+    expect(allLists(snapshot).map((l) => l.contextId)).toEqual(['mercado', null, 'farmacia']);
+    const empty = { ...snapshot, entries: snapshot.entries.filter((e) => e.id !== 'e3' && e.id !== 'e4') };
+    expect(allLists(empty).map((l) => l.contextId)).toEqual(['mercado', 'farmacia']);
   });
 
   it('a deactivated context falls into "Sem contexto", so nothing disappears', () => {

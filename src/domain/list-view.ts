@@ -55,6 +55,11 @@ export function listsByMissing(snapshot: Snapshot): { contextId: string | null; 
   return [...lists.filter((l) => l.missing > 0), ...lists.filter((l) => l.missing === 0)];
 }
 
+/** The sections of "Todas as listas": every list as in the menu, "Sem contexto" only when it has items. */
+export function allLists(snapshot: Snapshot): { contextId: string | null; missing: number }[] {
+  return listsByMissing(snapshot).filter((l) => l.contextId !== null || listEntries(snapshot, null).length > 0);
+}
+
 export function itemsById(items: readonly Item[]): Map<string, Item> {
   return new Map(items.map((item) => [item.id, item]));
 }
