@@ -55,9 +55,20 @@ export function listsByMissing(snapshot: Snapshot): { contextId: string | null; 
   return [...lists.filter((l) => l.missing > 0), ...lists.filter((l) => l.missing === 0)];
 }
 
-/** The sections of "Todas as listas": every list as in the menu, "Sem contexto" only when it has items. */
-export function allLists(snapshot: Snapshot): { contextId: string | null; missing: number }[] {
-  return listsByMissing(snapshot).filter((l) => l.contextId !== null || listEntries(snapshot, null).length > 0);
+/**
+ * The sections of "Todos os itens": the lists with items, struck ones included, in the menu's
+ * order. `keep` holds lists whose last item is still fading on screen, so it can be undone.
+ */
+export function allLists(snapshot: Snapshot, keep: ReadonlySet<string | null> = new Set()): { contextId: string | null; missing: number }[] {
+  return listsByMissing(snapshot).filter((l) => keep.has(l.contextId) || listEntries(snapshot, l.contextId).length > 0);
+}
+
+/** The list picker's arrows: the neighbor of `current` in `order`, going round at both ends. */
+export function stepAround<T>(order: readonly T[], current: T, step: 1 | -1): T {
+  const index = order.indexOf(current);
+  if (order.length === 0) return current;
+  if (index === -1) return order[0];
+  return order[(index + step + order.length) % order.length];
 }
 
 export function itemsById(items: readonly Item[]): Map<string, Item> {

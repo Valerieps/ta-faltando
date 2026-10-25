@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { Context } from './context';
 import type { Item } from './item';
 import type { ListEntry } from './list-entry';
-import { activeContexts, allLists, destinationFor, groupByCategory, itemsById, itemsWithoutContext, listEntries, listsByMissing, missingCount, pendingEntryOf, searchCatalog, type Snapshot } from './list-view';
+import { activeContexts, allLists, destinationFor, groupByCategory, itemsById, itemsWithoutContext, listEntries, listsByMissing, missingCount, pendingEntryOf, searchCatalog, stepAround, type Snapshot } from './list-view';
 
 const base = { updatedAt: 1, updatedBy: 'd', deletedAt: null };
 const context = (id: string, changes: Partial<Context> = {}): Context => ({
@@ -67,10 +67,20 @@ describe('list views', () => {
     ]);
   });
 
-  it('"Todas as listas" shows every context, and "Sem contexto" only when it has items', () => {
-    expect(allLists(snapshot).map((l) => l.contextId)).toEqual(['mercado', null, 'farmacia']);
+  it('"Todos os itens" shows only the lists with items', () => {
+    expect(allLists(snapshot).map((l) => l.contextId)).toEqual(['mercado', null]);
     const empty = { ...snapshot, entries: snapshot.entries.filter((e) => e.id !== 'e3' && e.id !== 'e4') };
-    expect(allLists(empty).map((l) => l.contextId)).toEqual(['mercado', 'farmacia']);
+    expect(allLists(empty).map((l) => l.contextId)).toEqual(['mercado']);
+    // A list whose last item is still fading stays, so the purchase can be undone.
+    expect(allLists(empty, new Set(['farmacia'])).map((l) => l.contextId)).toEqual(['mercado', 'farmacia']);
+  });
+
+  it('steps through the lists in a circle', () => {
+    const order = ['todas', 'mercado', 'farmacia'];
+    expect(stepAround(order, 'mercado', 1)).toBe('farmacia');
+    expect(stepAround(order, 'farmacia', 1)).toBe('todas');
+    expect(stepAround(order, 'todas', -1)).toBe('farmacia');
+    expect(stepAround(order, 'sumiu', 1)).toBe('todas');
   });
 
   it('a deactivated context falls into "Sem contexto", so nothing disappears', () => {

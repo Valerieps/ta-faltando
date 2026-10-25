@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import { contextCategories } from '../../domain/context-categories';
 import { type ListEntry } from '../../domain/list-entry';
-import { activeContexts, allLists, contextName, groupByCategory, itemsById, listEntries, listsByMissing, totalMissing, type Snapshot } from '../../domain/list-view';
+import { activeContexts, allLists, contextName, groupByCategory, itemsById, listEntries, listsByMissing, stepAround, totalMissing, type Snapshot } from '../../domain/list-view';
 import { AddField } from '../components/AddField';
 import { BottomNav } from '../components/BottomNav';
 import { ContextSheet } from '../components/ContextSheet';
@@ -12,7 +12,7 @@ import { GroupOrder, ShoppingRow } from '../components/ShoppingRows';
 import { TopBar } from '../components/TopBar';
 import { Uncontexted } from '../components/Uncontexted';
 import { holdPlace, useFading, useSettling, withFading } from '../components/useFading';
-import { CaretDownIcon, ChevronIcon, GroupIcon, PlusIcon } from '../icons';
+import { CaretDownIcon, ChevronIcon, GroupIcon, NextIcon, PlusIcon, PreviousIcon } from '../icons';
 import { ALL_LISTS, navigate } from '../router';
 import { useServices, useSettings } from '../services';
 import type { SwipeAction } from '../shopping-gestures';
@@ -35,19 +35,19 @@ export function holdList(contextId: string, finish: (contextId: string) => void)
 /**
  * The phone's lists, used inside the store too (spec/modo-compra.md): the circle and the swipes
  * strike items and count them as bought; leaving a list takes its struck items out. The list's
- * name opens a menu of "Todas as listas", the contexts and "Sem contexto", those with missing
+ * name opens a menu of "Todos os itens", the contexts and "Sem contexto", those with missing
  * items first; the menu also edits the open context and creates a new one
  * (spec/itens-e-contextos.md, "Tela das listas").
  */
 export function ListsScreen({ snapshot, contextId }: { snapshot: Snapshot; contextId: string | null | undefined }) {
-  return contextId === ALL_LISTS ? <AllLists snapshot={snapshot} /> : <OneList snapshot={snapshot} contextId={contextId} />;
+  return contextId === ALL_LISTS || contextId === undefined ? <AllLists snapshot={snapshot} /> : <OneList snapshot={snapshot} contextId={contextId} />;
 }
 
 /** One list: a context's, or "Sem contexto". */
-function OneList({ snapshot, contextId: requested }: { snapshot: Snapshot; contextId: string | null | undefined }) {
+function OneList({ snapshot, contextId: requested }: { snapshot: Snapshot; contextId: string | null }) {
   const { lists, contexts: contextUseCases } = useServices();
   const contexts = activeContexts(snapshot.contexts);
-  const contextId = requested === undefined || (requested !== null && !contexts.some((c) => c.id === requested)) ? (contexts[0]?.id ?? null) : requested;
+  const contextId = requested !== null && !contexts.some((c) => c.id === requested) ? (contexts[0]?.id ?? null) : requested;
   const context = contexts.find((c) => c.id === contextId);
   const { fading, rows, sheet } = useShoppingRows(snapshot);
   const [editing, setEditing] = useState(false);
@@ -133,8 +133,8 @@ function OneList({ snapshot, contextId: requested }: { snapshot: Snapshot; conte
 }
 
 /**
- * "Todas as listas": every list on one screen, one section per context like a category group,
- * those with missing items first. The + beside a context's name opens a field whose items go to
+ * "Todos os itens", the lists' default: every list with items on one screen, one section per
+ * context like a category group, those with missing items first. The + beside a context's name opens a field whose items go to
  * that context's catalog and list. Leaving the screen takes the struck items out of every list.
  */
 function AllLists({ snapshot }: { snapshot: Snapshot }) {
@@ -143,6 +143,7 @@ function AllLists({ snapshot }: { snapshot: Snapshot }) {
   const [collapsed, toggleGroup] = useCollapsed();
   const [adding, setAdding] = useState<string | null>(null);
   const input = useRef<HTMLInputElement>(null);
+  const sections = allLists(snapshot, new Set([...fading.values()].map((e) => e.contextId)));
 
   useEffect(() => {
     return holdList(ALL_LISTS, () => void lists.snapshot().then((now) => lists.finishPurchase([...activeContexts(now.contexts).map((c) => c.id), null])));
@@ -157,10 +158,15 @@ function AllLists({ snapshot }: { snapshot: Snapshot }) {
   return (
     <main className="screen lists">
       <TopBar />
-      <ListHead snapshot={snapshot} current={ALL_LISTS} title="Todas as listas" />
+      <ListHead snapshot={snapshot} current={ALL_LISTS} title="Todos os itens" />
 
       <div className="lists__body">
-        {allLists(snapshot).map(({ contextId, missing }) => {
+        {sections.length === 0 && (
+          <div className="empty">
+            <Say mood="happy">{tata.nothingMissing}</Say>
+          </div>
+        )}
+        {sections.map(({ contextId, missing }) => {
           const id = contextId ?? 'sem-contexto';
           const name = contextName(snapshot, contextId);
           const entries = withFading(listEntries(snapshot, contextId), fading, [contextId]);
@@ -265,14 +271,25 @@ function useShoppingRows(snapshot: Snapshot) {
   return { fading, rows, sheet };
 }
 
-/** The list's name, which opens the menu of lists, with the buttons that sit beside it. */
+/**
+ * The list's name, which opens the menu of lists, between arrows that step through the menu's
+ * lists, empty ones included, going round at the ends; then the buttons that sit beside it.
+ */
 function ListHead({ snapshot, current, title, onEdit, children }: { snapshot: Snapshot; current: string | null; title: string; onEdit?: () => void; children?: ReactNode }) {
   const [choosing, setChoosing] = useState(false);
+  const order = [ALL_LISTS, ...listsByMissing(snapshot).map((l) => l.contextId)];
+  const step = (by: 1 | -1) => navigate({ name: 'lists', contextId: stepAround(order, current, by) }, { replace: true });
   return (
     <header className="screen__head">
+      <button type="button" className="list-step" aria-label="Lista anterior" title="Lista anterior" onClick={() => step(-1)}>
+        <PreviousIcon />
+      </button>
       <button type="button" className="list-picker" aria-haspopup="menu" aria-expanded={choosing} onClick={() => setChoosing(!choosing)}>
         <h1 className="title">{title}</h1>
         <CaretDownIcon />
+      </button>
+      <button type="button" className="list-step" aria-label="Próxima lista" title="Próxima lista" onClick={() => step(1)}>
+        <NextIcon />
       </button>
       {children}
       {choosing && <ListMenu snapshot={snapshot} current={current} onClose={() => setChoosing(false)} onEdit={onEdit} />}
@@ -281,7 +298,7 @@ function ListHead({ snapshot, current, title, onEdit, children }: { snapshot: Sn
 }
 
 /**
- * The list picker's menu: "Todas as listas" first, then the lists with missing items, then the
+ * The list picker's menu: "Todos os itens" first, then the lists with missing items, then the
  * empty ones, each with its count; below them, editing the open context and creating a new one.
  */
 function ListMenu({ snapshot, current, onClose, onEdit }: { snapshot: Snapshot; current: string | null; onClose: () => void; onEdit?: () => void }) {
@@ -305,7 +322,7 @@ function ListMenu({ snapshot, current, onClose, onEdit }: { snapshot: Snapshot; 
           className={current === ALL_LISTS ? 'list-menu__item is-on' : 'list-menu__item'}
           onClick={() => go(ALL_LISTS)}
         >
-          <span>Todas as listas</span>
+          <span>Todos os itens</span>
           <span className="count">{totalMissing(snapshot)}</span>
         </button>
         {ordered.map(({ contextId: id, missing: count }, index) => (

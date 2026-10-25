@@ -97,7 +97,7 @@ export class Lists {
   }
 
   /**
-   * The + beside a context in "Todas as listas": puts the item in that context's catalog and on
+   * The + beside a context in "Todos os itens": puts the item in that context's catalog and on
    * its list. A name not in the catalog enters it there; an item of other contexts gains this
    * one too.
    */

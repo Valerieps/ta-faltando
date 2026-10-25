@@ -37,6 +37,7 @@ export const tata = {
   offline: 'Tô sem internet, mas anotei tudo aqui. Sincronizo quando ela voltar.',
   backupDue: 'Faz um mês desde o último backup. Quer guardar uma cópia agora?',
   noneWithoutContext: 'Tudo tem contexto. Nada pra arrumar aqui.',
+  nothingMissing: 'Nada faltando em nenhuma lista. Por hoje, tá tudo em ordem.',
 
   added(result: AddResult, contextName: string | null): string {
     const name = result.item.name;

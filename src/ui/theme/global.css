@@ -834,6 +834,24 @@ button.check::before {
   height: 22px;
 }
 
+/* The < and > around the list's name: they step to the previous or next list. */
+.list-step {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: var(--touch-min);
+  height: var(--touch-min);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+}
+
+.list-step svg {
+  width: 22px;
+  height: 22px;
+}
+
 .list-head__switch {
   flex: none;
   margin-left: auto;
@@ -1230,7 +1248,7 @@ button.check::before {
   color: var(--color-text-muted);
 }
 
-/* "Todas as listas": a context's name, with its + at the end of the line. */
+/* "Todos os itens": a context's name, with its + at the end of the line. */
 .group__bar {
   display: flex;
   align-items: center;

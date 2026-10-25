@@ -118,12 +118,15 @@ nos contextos dele. *(1a)*
 - Eu ligo ou desligo o agrupamento por categoria em cada lista (`modo-compra.md`). *(1a)*
 - No celular, no fim de cada lista, vazia ou não, há um link para abrir o catálogo daquele
   contexto. *(1a)*
-- No celular, a primeira opção do menu é **Todas as listas**: os itens de todos os contextos numa
-  tela só, uma seção por contexto, como os grupos de categoria, sem dividir em categorias. Em cima
-  os contextos com itens faltando, embaixo os vazios, só com o nome; "Sem contexto" aparece
-  quando tem itens. Riscar e contar como comprado funcionam como numa lista, e ao sair da tela
-  os riscados saem de todas as listas. *(1a)*
-- Em Todas as listas, um + ao lado do nome de cada contexto abre um campo: o que eu digito entra
+- No celular, a primeira opção do menu é **Todos os itens**, e é ela que abre quando eu vou para
+  as listas: os itens de todos os contextos numa tela só, uma seção por contexto, como os grupos
+  de categoria, sem dividir em categorias. Só aparecem os contextos com itens, em cima os que têm
+  itens faltando, embaixo os que só têm riscados. Riscar e contar como comprado funcionam como
+  numa lista, e ao sair da tela os riscados saem de todas as listas. *(1a)*
+- No celular, setas < e > dos lados do nome da lista passam para a lista anterior ou a próxima,
+  na ordem do menu, incluindo as vazias; depois da última volta para a primeira, e vice-versa.
+  *(1a)*
+- Em Todos os itens, um + ao lado do nome de cada contexto abre um campo: o que eu digito entra
   no catálogo e na lista daquele contexto. Um item que já é de outros contextos passa a ser
   também deste. *(1a)*
 - Cada item mostra, em texto discreto, o último preço pago (`precos.md`). *(1b)*
