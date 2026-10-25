@@ -75,10 +75,14 @@ export function itemsById(items: readonly Item[]): Map<string, Item> {
   return new Map(items.map((item) => [item.id, item]));
 }
 
-/** The catalog of a context (null = the items with no context): its live items, by name. */
-export function catalogOf(items: readonly Item[], contextId: string | null): Item[] {
-  return items
-    .filter((i) => i.deletedAt === null && (contextId === null ? itemContextIds(i).length === 0 : itemContextIds(i).includes(contextId)))
+/**
+ * The catalog of a context, its live items by name; null gives the items with no active context,
+ * the same ones the "Sem contexto" list shows.
+ */
+export function catalogOf(snapshot: Snapshot, contextId: string | null): Item[] {
+  if (contextId === null) return itemsWithoutContext(snapshot);
+  return snapshot.items
+    .filter((i) => i.deletedAt === null && itemContextIds(i).includes(contextId))
     .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
 }
 
@@ -95,11 +99,14 @@ export function searchCatalog(items: readonly Item[], query: string): Item[] {
 export const pendingEntryOf = (snapshot: Snapshot, itemId: string) =>
   snapshot.entries.find((e) => e.deletedAt === null && e.status === 'pending' && e.itemId === itemId);
 
-/** Items with no active context, the "Sem contexto" tab (spec/itens-e-contextos.md). */
-export const itemsWithoutContext = (snapshot: Snapshot) => {
+/**
+ * Items with no active context, the "Sem contexto" tab (spec/itens-e-contextos.md). `keep` holds
+ * items linked while the tab is open, so they stay until it is left and more contexts can be marked.
+ */
+export const itemsWithoutContext = (snapshot: Snapshot, keep: ReadonlySet<string> = new Set()) => {
   const active = new Set(activeContexts(snapshot.contexts).map((c) => c.id));
   return snapshot.items
-    .filter((i) => i.deletedAt === null && !itemContextIds(i).some((id) => active.has(id)))
+    .filter((i) => i.deletedAt === null && (keep.has(i.id) || !itemContextIds(i).some((id) => active.has(id))))
     .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
 };
 

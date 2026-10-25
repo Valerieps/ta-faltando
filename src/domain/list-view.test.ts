@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { Context } from './context';
 import type { Item } from './item';
 import type { ListEntry } from './list-entry';
-import { activeContexts, allLists, destinationFor, groupByCategory, itemsById, itemsWithoutContext, listEntries, listsByMissing, missingCount, pendingEntryOf, searchCatalog, stepAround, type Snapshot } from './list-view';
+import { activeContexts, allLists, catalogOf, destinationFor, groupByCategory, itemsById, itemsWithoutContext, listEntries, listsByMissing, missingCount, pendingEntryOf, searchCatalog, stepAround, type Snapshot } from './list-view';
 
 const base = { updatedAt: 1, updatedBy: 'd', deletedAt: null };
 const context = (id: string, changes: Partial<Context> = {}): Context => ({
@@ -86,6 +86,15 @@ describe('list views', () => {
   it('a deactivated context falls into "Sem contexto", so nothing disappears', () => {
     expect(listEntries(snapshot, null).map((e) => e.id)).toEqual(['e3', 'e4']);
     expect(itemsWithoutContext(snapshot).map((i) => i.id)).toEqual(['bala', 'pilha']);
+  });
+
+  it('the catalog with no context has the same items as the "Sem contexto" list', () => {
+    expect(catalogOf(snapshot, null).map((i) => i.id)).toEqual(['bala', 'pilha']);
+    expect(catalogOf(snapshot, 'velho').map((i) => i.id)).toEqual(['bala']);
+  });
+
+  it('keeps an item linked while "Sem contexto" is open, so more contexts can be marked', () => {
+    expect(itemsWithoutContext(snapshot, new Set(['leite'])).map((i) => i.id)).toEqual(['bala', 'leite', 'pilha']);
   });
 
   it('groups by the context categories, in their order, with the others in "Outros" last', () => {

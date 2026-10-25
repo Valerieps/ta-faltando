@@ -225,7 +225,7 @@ describe('Lists', () => {
     expect(listEntries(snapshot, 'mercado')).toHaveLength(1);
     expect(listEntries(snapshot, null)).toHaveLength(0);
     expect(totalMissing(snapshot)).toBe(1);
-    expect(catalogOf(snapshot.items, 'mercado').map((i) => i.name)).toEqual(['Shampoo']);
+    expect(catalogOf(snapshot, 'mercado').map((i) => i.name)).toEqual(['Shampoo']);
 
     // Added again through the other context, it was already there.
     expect((await lists.addItem(item.id, 'mercado'))?.outcome).toBe('already');

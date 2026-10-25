@@ -87,7 +87,11 @@ nos contextos dele. *(1a)*
 ## Itens sem contexto
 
 - Ficam numa aba própria, "Sem contexto", com um contador visível na tela inicial. *(1a)*
-- Na aba, cada item mostra os contextos como botões: um toque vincula o item a esse contexto. *(1a)*
+- Na aba, cada item mostra os contextos como botões: um toque vincula o item a esse contexto, outro
+  toque desvincula. O item vinculado continua na aba até eu sair dela, para eu marcar mais de um
+  contexto. *(1a)*
+- O catálogo "Sem contexto" mostra os mesmos itens da aba, inclusive os de um contexto
+  desativado. *(1a)*
 - Eu posso selecionar vários itens e vincular todos de uma vez. *(1a)*
 - Quando o item aparece numa nota fiscal, o contexto da loja vincula o item sozinho. *(1b)*
 
