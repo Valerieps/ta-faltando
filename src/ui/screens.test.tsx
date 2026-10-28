@@ -8,11 +8,10 @@ import { Synchronizer } from '../application/synchronizer';
 import { MemoryStore } from '../infrastructure/memory-store';
 import { ItemSheet } from './components/ItemSheet';
 import { DesktopApp } from './desktop/DesktopApp';
-import { Capture } from './screens/Capture';
 import { ListsScreen } from './screens/ListsScreen';
 import { Setup } from './screens/Setup';
 import { ProfileScreen } from './screens/ProfileScreen';
-import { BatchScreen, CatalogScreen } from './screens/SimpleScreens';
+import { BatchScreen } from './screens/SimpleScreens';
 import { ServicesProvider, type Services } from './services';
 
 /** Renders each screen over real use cases and a store in memory: a smoke test for the layout code. */
@@ -54,18 +53,15 @@ async function setup() {
 }
 
 describe('screens', () => {
-  it('capture shows the question, the recent items and the lists count', async () => {
+  it('the + opened by the shortcut asks what is missing and offers to paste a list', async () => {
     const { snapshot, render } = await setup();
-    const html = render(<Capture snapshot={snapshot} />);
-    expect(html).toContain('O que tá faltando?');
-    expect(html).toContain('Agora há pouco');
-    expect(html).not.toContain('Falar os itens');
-    expect(html).toMatch(/Listas <span class="count">2<\/span>/);
-    expect(html).toContain('aria-label="Comprar"');
-    expect(html).not.toContain('bottom-nav');
+    const html = render(<ListsScreen snapshot={snapshot} contextId={undefined} adding />);
+    expect(html).toContain('placeholder="O que tá faltando?"');
+    expect(html).toContain('Colar uma lista');
+    expect(html).not.toContain('class="bottom-nav"');
   });
 
-  it('the lists put the picker and the grouping on the name line, the avatar on top and the + mid-bar', async () => {
+  it('the lists put the picker and the grouping on the name line, the avatar on top and only the + at the bottom', async () => {
     const { snapshot, render } = await setup();
     const html = render(<ListsScreen snapshot={snapshot} contextId="mercado" />);
     expect(html).not.toContain('aria-label="Editar Mercado"');
@@ -75,10 +71,29 @@ describe('screens', () => {
     expect(head).toContain('Agrupar por categoria');
     expect(html).not.toContain('class="tabs"');
     const nav = html.slice(html.indexOf('class="bottom-nav"'));
-    expect(nav).not.toContain('Perfil');
-    expect(nav.indexOf('Listas')).toBeLessThan(nav.indexOf('aria-label="Anotar"'));
-    expect(nav.indexOf('aria-label="Anotar"')).toBeLessThan(nav.indexOf('Catálogo'));
-    expect(nav).toMatch(/is-on" aria-current="page">.*Listas/);
+    expect(nav).toContain('aria-label="Anotar"');
+    expect(nav).not.toContain('Catálogo');
+    expect(nav).not.toContain('Listas');
+  });
+
+  it('a list switches between Faltando and Tudo, which is its catalog without a context picker', async () => {
+    const { snapshot, render } = await setup();
+    const faltando = render(<ListsScreen snapshot={snapshot} contextId="mercado" />);
+    expect(faltando).toMatch(/aria-checked="true" class="is-on">Faltando/);
+    expect(faltando).not.toContain('Buscar em todos os contextos');
+    const tudo = render(<ListsScreen snapshot={snapshot} contextId="mercado" view="tudo" />);
+    expect(tudo).toMatch(/aria-checked="true" class="is-on">Tudo/);
+    expect(tudo).toContain('Buscar em todos os contextos');
+    expect(tudo).not.toContain('aria-label="Contexto"');
+    expect(tudo).not.toContain('Terminei');
+    // Mercado is grouped by category, and so is its catalog.
+    expect(tudo).toMatch(/<h2 class="label">Laticínios<\/h2>.*Leite/);
+  });
+
+  it('"Sem contexto" and "Todos os itens" have no Tudo', async () => {
+    const { snapshot, render } = await setup();
+    expect(render(<ListsScreen snapshot={snapshot} contextId={null} />)).not.toContain('>Tudo<');
+    expect(render(<ListsScreen snapshot={snapshot} contextId={undefined} />)).not.toContain('>Tudo<');
   });
 
   it('the profile holds the account, the sync and every setting', async () => {
@@ -103,9 +118,21 @@ describe('screens', () => {
     expect(html).not.toContain('Comprar no');
     expect(html).toContain('aria-label="Agrupar por categoria"');
     expect(html).toContain('Laticínios');
-    expect(html).not.toContain('Finalizar compra');
     expect(html).not.toContain('aria-label="Desfazer"');
-    expect(html).toMatch(/Arrumar a ordem dos grupos.*Abrir o catálogo de Mercado/);
+    expect(html).toMatch(/Terminei \(1 riscado\).*Arrumar a ordem dos grupos/);
+    expect(html).not.toContain('Abrir o catálogo de Mercado');
+  });
+
+  it('"Terminei" shows only while a list has struck items, and in "Todos os itens" too', async () => {
+    const { snapshot, render } = await setup();
+    expect(render(<ListsScreen snapshot={snapshot} contextId={undefined} />)).toContain('Terminei (1 riscado)');
+    const unstruck = { ...snapshot, entries: snapshot.entries.map((e) => ({ ...e, checkedAt: null })) };
+    expect(render(<ListsScreen snapshot={unstruck} contextId="mercado" />)).not.toContain('Terminei');
+  });
+
+  it('an empty list links to its Tudo', async () => {
+    const { snapshot, render } = await setup();
+    expect(render(<ListsScreen snapshot={snapshot} contextId="farmacia" />)).toContain('Abrir o catálogo de Farmácia');
   });
 
   it('the "Sem contexto" tab offers the contexts as buttons', async () => {
@@ -120,7 +147,7 @@ describe('screens', () => {
     const html = render(<DesktopApp snapshot={snapshot} route={{ name: 'home' }} />);
     expect(html).toContain('Adicionar em lote');
     expect(html).toContain('Riscar Detergente');
-    expect(html).toContain('Finalizar compra (1 riscado)');
+    expect(html).toContain('Terminei (1 riscado)');
   });
 
   it('the desktop catalog creates and renames contexts from its dropdown, with no Contextos page', async () => {
@@ -130,15 +157,6 @@ describe('screens', () => {
     expect(html).toContain('Mudar o nome de Mercado');
     expect(html).toContain('aria-label="Contexto"');
     expect(html).not.toMatch(/side__link[^>]*>Contextos/);
-  });
-
-  it('the phone catalog has the same dropdown, under a search of every context', async () => {
-    const { snapshot, render } = await setup();
-    const html = render(<CatalogScreen snapshot={snapshot} contextId="mercado" />);
-    expect(html).toContain('aria-label="Novo contexto"');
-    expect(html).toContain('Mudar o nome de Mercado');
-    expect(html).toContain('Buscar em todos os contextos');
-    expect(html.indexOf('Buscar em todos os contextos')).toBeLessThan(html.indexOf('aria-label="Contexto"'));
   });
 
   it('the item sheet takes the item out of the catalog with a trash icon, no confirmation step', async () => {
@@ -159,7 +177,6 @@ describe('screens', () => {
     expect(welcome).toContain('Oi, eu sou a Tatá');
     expect(welcome).not.toContain('outro aparelho');
     expect(render(<Setup snapshot={snapshot} redo onFinish={() => {}} />)).toContain('Onde você costuma comprar?');
-    expect(render(<CatalogScreen snapshot={snapshot} contextId="mercado" />)).toContain('Leite');
     expect(render(<BatchScreen snapshot={snapshot} />)).toContain('Separar os itens');
   });
 });

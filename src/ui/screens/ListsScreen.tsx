@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
 import { contextCategories } from '../../domain/context-categories';
-import { type ListEntry } from '../../domain/list-entry';
+import { isChecked, type ListEntry } from '../../domain/list-entry';
 import { activeContexts, allLists, contextName, groupByCategory, itemsById, listEntries, listsByMissing, stepAround, totalMissing, type Snapshot } from '../../domain/list-view';
 import { AddField } from '../components/AddField';
 import { BottomNav } from '../components/BottomNav';
+import { Catalog } from '../components/Catalog';
 import { ContextSheet } from '../components/ContextSheet';
 import { ItemSheet } from '../components/ItemSheet';
 import { Say } from '../components/Say';
@@ -18,33 +19,35 @@ import { useServices, useSettings } from '../services';
 import type { SwipeAction } from '../shopping-gestures';
 import { tata } from '../tata-lines';
 
-// The list whose struck items leave once the screen lets go of it.
-let leaving: { contextId: string; timer: ReturnType<typeof setTimeout> } | null = null;
-
-/**
- * Holds a list while it is open; the returned release calls `finish` for it on the next tick,
- * unless the same list is held again first (React's StrictMode remounts at once).
- */
-export function holdList(contextId: string, finish: (contextId: string) => void): () => void {
-  if (leaving?.contextId === contextId) clearTimeout(leaving.timer);
-  return () => {
-    leaving = { contextId, timer: setTimeout(() => finish(contextId)) };
-  };
-}
+export type ListView = 'faltando' | 'tudo';
 
 /**
  * The phone's lists, used inside the store too (spec/modo-compra.md): the circle and the swipes
- * strike items and count them as bought; leaving a list takes its struck items out. The list's
+ * strike items and count them as bought, and "Terminei" takes the struck items out. The list's
  * name opens a menu of "Todos os itens", the contexts and "Sem contexto", those with missing
- * items first; the menu also edits the open context and creates a new one
- * (spec/itens-e-contextos.md, "Tela das listas").
+ * items first; the menu also edits the open context and creates a new one. A context's list
+ * also shows its catalog, as Tudo (spec/itens-e-contextos.md). `adding` opens the + at once.
  */
-export function ListsScreen({ snapshot, contextId }: { snapshot: Snapshot; contextId: string | null | undefined }) {
-  return contextId === ALL_LISTS || contextId === undefined ? <AllLists snapshot={snapshot} /> : <OneList snapshot={snapshot} contextId={contextId} />;
+export function ListsScreen({ snapshot, contextId, view = 'faltando', adding = false }: { snapshot: Snapshot; contextId: string | null | undefined; view?: ListView; adding?: boolean }) {
+  return contextId === ALL_LISTS || contextId === undefined ? (
+    <AllLists snapshot={snapshot} adding={adding} />
+  ) : (
+    <OneList snapshot={snapshot} contextId={contextId} view={view} adding={adding} />
+  );
 }
 
-/** One list: a context's, or "Sem contexto". */
-function OneList({ snapshot, contextId: requested }: { snapshot: Snapshot; contextId: string | null }) {
+/** "Terminei": closes the purchase of the lists on screen, shown while they have struck items. */
+function Done({ struck, onDone }: { struck: number; onDone: () => void }) {
+  if (struck === 0) return null;
+  return (
+    <button type="button" className="btn list-done" onClick={onDone}>
+      Terminei ({struck === 1 ? '1 riscado' : `${struck} riscados`})
+    </button>
+  );
+}
+
+/** One list: a context's, as Faltando or Tudo, or "Sem contexto". */
+function OneList({ snapshot, contextId: requested, view, adding }: { snapshot: Snapshot; contextId: string | null; view: ListView; adding: boolean }) {
   const { lists, contexts: contextUseCases } = useServices();
   const contexts = activeContexts(snapshot.contexts);
   const contextId = requested !== null && !contexts.some((c) => c.id === requested) ? (contexts[0]?.id ?? null) : requested;
@@ -54,20 +57,11 @@ function OneList({ snapshot, contextId: requested }: { snapshot: Snapshot; conte
   const [ordering, setOrdering] = useState(false);
   const [collapsed, toggleGroup] = useCollapsed();
 
-  useEffect(() => {
-    if (contextId === null) return;
-    return holdList(contextId, (id) => void lists.finishPurchase([id]));
-  }, [contextId, lists]);
-
   const entries = withFading(listEntries(snapshot, contextId), fading, [contextId]);
   const items = itemsById(snapshot.items);
   const name = contextName(snapshot, contextId);
-
-  const catalogLink = (
-    <button type="button" className="link-button" onClick={() => navigate({ name: 'catalog', contextId })}>
-      Abrir o catálogo de {name}
-    </button>
-  );
+  const tudo = view === 'tudo' && context !== undefined;
+  const done = <Done struck={entries.filter((e) => isChecked(e) && !fading.has(e.id)).length} onDone={() => void lists.finishPurchase([contextId])} />;
 
   return (
     <main className="screen lists">
@@ -85,14 +79,34 @@ function OneList({ snapshot, contextId: requested }: { snapshot: Snapshot; conte
           </button>
         )}
       </ListHead>
+      {context && (
+        <div className="segmented list-view" role="radiogroup" aria-label="Ver">
+          {(['faltando', 'tudo'] as const).map((option) => (
+            <button
+              key={option}
+              type="button"
+              role="radio"
+              aria-checked={(view === 'tudo') === (option === 'tudo')}
+              className={(view === 'tudo') === (option === 'tudo') ? 'is-on' : ''}
+              onClick={() => navigate({ name: option === 'tudo' ? 'catalog' : 'lists', contextId: context.id }, { replace: true })}
+            >
+              {option === 'tudo' ? 'Tudo' : 'Faltando'}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="lists__body">
-        {contextId === null ? (
+        {tudo ? (
+          <Catalog key={contextId} snapshot={snapshot} contextId={contextId} picker={false} />
+        ) : contextId === null ? (
           <Uncontexted snapshot={snapshot} />
         ) : entries.length === 0 ? (
           <div className="empty">
             <Say mood="happy">{tata.emptyList(name)}</Say>
-            {catalogLink}
+            <button type="button" className="link-button" onClick={() => navigate({ name: 'catalog', contextId }, { replace: true })}>
+              Abrir o catálogo de {name}
+            </button>
           </div>
         ) : context?.groupByCategory ? (
           <>
@@ -110,20 +124,20 @@ function OneList({ snapshot, contextId: requested }: { snapshot: Snapshot; conte
                 </section>
               );
             })}
+            {done}
             <button type="button" className="link-button" onClick={() => setOrdering(true)}>
               Arrumar a ordem dos grupos
             </button>
-            {catalogLink}
           </>
         ) : (
           <>
             {rows(entries)}
-            {catalogLink}
+            {done}
           </>
         )}
       </div>
 
-      <BottomNav current="lists" contextId={contextId} snapshot={snapshot} />
+      <BottomNav snapshot={snapshot} openContextId={tudo ? context.id : undefined} startOpen={adding} />
 
       {editing && context && <ContextSheet context={context} snapshot={snapshot} onClose={() => setEditing(false)} />}
       {ordering && context && <GroupOrder context={context} categories={contextCategories(context, snapshot.items)} onClose={() => setOrdering(false)} />}
@@ -135,9 +149,9 @@ function OneList({ snapshot, contextId: requested }: { snapshot: Snapshot; conte
 /**
  * "Todos os itens", the lists' default: every list with items on one screen, one section per
  * context like a category group, those with missing items first. The + beside a context's name opens a field whose items go to
- * that context's catalog and list. Leaving the screen takes the struck items out of every list.
+ * that context's catalog and list. "Terminei" takes the struck items out of every list.
  */
-function AllLists({ snapshot }: { snapshot: Snapshot }) {
+function AllLists({ snapshot, adding: startAdding }: { snapshot: Snapshot; adding: boolean }) {
   const { lists } = useServices();
   const { fading, rows, sheet } = useShoppingRows(snapshot);
   const [collapsed, toggleGroup] = useCollapsed();
@@ -145,9 +159,7 @@ function AllLists({ snapshot }: { snapshot: Snapshot }) {
   const input = useRef<HTMLInputElement>(null);
   const sections = allLists(snapshot, new Set([...fading.values()].map((e) => e.contextId)));
 
-  useEffect(() => {
-    return holdList(ALL_LISTS, () => void lists.snapshot().then((now) => lists.finishPurchase([...activeContexts(now.contexts).map((c) => c.id), null])));
-  }, [lists]);
+  const struck = new Set(sections.flatMap(({ contextId }) => listEntries(snapshot, contextId).filter((e) => isChecked(e) && !fading.has(e.id)).map((e) => e.id))).size;
 
   function openField(contextId: string) {
     // Rendered and focused inside the tap, so the phone opens the keyboard.
@@ -202,9 +214,10 @@ function AllLists({ snapshot }: { snapshot: Snapshot }) {
             </section>
           );
         })}
+        <Done struck={struck} onDone={() => void lists.finishPurchase([...activeContexts(snapshot.contexts).map((c) => c.id), null])} />
       </div>
 
-      <BottomNav current="lists" snapshot={snapshot} />
+      <BottomNav snapshot={snapshot} startOpen={startAdding} />
       {sheet}
     </main>
   );

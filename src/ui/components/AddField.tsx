@@ -1,6 +1,6 @@
 import { useId, useMemo, useState, type KeyboardEvent, type Ref } from 'react';
 import type { AddResult } from '../../application/lists';
-import { parseEntryText } from '../../domain/entry-text';
+import { parseEntryText, splitBatch } from '../../domain/entry-text';
 import { contextName, destinationFor, type Snapshot } from '../../domain/list-view';
 import { searchItems } from '../../domain/search';
 import { useServices } from '../services';
@@ -17,14 +17,19 @@ interface Props {
   openContextId?: string | null;
   /** The context of a + in "Todos os itens": whatever is typed goes to its catalog and list. */
   into?: string;
+  /** Given on the phone's +: a pasted list (commas or lines) goes to the batch instead of the field. */
+  onPasteList?: (text: string) => void;
 }
+
+/** A pasted text that is a list of items rather than one item. */
+export const isPastedList = (text: string) => /[,\n]/.test(text) && splitBatch(text).length > 1;
 
 /**
  * The field of the "+" button: autocomplete from the catalog, tolerant to accents and typos,
  * showing where each item goes before the enter (spec/itens-e-contextos.md). Enter adds exactly
  * what was typed and clears the field for the next item.
  */
-export function AddField({ snapshot, onAdded, opens, autoFocus, inputRef, placeholder = 'Digite e aperte enter', openContextId, into }: Props) {
+export function AddField({ snapshot, onAdded, opens, autoFocus, inputRef, placeholder = 'Digite e aperte enter', openContextId, into, onPasteList }: Props) {
   const { lists } = useServices();
   const [text, setText] = useState('');
   const [highlight, setHighlight] = useState(-1);
@@ -112,6 +117,12 @@ export function AddField({ snapshot, onAdded, opens, autoFocus, inputRef, placeh
             setHighlight(-1);
           }}
           onKeyDown={onKeyDown}
+          onPaste={(event) => {
+            const pasted = event.clipboardData.getData('text');
+            if (!onPasteList || !isPastedList(pasted)) return;
+            event.preventDefault();
+            onPasteList(pasted);
+          }}
         />
       </div>
     </div>

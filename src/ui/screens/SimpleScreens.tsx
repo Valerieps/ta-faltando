@@ -1,36 +1,31 @@
 import { useState } from 'react';
 import { splitBatch, type EntryText } from '../../domain/entry-text';
-import { activeContexts, type Snapshot } from '../../domain/list-view';
+import type { Snapshot } from '../../domain/list-view';
 import { BatchReview } from '../components/BatchReview';
-import { BottomNav } from '../components/BottomNav';
-import { Catalog } from '../components/Catalog';
 import { Say } from '../components/Say';
-import { TopBar } from '../components/TopBar';
-import { goBack } from '../router';
+import { goBack, navigate } from '../router';
 import { tata } from '../tata-lines';
 
 // The phone's secondary screens: a title on top, the content, and the buttons at the bottom,
 // by the thumb (identity draft, "Só com a mão direita").
 
-export function CatalogScreen({ snapshot, contextId }: { snapshot: Snapshot; contextId: string | null | undefined }) {
-  const contexts = activeContexts(snapshot.contexts);
-  const id = contextId === undefined ? (contexts[0]?.id ?? null) : contextId;
-  return (
-    <main className="screen">
-      <TopBar />
-      <h1 className="title">Catálogo</h1>
-      <div className="screen__body">
-        <Catalog key={id ?? 'none'} snapshot={snapshot} contextId={id} />
-      </div>
-      <BottomNav current="catalog" contextId={id} snapshot={snapshot} />
-    </main>
-  );
+// The text pasted into the + on its way to the batch, taken by the batch when it opens.
+let pasted = '';
+
+/** Opens the batch; a list pasted into the + goes straight to the review there. */
+export function pasteBatch(text: string): void {
+  pasted = text;
+  navigate({ name: 'batch' });
 }
 
 /** "Em lote": each line or comma becomes an item; pasted lists from another app work too. */
 export function BatchScreen({ snapshot }: { snapshot: Snapshot }) {
-  const [text, setText] = useState('');
-  const [review, setReview] = useState<EntryText[] | null>(null);
+  const [text, setText] = useState(() => {
+    const taken = pasted;
+    pasted = '';
+    return taken;
+  });
+  const [review, setReview] = useState<EntryText[] | null>(() => (text ? splitBatch(text) : null));
   const [said, setSaid] = useState<string | null>(null);
 
   return (

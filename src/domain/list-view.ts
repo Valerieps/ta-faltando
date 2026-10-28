@@ -139,6 +139,19 @@ export function groupByCategory(entries: readonly ListEntry[], items: ReadonlyMa
     });
 }
 
+/**
+ * A context's catalog grouped like its list: by the context's categories, in their order, with
+ * "Outros" last; the items keep their order inside each group.
+ */
+export function groupItemsByCategory(items: readonly Item[], categories: readonly string[]): { readonly categoryId: string | null; readonly name: string; readonly items: readonly Item[] }[] {
+  const groups = new Map<string | null, Item[]>();
+  for (const item of items) {
+    const id = item.category !== null && categories.includes(item.category) ? item.category : null;
+    groups.set(id, [...(groups.get(id) ?? []), item]);
+  }
+  return [...categories, null].filter((id) => groups.has(id)).map((id) => ({ categoryId: id, name: categoryName(id), items: groups.get(id)! }));
+}
+
 /** Where a typed item goes, and with which category (spec/itens-e-contextos.md, "Como o app escolhe"). */
 export interface Destination {
   /** The catalog item, when the name is already in it. */

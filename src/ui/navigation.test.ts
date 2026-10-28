@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { AddResult } from '../application/lists';
+import { isPastedList } from './components/AddField';
 import { parseRoute, routeHash, type Route } from './router';
 import { swipeAction, swipeDirection } from './shopping-gestures';
 import { tata } from './tata-lines';
@@ -26,6 +27,16 @@ describe('routes', () => {
   it('an unknown or empty hash opens home', () => {
     expect(parseRoute('')).toEqual({ name: 'home' });
     expect(parseRoute('#/qualquer')).toEqual({ name: 'home' });
+  });
+});
+
+describe('pasting into the +', () => {
+  it('sends a list with commas or lines to the batch, and keeps a single item in the field', () => {
+    expect(isPastedList('tomate, cebola')).toBe(true);
+    expect(isPastedList('shampoo\nareia do gato')).toBe(true);
+    expect(isPastedList('arroz e feijão')).toBe(false);
+    expect(isPastedList('leite sem lactose')).toBe(false);
+    expect(isPastedList('leite,')).toBe(false);
   });
 });
 
