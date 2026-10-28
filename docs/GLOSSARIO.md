@@ -8,17 +8,19 @@ Um termo, um sentido. Estes nomes valem para os textos da interface e para as do
 
 - **Contexto:** um lugar onde eu faço compras: Mercado, Hortifrúti, Padaria, Farmácia, Pet shop,
   Lojas online ou um que eu criei. Cada contexto tem a sua lista. (`spec/itens-e-contextos.md`)
-- **Lista:** os itens que estão faltando num contexto. Um item sai da lista quando eu finalizo a
-  compra em que ele foi marcado. (`spec/itens-e-contextos.md`, `spec/modo-compra.md`)
+- **Lista:** os itens que estão faltando num contexto. Um item riscado sai da lista quando eu
+  toco em "Terminei". (`spec/itens-e-contextos.md`, `spec/modo-compra.md`)
 - **Catálogo:** todos os itens que eu costumo comprar, cada um com os seus contextos. É a base
   do autocompletar e de como o app escolhe o contexto de um item novo. Não é uma lista: um item do
-  catálogo só está na lista quando está faltando. (`spec/itens-e-contextos.md`)
+  catálogo só está na lista quando está faltando. No celular, o catálogo de um contexto é o
+  **Tudo** da sua lista; **Faltando** é a própria lista. (`spec/itens-e-contextos.md`)
+- **Terminei:** o botão no fim da lista que fecha a compra: os itens riscados contam como
+  comprados e saem. (`spec/modo-compra.md`)
 - **Item:** algo que eu compro, em nível genérico ("leite"). É o que vai na lista. (`spec/itens-e-contextos.md`)
 - **Contextos do item:** os contextos a que um item pertence, um ou mais; quando eu o adiciono, ele vai para a lista de cada um. (`spec/itens-e-contextos.md`)
 - **Sem contexto:** a aba dos itens que ainda não têm contexto. (`spec/itens-e-contextos.md`)
 - **Categoria:** o tipo do item (hortifrúti, laticínios, limpeza, higiene…), usado para agrupar a
   lista no modo compra. Cada contexto tem as suas, que eu crio, renomeio, ordeno e apago. (`spec/modo-compra.md`)
-- **Captura:** a tela do celular só com o campo de adicionar, aberta pelo + no meio da barra do pé. (`spec/itens-e-contextos.md`)
 - **Tatá:** o bot do app, uma sacolinha que fala em primeira pessoa nos momentos certos. A voz e
   o desenho estão no rascunho da identidade visual (`rascunhos/README.md`).
 - **Setup:** as telas do primeiro uso, que montam o catálogo inicial. (`spec/setup.md`)

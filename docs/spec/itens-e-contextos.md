@@ -9,44 +9,55 @@ Eu adiciono o que está faltando sem pensar em qual lista: o app coloca cada ite
 
 ## Telas do celular e do computador
 
-- No celular, o app abre nas listas. Um **+** redondo no meio da barra do pé não muda de tela:
-  no lugar da barra aparece o campo de adicionar, já focado, com o teclado aberto. O enter
-  adiciona o item e limpa o campo para o próximo; quando eu saio do campo ou recolho o teclado,
-  a barra volta. *(1a)*
+- No celular, o app abre nas listas. Um **+** redondo no pé da tela, do lado da mão escolhida,
+  não muda de tela: no lugar dele aparece o campo de adicionar, já focado, com o teclado aberto.
+  O enter adiciona o item e limpa o campo para o próximo; quando eu saio do campo ou recolho o
+  teclado, o + volta. *(1a)*
   Por quê: no celular eu quase sempre adiciono um item por vez, no meio do dia; o + fica a um
   toque, sob o polegar, e eu continuo vendo a lista em que estava.
-- No celular, uma barra no pé das telas tem **Listas**, o **+** e **Catálogo**, nessa ordem. A
-  captura e o lote não têm a barra. *(1a)*
-- No celular, as listas e o catálogo têm no topo uma barra com o nome do app e, no canto
-  direito, o círculo com as minhas iniciais, que abre o Perfil. *(1a)*
+- No celular, o + é o único jeito de anotar: não há tela de captura nem barra de abas no pé. Junto
+  do campo do +, um link "Colar uma lista" abre o lote; colar no campo um texto com vírgulas ou
+  quebras de linha também abre o lote, já com o texto colado. *(1a)*
+  Por quê: com uma tela de captura e um + fazendo a mesma coisa, eu ficava indo e voltando entre
+  as telas.
+- No celular, a lista e o catálogo de um contexto são a mesma tela: um seletor no topo alterna
+  entre **Faltando** (a lista) e **Tudo** (o catálogo daquele contexto). A lista sempre abre em
+  Faltando. "Todos os itens" e "Sem contexto" não têm o Tudo. *(1a)*
+  Por quê: a lista e o catálogo são os mesmos itens com filtros diferentes; em abas separadas,
+  eu ia e voltava entre elas, e sair da lista no meio da compra me atrapalhava.
+- No celular, as listas têm no topo uma barra com a Tatá e, no canto direito, o círculo com as
+  minhas iniciais, que abre o Perfil. *(1a)*
 - No celular, tudo que eu toco fica na parte de baixo da tela, do lado da mão escolhida
-  (`modo-compra.md`). O campo do + e o da captura ficam colados no teclado, e o autocompletar
-  abre para cima. A captura é a tela aberta pelo atalho do ícone do app. *(1a)*
+  (`modo-compra.md`). O campo do + fica colado no teclado, e o autocompletar abre para cima. *(1a)*
+- No celular, quando o + abre, a Tatá avisa quando estou sem internet e me lembra do backup quando
+  ele está atrasado, com um link para o Perfil. *(1a)*
 - No computador, o app abre nas listas, uma coluna por contexto, com a caixa do lote ao lado. *(1a)*
   Por quê: no computador eu vejo tudo de uma vez e adiciono em lote.
-- Quando eu seguro o dedo no ícone do app, aparecem atalhos para a captura, as listas, o
-  catálogo e o lote; cada atalho pode ser arrastado para a tela inicial. No computador, os mesmos
-  atalhos aparecem no clique direito no ícone do app instalado. *(1a)*
+- Quando eu seguro o dedo no ícone do app, aparecem atalhos: **Adicionar** abre as listas com o
+  campo do + aberto, **Listas** abre as listas, **Catálogo** abre a lista do primeiro contexto em
+  Tudo, e **Em lote** abre o lote. Cada atalho pode ser arrastado para a tela inicial. No
+  computador, os mesmos atalhos aparecem no clique direito no ícone do app instalado. *(1a)*
   Por quê: o Chrome não deixa um PWA ter widget na tela inicial; o atalho é o mais perto disso.
 
-- No Catálogo, eu escolho o contexto num menu. Um + à esquerda do menu cria um contexto novo, e o
-  lápis à direita edita o contexto aberto (nome, posição, categorias, desativar). Não há uma tela
-  de Contextos. *(1a)*
-- Acima do menu, uma busca procura nos catálogos de todos os contextos; cada item achado mostra
-  os seus contextos. O enter põe um nome novo no catálogo do contexto aberto e já na lista. *(1a)*
-- No catálogo, um carrinho antes do item mostra se ele está na lista (cheio) ou não (vazio), e o
-  lápis depois dele abre o detalhe do item. *(1a)*
-- No detalhe do item, uma lixeira tira o item do catálogo num toque só, sem pedir confirmação. *(1a)*
-- No celular, a tela das listas também edita os contextos: o menu que abre no nome da lista tem
-  "Editar …", que edita o contexto aberto (nome, posição, categorias, desativar), e "Novo
-  contexto", que cria um. *(1a)*
+- No celular, o menu que abre no nome da lista escolhe a lista e também edita os contextos:
+  "Editar …" edita o contexto aberto (nome, posição, categorias, desativar), e "Novo contexto"
+  cria um. Não há uma tela de Contextos. *(1a)*
   Por quê: era difícil achar onde se editava um contexto.
+- No computador, no Catálogo, eu escolho o contexto num menu. Um + à esquerda do menu cria um
+  contexto novo, e o lápis à direita edita o contexto aberto (nome, posição, categorias,
+  desativar). *(1a)*
+- No Tudo do celular e no Catálogo do computador, uma busca no topo procura nos catálogos de
+  todos os contextos; cada item achado mostra os seus contextos. O enter põe um nome novo no
+  catálogo do contexto aberto e já na lista. *(1a)*
+- No Tudo e no Catálogo, um carrinho antes do item mostra se ele está na lista (cheio) ou não
+  (vazio), e o lápis depois dele abre o detalhe do item. *(1a)*
+- No detalhe do item, uma lixeira tira o item do catálogo num toque só, sem pedir confirmação. *(1a)*
 - No celular, a tela Perfil, aberta pelo círculo do topo, reúne a conta e todos os ajustes: um
   círculo com as minhas iniciais, tiradas do e-mail da conta Google, o meu e-mail, o estado da sincronização, a mão, o
   backup, refazer o setup e sair (ou entrar, se eu estiver sem login). *(1a)*
   Por quê: é onde eu procuro os ajustes de um app.
-- No celular, a tela das listas já é o modo compra (`modo-compra.md`). O carrinho ao lado do
-  campo da captura pergunta em qual lista com itens faltando eu vou comprar e abre essa lista. *(1a)*
+- No celular, a tela das listas já é o modo compra (`modo-compra.md`); eu escolho a lista da loja
+  em que vou comprar pelo menu do nome da lista. *(1a)*
 
 ## Formas de adicionar
 
@@ -55,7 +66,7 @@ contexto", sem nenhuma pergunta na hora.
 
 | Forma | Como funciona | Melhor para |
 | --- | --- | --- |
-| Pelo catálogo | Abro o catálogo de um contexto (tudo o que eu costumo comprar ali) e toco nos itens que estão faltando. Os que já estão na lista aparecem marcados | Montar a lista antes da compra do mês |
+| Pelo catálogo | Abro o catálogo de um contexto (no celular, o Tudo da lista: tudo o que eu costumo comprar ali) e toco nos itens que estão faltando. Os que já estão na lista aparecem marcados | Montar a lista antes da compra do mês |
 | Botão + | Um campo com autocompletar a partir do catálogo, tolerante a acento e erro de digitação ("agua sanitaria" encontra "Água sanitária") | Lembrar de um item no meio do dia |
 | Em lote | Uma caixa de texto em que cada linha ou vírgula vira um item; aceita colar uma lista de outro app ou de uma mensagem | Migrar listas antigas ou copiar de uma conversa |
 
@@ -80,8 +91,8 @@ contexto", sem nenhuma pergunta na hora.
 2. **Item novo que está nas filas de sugestões do setup:** usa o contexto da sugestão. *(1a)*
 3. **Item totalmente novo:** entra em "Sem contexto", sem pergunta na hora. *(1a)*
 
-No celular, quando eu anoto pelo + com o Catálogo aberto, um item que ainda não está no catálogo
-entra no contexto aberto ali, no lugar das regras 2 e 3; um item que já está no catálogo continua
+No celular, quando eu anoto pelo + com o Tudo de uma lista aberto, um item que ainda não está no
+catálogo entra no contexto daquela lista, no lugar das regras 2 e 3; um item que já está no catálogo continua
 nos contextos dele. *(1a)*
 
 ## Itens sem contexto
@@ -120,13 +131,12 @@ nos contextos dele. *(1a)*
   como comprado, e o ícone de agrupar fica na mesma linha do nome da lista, à direita
   (`modo-compra.md`). *(1a)*
 - Eu ligo ou desligo o agrupamento por categoria em cada lista (`modo-compra.md`). *(1a)*
-- No celular, no fim de cada lista, vazia ou não, há um link para abrir o catálogo daquele
-  contexto. *(1a)*
+- No celular, uma lista vazia mostra um link que abre o Tudo daquele contexto. *(1a)*
 - No celular, a primeira opção do menu é **Todos os itens**, e é ela que abre quando eu vou para
   as listas: os itens de todos os contextos numa tela só, uma seção por contexto, como os grupos
   de categoria, sem dividir em categorias. Só aparecem os contextos com itens, em cima os que têm
-  itens faltando, embaixo os que só têm riscados. Riscar e contar como comprado funcionam como
-  numa lista, e ao sair da tela os riscados saem de todas as listas. *(1a)*
+  itens faltando, embaixo os que só têm riscados. Riscar, contar como comprado e o "Terminei" funcionam
+  como numa lista; o "Terminei" dali tira os riscados de todas as listas. *(1a)*
 - No celular, setas < e > dos lados do nome da lista passam para a lista anterior ou a próxima,
   na ordem do menu, incluindo as vazias; depois da última volta para a primeira, e vice-versa.
   *(1a)*

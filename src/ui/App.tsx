@@ -2,11 +2,10 @@ import { useCallback, useState } from 'react';
 import { activeContexts } from '../domain/list-view';
 import { DesktopApp } from './desktop/DesktopApp';
 import { navigate, useRoute } from './router';
-import { Capture } from './screens/Capture';
 import { ListsScreen } from './screens/ListsScreen';
 import { Setup } from './screens/Setup';
 import { ProfileScreen } from './screens/ProfileScreen';
-import { BatchScreen, CatalogScreen } from './screens/SimpleScreens';
+import { BatchScreen } from './screens/SimpleScreens';
 import { useIsDesktop, useServices, useSettings, useSnapshot } from './services';
 
 /**
@@ -43,13 +42,15 @@ export function App() {
         screen = <ListsScreen snapshot={snapshot} contextId={route.name === 'uncontexted' ? null : route.contextId} />;
         break;
       case 'catalog':
-        screen = <CatalogScreen snapshot={snapshot} contextId={route.contextId} />;
+        // The catalog is the Tudo of a context's list; with none chosen, the first context's.
+        screen = <ListsScreen snapshot={snapshot} contextId={route.contextId ?? activeContexts(snapshot.contexts)[0]?.id ?? null} view="tudo" />;
         break;
       case 'batch':
         screen = <BatchScreen snapshot={snapshot} />;
         break;
       case 'capture':
-        screen = <Capture snapshot={snapshot} />;
+        // The icon's "Adicionar" shortcut: the lists with the + open.
+        screen = <ListsScreen snapshot={snapshot} contextId={undefined} adding />;
         break;
       case 'settings':
       case 'profile':

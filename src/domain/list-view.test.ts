@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { Context } from './context';
 import type { Item } from './item';
 import type { ListEntry } from './list-entry';
-import { activeContexts, allLists, catalogOf, destinationFor, groupByCategory, itemsById, itemsWithoutContext, listEntries, listsByMissing, missingCount, pendingEntryOf, searchCatalog, stepAround, type Snapshot } from './list-view';
+import { activeContexts, allLists, catalogOf, destinationFor, groupByCategory, groupItemsByCategory, itemsById, itemsWithoutContext, listEntries, listsByMissing, missingCount, pendingEntryOf, searchCatalog, stepAround, type Snapshot } from './list-view';
 
 const base = { updatedAt: 1, updatedBy: 'd', deletedAt: null };
 const context = (id: string, changes: Partial<Context> = {}): Context => ({
@@ -108,6 +108,15 @@ describe('list views', () => {
     ]);
     // A category the context does not have goes to "Outros".
     expect(groupByCategory(entries, items, ['limpeza']).map((g) => g.name)).toEqual(['Limpeza', 'Outros']);
+  });
+
+  it('groups a catalog like its list, keeping the item order inside each group', () => {
+    const catalog = [item('leite', 'mercado', 'laticinios'), item('pilha', 'mercado'), item('queijo', 'mercado', 'laticinios'), item('sabao', 'mercado', 'limpeza')];
+    expect(groupItemsByCategory(catalog, ['limpeza', 'laticinios']).map((g) => [g.name, g.items.map((i) => i.id)])).toEqual([
+      ['Limpeza', ['sabao']],
+      ['Laticínios', ['leite', 'queijo']],
+      ['Outros', ['pilha']],
+    ]);
   });
 
   it('chooses the context: the catalog first, then the setup suggestions, else none', () => {

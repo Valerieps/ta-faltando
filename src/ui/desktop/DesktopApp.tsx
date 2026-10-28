@@ -197,7 +197,7 @@ function Column({
       )}
       {struck > 0 && (
         <button type="button" className="pill" onClick={() => void lists.finishPurchase([id])}>
-          Finalizar compra ({struck === 1 ? '1 riscado' : `${struck} riscados`})
+          Terminei ({struck === 1 ? '1 riscado' : `${struck} riscados`})
         </button>
       )}
     </section>

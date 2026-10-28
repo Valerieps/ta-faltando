@@ -150,8 +150,7 @@ a {
   gap: var(--space-2);
 }
 
-.screen__head .avatar,
-.capture__head .avatar {
+.screen__head .avatar {
   margin-left: auto;
 }
 
@@ -264,7 +263,7 @@ a.btn {
   padding: 0;
 }
 
-/* The round + in the middle of the bottom bar. */
+/* The round + at the bottom, by the thumb. */
 .fab {
   display: grid;
   flex: none;
@@ -283,43 +282,22 @@ a.btn {
   height: 26px;
 }
 
-/* ---- Bottom bar (phone): Catálogo, the round +, Listas ---- */
+/* ---- The round + (phone), on the side of the chosen hand ---- */
 
 .bottom-nav {
   display: flex;
-  align-items: flex-end;
-  margin: 0 calc(-1 * var(--space-4));
-  border-top: 1px solid var(--color-border);
+  justify-content: flex-end;
 }
 
-.bottom-nav__tab {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  min-height: var(--touch-min);
-  padding: var(--space-2) 0 0;
-  border: 0;
-  background: none;
-  color: var(--color-text-muted);
-  font-size: var(--font-size-small);
-  font-weight: 600;
+[data-hand='left'] .bottom-nav {
+  justify-content: flex-start;
 }
 
-/* The + rises above the bar's line, like a raised button. */
-.bottom-nav__middle {
-  display: flex;
-  flex: 1;
-  justify-content: center;
-}
-
-.bottom-nav__middle .fab {
-  margin-top: calc(-1 * var(--fab-size) / 2);
+.bottom-nav .fab {
   box-shadow: 0 4px 12px rgb(0 0 0 / 18%);
 }
 
-/* The + swaps the bar for the add field, which sits on the keyboard. */
+/* The + swaps itself for the add field, which sits on the keyboard. */
 .bottom-add {
   display: flex;
   flex-direction: column;
@@ -327,9 +305,12 @@ a.btn {
   padding-top: var(--space-2);
 }
 
-.bottom-nav__tab.is-on {
-  color: var(--color-text);
-  font-weight: 800;
+.bottom-add__batch {
+  align-self: flex-end;
+}
+
+[data-hand='left'] .bottom-add__batch {
+  align-self: flex-start;
 }
 
 .btn--icon {
@@ -562,48 +543,6 @@ a.btn {
   overflow: visible;
 }
 
-/* ---- Capture ---- */
-
-.capture__head {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-}
-
-.recent ul {
-  display: flex;
-  flex-direction: column;
-}
-
-.recent__row {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding: var(--space-2) 0;
-  border-top: 1px solid var(--color-border);
-  animation: drop 300ms ease-out;
-}
-
-@keyframes drop {
-  from {
-    transform: translateY(-6px);
-    background: var(--color-brand-soft);
-  }
-}
-
-.capture__links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-}
-
-.capture__bottom {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  margin-top: auto;
-}
-
 .add-field {
   position: relative;
   display: flex;
@@ -800,6 +739,16 @@ button.check::before {
   gap: var(--space-4);
 }
 
+/* Faltando and Tudo, under the list's name. */
+.list-view {
+  align-self: flex-start;
+}
+
+/* "Terminei", after the list's items. */
+.list-done {
+  margin-top: var(--space-2);
+}
+
 .empty {
   display: flex;
   flex-direction: column;
@@ -987,6 +936,12 @@ button.check::before {
 }
 
 /* ---- Contexts and catalog ---- */
+
+.catalog__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
 
 .catalog,
 .settings {
@@ -1519,12 +1474,6 @@ button.check::before {
   font-weight: 600;
   text-align: left;
   text-decoration: none;
-}
-
-.shop-chooser {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
 }
 
 /* ---- Settings ---- */

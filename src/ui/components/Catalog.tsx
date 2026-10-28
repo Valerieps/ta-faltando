@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import { contextCategories } from '../../domain/context-categories';
 import { findItemByName, itemContextIds, type Item } from '../../domain/item';
-import { catalogOf, contextName, pendingEntryOf, searchCatalog, type Snapshot } from '../../domain/list-view';
+import { activeContexts, catalogOf, contextName, groupItemsByCategory, pendingEntryOf, searchCatalog, type Snapshot } from '../../domain/list-view';
 import { CartIcon, PencilIcon } from '../icons';
 import { useServices } from '../services';
 import { ContextPicker } from './ContextPicker';
@@ -9,15 +10,19 @@ import { ItemSheet } from './ItemSheet';
 /**
  * "Pelo catálogo": everything I usually buy in a context; a tap puts the item on the list or
  * takes it off, and the ones already on the list show a filled cart (spec/itens-e-contextos.md).
- * The search on top looks in every context, and enter puts a new name in the open one.
+ * The search on top looks in every context, and enter puts a new name in the open one. On the
+ * phone it is the Tudo of a list, whose name already picks the context, so it shows no picker;
+ * a context grouped by category groups its catalog the same way.
  */
-export function Catalog({ snapshot, contextId }: { snapshot: Snapshot; contextId: string | null }) {
+export function Catalog({ snapshot, contextId, picker = true }: { snapshot: Snapshot; contextId: string | null; picker?: boolean }) {
   const { lists } = useServices();
   const [filter, setFilter] = useState('');
   const [detail, setDetail] = useState<string | null>(null);
   const searching = filter.trim() !== '';
   const items = searching ? searchCatalog(snapshot.items, filter) : catalogOf(snapshot, contextId);
   const name = contextName(snapshot, contextId);
+  const context = activeContexts(snapshot.contexts).find((c) => c.id === contextId);
+  const groups = !searching && context?.groupByCategory ? groupItemsByCategory(items, contextCategories(context, snapshot.items)) : [{ categoryId: null, name: '', items }];
 
   async function toggle(item: Item) {
     const entry = pendingEntryOf(snapshot, item.id);
@@ -53,31 +58,36 @@ export function Catalog({ snapshot, contextId }: { snapshot: Snapshot; contextId
           }}
         />
       </div>
-      {!searching && <ContextPicker snapshot={snapshot} current={contextId} />}
+      {!searching && picker && <ContextPicker snapshot={snapshot} current={contextId} />}
       {items.length === 0 && (
         <p className="muted">{searching ? `Enter põe “${filter.trim()}” no catálogo de ${name} e na lista.` : `O catálogo de ${name} ainda está vazio.`}</p>
       )}
-      <ul className="catalog__items">
-        {items.map((item) => {
-          const checked = pendingEntryOf(snapshot, item.id) !== undefined;
-          return (
-            <li key={item.id} className="row">
-              <button type="button" className="row__main" aria-pressed={checked} onClick={() => void toggle(item)}>
-                <span className={checked ? 'cart is-on' : 'cart'} aria-hidden="true">
-                  <CartIcon />
-                </span>
-                <span className="row__name">
-                  {item.name}
-                  {searching && <span className="muted"> · {contextsOf(item)}</span>}
-                </span>
-              </button>
-              <button type="button" className="icon-button" aria-label={`Editar ${item.name}`} onClick={() => setDetail(item.id)}>
-                <PencilIcon />
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+      {groups.map((group) => (
+        <section key={group.categoryId ?? 'outros'} className="catalog__group">
+          {group.name && <h2 className="label">{group.name}</h2>}
+          <ul className="catalog__items">
+            {group.items.map((item) => {
+              const checked = pendingEntryOf(snapshot, item.id) !== undefined;
+              return (
+                <li key={item.id} className="row">
+                  <button type="button" className="row__main" aria-pressed={checked} onClick={() => void toggle(item)}>
+                    <span className={checked ? 'cart is-on' : 'cart'} aria-hidden="true">
+                      <CartIcon />
+                    </span>
+                    <span className="row__name">
+                      {item.name}
+                      {searching && <span className="muted"> · {contextsOf(item)}</span>}
+                    </span>
+                  </button>
+                  <button type="button" className="icon-button" aria-label={`Editar ${item.name}`} onClick={() => setDetail(item.id)}>
+                    <PencilIcon />
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ))}
       {detail && <ItemSheet snapshot={snapshot} itemId={detail} onClose={() => setDetail(null)} />}
     </div>
   );
